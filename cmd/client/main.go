@@ -3,7 +3,9 @@ package main
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"fmt"
 	"net/http"
+	"net/http/httputil"
 	"os"
 )
 
@@ -22,4 +24,17 @@ func main() {
 			},
 		},
 	}
+
+	resp, err := client.Get("https://egot.internal.com:4443/dcap")
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	dump, err := httputil.DumpResponse(resp, true)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%s\n", dump)
 }
