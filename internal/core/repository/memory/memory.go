@@ -128,7 +128,7 @@ func (r *Repository) TagEntity(tag string, e Entity) error {
 	return nil
 }
 
-func (r *Repository) GetDeviceCapability() sep.DeviceCapability {
+func (r *Repository) GetDeviceCapability(id Entity) sep.DeviceCapability {
 	r.RLock()
 	defer r.RUnlock()
 	return sep.DeviceCapability{
@@ -146,7 +146,7 @@ func (r *Repository) GetDeviceCapability() sep.DeviceCapability {
 		EndDeviceListLink: &sep.EndDeviceListLink{
 			ListLink: &sep.ListLink{
 				Link: &sep.Link{
-					HrefAttr: uri.EndDevice,
+					HrefAttr: uri.EndDeviceList,
 				},
 				AllAttr: 1,
 			},
