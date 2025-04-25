@@ -2,6 +2,8 @@ package memory
 
 import (
 	"crypto/sha256"
+	"crypto/x509"
+	"encoding/pem"
 	"fmt"
 	"io/fs"
 	"log"
@@ -12,6 +14,7 @@ import (
 
 	"github.com/Tylores/egot/internal/core/repository"
 	"github.com/Tylores/egot/internal/sep"
+	"github.com/Tylores/egot/internal/uri"
 )
 
 type Entity uint32
@@ -24,7 +27,6 @@ type Pool struct {
 
 func NewPool(size Entity) *Pool {
 	return &Pool{
-		dcap: make([]sep.DeviceCapability, size),
 		edev: make([]sep.EndDevice, size),
 		reg:  make([]sep.Registration, size),
 	}
@@ -72,12 +74,22 @@ func (r *Repository) InitRepository(dir string) {
 			return nil
 		}
 
-		cert, error := os.ReadFile(path)
+		cert_file, error := os.ReadFile(path)
 		if error != nil {
 			return error
 		}
 
-		fp := fmt.Sprintf("%X", sha256.Sum256(cert))[0:40]
+		block, _ := pem.Decode(cert_file)
+		if block == nil {
+			return nil
+		}
+
+		cert, error := x509.ParseCertificate(block.Bytes)
+		if err != nil {
+			return error
+		}
+
+		fp := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]
 		e, error := r.NextFreeEntity()
 		if error != nil {
 			return error
@@ -116,16 +128,30 @@ func (r *Repository) TagEntity(tag string, e Entity) error {
 	return nil
 }
 
-func (r *Repository) GetDeviceCapability(id Entity) sep.DeviceCapability {
+func (r *Repository) GetDeviceCapability() sep.DeviceCapability {
 	r.RLock()
 	defer r.RUnlock()
-	return r.pool.dcap[id]
-}
-
-func (r *Repository) PutDeviceCapability(id Entity, data sep.DeviceCapability) {
-	r.Lock()
-	defer r.Unlock()
-	r.pool.dcap[id] = data
+	return sep.DeviceCapability{
+		PollRateAttr: 10,
+		FunctionSetAssignmentsBase: &sep.FunctionSetAssignmentsBase{
+			Resource: &sep.Resource{
+				HrefAttr: uri.DeviceCapability,
+			},
+			TimeLink: &sep.TimeLink{
+				Link: &sep.Link{
+					HrefAttr: uri.Time,
+				},
+			},
+		},
+		EndDeviceListLink: &sep.EndDeviceListLink{
+			ListLink: &sep.ListLink{
+				Link: &sep.Link{
+					HrefAttr: uri.EndDevice,
+				},
+				AllAttr: 1,
+			},
+		},
+	}
 }
 
 func (r *Repository) GetEndDevice(id Entity) sep.EndDevice {

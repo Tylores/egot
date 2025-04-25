@@ -7,6 +7,9 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"os"
+
+	"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/uri"
 )
 
 func main() {
@@ -25,7 +28,7 @@ func main() {
 		},
 	}
 
-	resp, err := client.Get("https://egot.internal.com:4443/dcap")
+	resp, err := client.Get("https://" + routes.Core + uri.DeviceCapability)
 	if err != nil {
 		panic(err)
 	}
