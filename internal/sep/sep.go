@@ -16,7 +16,6 @@ type DeviceCapability struct {
 	EndDeviceListLink        *EndDeviceListLink        `xml:"EndDeviceListLink"`
 	MirrorUsagePointListLink *MirrorUsagePointListLink `xml:"MirrorUsagePointListLink"`
 	SelfDeviceLink           *SelfDeviceLink           `xml:"SelfDeviceLink"`
-	DeviceCapabilityr23      *Revision23Type           `xml:"DeviceCapability2023"`
 	*FunctionSetAssignmentsBase
 }
 
@@ -38,7 +37,6 @@ type AbstractDevice struct {
 	Phase                        *PhaseCode                    `xml:"phase"`
 	PowerStatusLink              *PowerStatusLink              `xml:"PowerStatusLink"`
 	SFDI                         *SFDIType                     `xml:"sFDI"`
-	AbstractDevicer23            *Revision23Type               `xml:"AbstractDevice2023"`
 	*SubscribableResource
 }
 
@@ -51,7 +49,6 @@ type DeviceStatus struct {
 	OpTime          uint32          `xml:"opTime"`
 	Temperature     []*Temperature  `xml:"Temperature"`
 	TimeLink        *TimeLink       `xml:"TimeLink"`
-	DeviceStatusr23 *Revision23Type `xml:"DeviceStatus2023"`
 	*Resource
 }
 
@@ -59,7 +56,6 @@ type DeviceStatus struct {
 type EndDeviceList struct {
 	PollRateAttr     uint32          `xml:"pollRate,attr,omitempty"`
 	EndDevice        []*EndDevice    `xml:"EndDevice"`
-	EndDeviceListr23 *Revision23Type `xml:"EndDeviceList2023"`
 	*SubscribableList
 }
 
@@ -67,7 +63,6 @@ type EndDeviceList struct {
 type EndDevice struct {
 	ProxiedDeviceListLink *ProxiedDeviceListLink `xml:"ProxiedDeviceListLink"`
 	SubscriptionListLink  *SubscriptionListLink  `xml:"SubscriptionListLink"`
-	EndDevicer23          *Revision23Type        `xml:"EndDevice2023"`
 	*ExternalDevice
 }
 
@@ -80,7 +75,6 @@ type ExternalDevice struct {
 	FunctionSetAssignmentsListLink  *FunctionSetAssignmentsListLink  `xml:"FunctionSetAssignmentsListLink"`
 	PostRate                        uint32                           `xml:"postRate"`
 	RegistrationLink                *RegistrationLink                `xml:"RegistrationLink"`
-	ExternalDevicer23               *Revision23Type                  `xml:"ExternalDevice2023"`
 	*AbstractDevice
 }
 
@@ -89,7 +83,6 @@ type Registration struct {
 	PollRateAttr       uint32          `xml:"pollRate,attr,omitempty"`
 	DateTimeRegistered *TimeType       `xml:"dateTimeRegistered"`
 	PIN                *PINType        `xml:"pIN"`
-	Registrationr23    *Revision23Type `xml:"Registration2023"`
 	*Resource
 }
 
@@ -97,7 +90,6 @@ type Registration struct {
 type SelfDevice struct {
 	PollRateAttr          uint32                 `xml:"pollRate,attr,omitempty"`
 	ProxiedDeviceListLink *ProxiedDeviceListLink `xml:"ProxiedDeviceListLink"`
-	SelfDevicer23         *Revision23Type        `xml:"SelfDevice2023"`
 	*AbstractDevice
 }
 
@@ -106,7 +98,6 @@ type Temperature struct {
 	Multiplier     *PowerOfTenMultiplierType `xml:"multiplier"`
 	Subject        uint8                     `xml:"subject"`
 	Value          int16                     `xml:"value"`
-	Temperaturer23 *Revision23Type           `xml:"Temperature2023"`
 }
 
 // FunctionSetAssignmentsBase is Defines a collection of function set instances that are to be used by one or more devices as indicated by the EndDevice object(s) of the server.
@@ -121,7 +112,6 @@ type FunctionSetAssignmentsBase struct {
 	TariffProfileListLink         *TariffProfileListLink         `xml:"TariffProfileListLink"`
 	TimeLink                      *TimeLink                      `xml:"TimeLink"`
 	UsagePointListLink            *UsagePointListLink            `xml:"UsagePointListLink"`
-	FunctionSetAssignmentsBaser23 *Revision23Type                `xml:"FunctionSetAssignmentsBase2023"`
 	*Resource
 }
 
@@ -131,7 +121,6 @@ type FunctionSetAssignments struct {
 	MRID                      *MRIDType       `xml:"mRID"`
 	Description               string          `xml:"description"`
 	Version                   *VersionType    `xml:"version"`
-	FunctionSetAssignmentsr23 *Revision23Type `xml:"FunctionSetAssignments2023"`
 	*FunctionSetAssignmentsBase
 }
 
@@ -139,7 +128,6 @@ type FunctionSetAssignments struct {
 type FunctionSetAssignmentsList struct {
 	PollRateAttr                  uint32                    `xml:"pollRate,attr,omitempty"`
 	FunctionSetAssignments        []*FunctionSetAssignments `xml:"FunctionSetAssignments"`
-	FunctionSetAssignmentsListr23 *Revision23Type           `xml:"FunctionSetAssignmentsList2023"`
 	*SubscribableList
 }
 
@@ -148,13 +136,11 @@ type Condition struct {
 	AttributeIdentifier uint8           `xml:"attributeIdentifier"`
 	LowerThreshold      int64           `xml:"lowerThreshold"`
 	UpperThreshold      int64           `xml:"upperThreshold"`
-	Conditionr23        *Revision23Type `xml:"Condition2023"`
 }
 
 // SubscriptionBase is The resource for which the subscription applies. Query string parameters SHALL NOT be specified when subscribing to list resources.  Should a query string parameter be specified, servers SHALL ignore them.
 type SubscriptionBase struct {
 	SubscribedResource  string          `xml:"subscribedResource"`
-	SubscriptionBaser23 *Revision23Type `xml:"SubscriptionBase2023"`
 	*Resource
 }
 
@@ -165,7 +151,6 @@ type Subscription struct {
 	Level           string          `xml:"level"`
 	Limit           uint32          `xml:"limit"`
 	NotificationURI string          `xml:"notificationURI"`
-	Subscriptionr23 *Revision23Type `xml:"Subscription2023"`
 	*SubscriptionBase
 }
 
@@ -173,7 +158,6 @@ type Subscription struct {
 type SubscriptionList struct {
 	PollRateAttr        uint32          `xml:"pollRate,attr,omitempty"`
 	Subscription        []*Subscription `xml:"Subscription"`
-	SubscriptionListr23 *Revision23Type `xml:"SubscriptionList2023"`
 	*List
 }
 
@@ -184,14 +168,12 @@ type Notification struct {
 	Resource        *Resource       `xml:"Resource"`
 	Status          uint8           `xml:"status"`
 	SubscriptionURI string          `xml:"subscriptionURI"`
-	Notificationr23 *Revision23Type `xml:"Notification2023"`
 	*SubscriptionBase
 }
 
 // NotificationList is A List element to hold Notification objects.
 type NotificationList struct {
 	Notification        []*Notification `xml:"Notification"`
-	NotificationListr23 *Revision23Type `xml:"NotificationList2023"`
 	*List
 }
 
@@ -199,21 +181,18 @@ type NotificationList struct {
 type ResponseSetList struct {
 	PollRateAttr       uint32          `xml:"pollRate,attr,omitempty"`
 	ResponseSet        []*ResponseSet  `xml:"ResponseSet"`
-	ResponseSetListr23 *Revision23Type `xml:"ResponseSetList2023"`
 	*List
 }
 
 // ResponseSet is A container for a ResponseList.
 type ResponseSet struct {
 	ResponseListLink *ResponseListLink `xml:"ResponseListLink"`
-	ResponseSetr23   *Revision23Type   `xml:"ResponseSet2023"`
 	*IdentifiedObject
 }
 
 // ResponseList is A List element to hold Response objects.
 type ResponseList struct {
 	Response        []*Response     `xml:"Response"`
-	ResponseListr23 *Revision23Type `xml:"ResponseList2023"`
 	*List
 }
 
@@ -223,7 +202,6 @@ type Response struct {
 	EndDeviceLFDI   string          `xml:"endDeviceLFDI"`
 	Status          uint8           `xml:"status"`
 	Subject         *MRIDType       `xml:"subject"`
-	Responser23     *Revision23Type `xml:"Response2023"`
 	*Resource
 }
 
@@ -232,7 +210,6 @@ type DefaultDERControlResponse struct {
 	DefaultsResponded            *DefaultDERControlType `xml:"defaultsResponded"`
 	ModesResponded               *DERControlType        `xml:"modesResponded"`
 	ModesResponded2              *DERControlType2       `xml:"modesResponded2"`
-	DefaultDERControlResponser23 *Revision23Type        `xml:"DefaultDERControlResponse2023"`
 	*Response
 }
 
@@ -240,7 +217,6 @@ type DefaultDERControlResponse struct {
 type DERControlResponse struct {
 	ModesResponded        *DERControlType  `xml:"modesResponded"`
 	ModesResponded2       *DERControlType2 `xml:"modesResponded2"`
-	DERControlResponser23 *Revision23Type  `xml:"DERControlResponse2023"`
 	*Response
 }
 
@@ -252,7 +228,6 @@ type DrResponse struct {
 	Offset                 *Offset                 `xml:"Offset"`
 	OverrideDuration       uint16                  `xml:"overrideDuration"`
 	SetPoint               *SetPoint               `xml:"SetPoint"`
-	DrResponser23          *Revision23Type         `xml:"DrResponse2023"`
 	*Response
 }
 
@@ -260,24 +235,20 @@ type DrResponse struct {
 type AppliedTargetReduction struct {
 	Type                      *UnitType       `xml:"type"`
 	Value                     uint16          `xml:"value"`
-	AppliedTargetReductionr23 *Revision23Type `xml:"AppliedTargetReduction2023"`
 }
 
 // FlowReservationResponseResponse is A response to a FlowReservationResponse
 type FlowReservationResponseResponse struct {
-	FlowReservationResponseResponser23 *Revision23Type `xml:"FlowReservationResponseResponse2023"`
 	*Response
 }
 
 // PriceResponse is A response related to a price message.
 type PriceResponse struct {
-	PriceResponser23 *Revision23Type `xml:"PriceResponse2023"`
 	*Response
 }
 
 // TextResponse is A response to a text message
 type TextResponse struct {
-	TextResponser23 *Revision23Type `xml:"TextResponse2023"`
 	*Response
 }
 
@@ -291,7 +262,6 @@ type Time struct {
 	LocalTime    *TimeType       `xml:"localTime"`
 	Quality      uint8           `xml:"quality"`
 	TzOffset     *TimeOffsetType `xml:"tzOffset"`
-	Timer23      *Revision23Type `xml:"Time2023"`
 	*Resource
 }
 
@@ -314,7 +284,6 @@ type DeviceInformation struct {
 	SupportedLocaleListLink *SupportedLocaleListLink `xml:"SupportedLocaleListLink"`
 	SwActTime               *TimeType                `xml:"swActTime"`
 	SwVer                   string                   `xml:"swVer"`
-	DeviceInformationr23    *Revision23Type          `xml:"DeviceInformation2023"`
 	*Resource
 }
 
@@ -343,20 +312,17 @@ type DRLCCapabilities struct {
 	AverageEnergy       *RealEnergy     `xml:"averageEnergy"`
 	MaxDemand           *ActivePower    `xml:"maxDemand"`
 	OptionsImplemented  string          `xml:"optionsImplemented"`
-	DRLCCapabilitiesr23 *Revision23Type `xml:"DRLCCapabilities2023"`
 }
 
 // SupportedLocale is The code for a locale that is supported
 type SupportedLocale struct {
 	Locale             *LocaleType     `xml:"locale"`
-	SupportedLocaler23 *Revision23Type `xml:"SupportedLocale2023"`
 	*Resource
 }
 
 // SupportedLocaleList is A List element to hold SupportedLocale objects.
 type SupportedLocaleList struct {
 	SupportedLocale        []*SupportedLocale `xml:"SupportedLocale"`
-	SupportedLocaleListr23 *Revision23Type    `xml:"SupportedLocaleList2023"`
 	*List
 }
 
@@ -371,7 +337,6 @@ type PowerStatus struct {
 	PEVInfo                  *PEVInfo         `xml:"PEVInfo"`
 	SessionTimeOnBattery     uint32           `xml:"sessionTimeOnBattery"`
 	TotalTimeOnBattery       uint32           `xml:"totalTimeOnBattery"`
-	PowerStatusr23           *Revision23Type  `xml:"PowerStatus2023"`
 	*Resource
 }
 
@@ -395,7 +360,6 @@ type PEVInfo struct {
 	TargetStateOfCharge     *PerCent        `xml:"targetStateOfCharge"`
 	TimeChargeIsNeeded      *TimeType       `xml:"timeChargeIsNeeded"`
 	TimeChargingStatusPEV   *TimeType       `xml:"timeChargingStatusPEV"`
-	PEVInfor23              *Revision23Type `xml:"PEVInfo2023"`
 }
 
 // IEEE802154 is As defined by IEEE 802.15.4
@@ -404,21 +368,18 @@ type IEEE802154 struct {
 	CapabilityInfo   string            `xml:"capabilityInfo"`
 	NeighborListLink *NeighborListLink `xml:"NeighborListLink"`
 	ShortAddress     uint16            `xml:"shortAddress"`
-	IEEE802154r23    *Revision23Type   `xml:"IEEE_802_15_42023"`
 }
 
 // IPAddr is An IP address value.
 type IPAddr struct {
 	Address             string               `xml:"address"`
 	RPLInstanceListLink *RPLInstanceListLink `xml:"RPLInstanceListLink"`
-	IPAddrr23           *Revision23Type      `xml:"IPAddr2023"`
 	*Resource
 }
 
 // IPAddrList is List of IPAddr instances.
 type IPAddrList struct {
 	IPAddr        []*IPAddr       `xml:"IPAddr"`
-	IPAddrListr23 *Revision23Type `xml:"IPAddrList2023"`
 	*List
 }
 
@@ -450,7 +411,6 @@ type IPInterface struct {
 	LastResetTime       int64                `xml:"lastResetTime"`
 	LastUpdatedTime     int64                `xml:"lastUpdatedTime"`
 	LLInterfaceListLink *LLInterfaceListLink `xml:"LLInterfaceListLink"`
-	IPInterfacer23      *Revision23Type      `xml:"IPInterface2023"`
 	*Resource
 }
 
@@ -458,7 +418,6 @@ type IPInterface struct {
 type IPInterfaceList struct {
 	PollRateAttr       uint32          `xml:"pollRate,attr,omitempty"`
 	IPInterface        []*IPInterface  `xml:"IPInterface"`
-	IPInterfaceListr23 *Revision23Type `xml:"IPInterfaceList2023"`
 	*List
 }
 
@@ -480,14 +439,12 @@ type LLInterface struct {
 	LLRetryCount      uint32          `xml:"LLRetryCount"`
 	LLSecurityErrorRx uint32          `xml:"LLSecurityErrorRx"`
 	LoWPAN            *LoWPAN         `xml:"loWPAN"`
-	LLInterfacer23    *Revision23Type `xml:"LLInterface2023"`
 	*Resource
 }
 
 // LLInterfaceList is List of LLInterface instances.
 type LLInterfaceList struct {
 	LLInterface        []*LLInterface  `xml:"LLInterface"`
-	LLInterfaceListr23 *Revision23Type `xml:"LLInterfaceList2023"`
 	*List
 }
 
@@ -499,7 +456,6 @@ type LoWPAN struct {
 	PacketsRx   uint32          `xml:"packetsRx"`
 	PacketsTx   uint32          `xml:"packetsTx"`
 	RxFragError uint32          `xml:"rxFragError"`
-	LoWPANr23   *Revision23Type `xml:"loWPAN2023"`
 }
 
 // Neighbor is As defined by IEEE 802.15.4
@@ -507,14 +463,12 @@ type Neighbor struct {
 	IsChild      bool            `xml:"isChild"`
 	LinkQuality  uint8           `xml:"linkQuality"`
 	ShortAddress uint16          `xml:"shortAddress"`
-	Neighborr23  *Revision23Type `xml:"Neighbor2023"`
 	*Resource
 }
 
 // NeighborList is List of 15.4 neighbors.
 type NeighborList struct {
 	Neighbor        []*Neighbor     `xml:"Neighbor"`
-	NeighborListr23 *Revision23Type `xml:"NeighborList2023"`
 	*List
 }
 
@@ -530,14 +484,12 @@ type RPLInstance struct {
 	RPLInstanceID           uint8                    `xml:"RPLInstanceID"`
 	RPLSourceRoutesListLink *RPLSourceRoutesListLink `xml:"RPLSourceRoutesListLink"`
 	VersionNumber           uint8                    `xml:"versionNumber"`
-	RPLInstancer23          *Revision23Type          `xml:"RPLInstance2023"`
 	*Resource
 }
 
 // RPLInstanceList is List of RPLInstances associated with the IPinterface.
 type RPLInstanceList struct {
 	RPLInstance        []*RPLInstance  `xml:"RPLInstance"`
-	RPLInstanceListr23 *Revision23Type `xml:"RPLInstanceList2023"`
 	*List
 }
 
@@ -545,14 +497,12 @@ type RPLInstanceList struct {
 type RPLSourceRoutes struct {
 	DestAddress        string          `xml:"DestAddress"`
 	SourceRoute        string          `xml:"SourceRoute"`
-	RPLSourceRoutesr23 *Revision23Type `xml:"RPLSourceRoutes2023"`
 	*Resource
 }
 
 // RPLSourceRoutesList is List or RPL source routes if the hosting device is the DODAGroot
 type RPLSourceRoutesList struct {
 	RPLSourceRoutes        []*RPLSourceRoutes `xml:"RPLSourceRoutes"`
-	RPLSourceRoutesListr23 *Revision23Type    `xml:"RPLSourceRoutesList2023"`
 	*List
 }
 
@@ -572,7 +522,6 @@ type LogEvent struct {
 	LogEventID      uint16          `xml:"logEventID"`
 	LogEventPEN     *PENType        `xml:"logEventPEN"`
 	ProfileID       uint8           `xml:"profileID"`
-	LogEventr23     *Revision23Type `xml:"LogEvent2023"`
 	*Resource
 }
 
@@ -580,7 +529,6 @@ type LogEvent struct {
 type LogEventList struct {
 	PollRateAttr    uint32          `xml:"pollRate,attr,omitempty"`
 	LogEvent        []*LogEvent     `xml:"LogEvent"`
-	LogEventListr23 *Revision23Type `xml:"LogEventList2023"`
 	*SubscribableList
 }
 
@@ -592,7 +540,6 @@ type Configuration struct {
 	PriceResponseCfgListLink *PriceResponseCfgListLink `xml:"PriceResponseCfgListLink"`
 	TimeConfiguration        *TimeConfiguration        `xml:"TimeConfiguration"`
 	UserDeviceName           string                    `xml:"userDeviceName"`
-	Configurationr23         *Revision23Type           `xml:"Configuration2023"`
 	*SubscribableResource
 }
 
@@ -600,7 +547,6 @@ type Configuration struct {
 type PowerConfiguration struct {
 	BatteryInstallTime    *TimeType       `xml:"batteryInstallTime"`
 	LowChargeThreshold    uint32          `xml:"lowChargeThreshold"`
-	PowerConfigurationr23 *Revision23Type `xml:"PowerConfiguration2023"`
 }
 
 // PriceResponseCfg is Price responsive clients acting upon the associated RateComponent SHOULD reduce consumption to the maximum extent possible while the price is greater than this threshold.
@@ -608,14 +554,12 @@ type PriceResponseCfg struct {
 	ConsumeThreshold      int                `xml:"consumeThreshold"`
 	MaxReductionThreshold int                `xml:"maxReductionThreshold"`
 	RateComponentLink     *RateComponentLink `xml:"RateComponentLink"`
-	PriceResponseCfgr23   *Revision23Type    `xml:"PriceResponseCfg2023"`
 	*Resource
 }
 
 // PriceResponseCfgList is A List element to hold PriceResponseCfg objects.
 type PriceResponseCfgList struct {
 	PriceResponseCfg        []*PriceResponseCfg `xml:"PriceResponseCfg"`
-	PriceResponseCfgListr23 *Revision23Type     `xml:"PriceResponseCfgList2023"`
 	*List
 }
 
@@ -625,7 +569,6 @@ type TimeConfiguration struct {
 	DstOffset            *TimeOffsetType `xml:"dstOffset"`
 	DstStartRule         *DstRuleType    `xml:"dstStartRule"`
 	TzOffset             *TimeOffsetType `xml:"tzOffset"`
-	TimeConfigurationr23 *Revision23Type `xml:"TimeConfiguration2023"`
 }
 
 // File is A value indicating the type of the file.  SHALL be one of the following values:
@@ -646,7 +589,6 @@ type File struct {
 	MfVer        string          `xml:"mfVer"`
 	Size         uint32          `xml:"size"`
 	Type         string          `xml:"type"`
-	Filer23      *Revision23Type `xml:"File2023"`
 	*Resource
 }
 
@@ -654,7 +596,6 @@ type File struct {
 type FileList struct {
 	PollRateAttr uint32          `xml:"pollRate,attr,omitempty"`
 	File         []*File         `xml:"File"`
-	FileListr23  *Revision23Type `xml:"FileList2023"`
 	*List
 }
 
@@ -669,7 +610,6 @@ type FileStatus struct {
 	RequestFailCount   uint16          `xml:"requestFailCount"`
 	Status             uint8           `xml:"status"`
 	StatusTime         *TimeType       `xml:"statusTime"`
-	FileStatusr23      *Revision23Type `xml:"FileStatus2023"`
 	*Resource
 }
 
@@ -677,14 +617,12 @@ type FileStatus struct {
 type LoadShedAvailabilityList struct {
 	PollRateAttr                uint32                  `xml:"pollRate,attr,omitempty"`
 	LoadShedAvailability        []*LoadShedAvailability `xml:"LoadShedAvailability"`
-	LoadShedAvailabilityListr23 *Revision23Type         `xml:"LoadShedAvailabilityList2023"`
 	*List
 }
 
 // ApplianceLoadReduction is Indicates the type of appliance load reduction requested.
 type ApplianceLoadReduction struct {
 	Type                      *ApplianceLoadReductionType `xml:"type"`
-	ApplianceLoadReductionr23 *Revision23Type             `xml:"ApplianceLoadReduction2023"`
 }
 
 // DemandResponseProgram is Indicates the relative primacy of the provider of this program.
@@ -694,7 +632,6 @@ type DemandResponseProgram struct {
 	AvailabilityUpdatePowerChangeThreshold   *ActivePower                    `xml:"availabilityUpdatePowerChangeThreshold"`
 	EndDeviceControlListLink                 *EndDeviceControlListLink       `xml:"EndDeviceControlListLink"`
 	Primacy                                  *PrimacyType                    `xml:"primacy"`
-	DemandResponseProgramr23                 *Revision23Type                 `xml:"DemandResponseProgram2023"`
 	*IdentifiedObject
 }
 
@@ -702,14 +639,12 @@ type DemandResponseProgram struct {
 type DemandResponseProgramList struct {
 	PollRateAttr                 uint32                   `xml:"pollRate,attr,omitempty"`
 	DemandResponseProgram        []*DemandResponseProgram `xml:"DemandResponseProgram"`
-	DemandResponseProgramListr23 *Revision23Type          `xml:"DemandResponseProgramList2023"`
 	*SubscribableList
 }
 
 // DutyCycle is Contains the maximum On state duty cycle applied by the end device, as a percentage of time.  The field not present indicates that this field has not been used by the end device.
 type DutyCycle struct {
 	NormalValue  uint8           `xml:"normalValue"`
-	DutyCycler23 *Revision23Type `xml:"DutyCycle2023"`
 }
 
 // EndDeviceControl is The overrideDuration attribute provides a duration, in seconds, for which a client device is allowed to override this EndDeviceControl and still meet the contractual agreement with a service provider without opting out. If overrideDuration is not specified, then it SHALL default to 0.
@@ -723,14 +658,12 @@ type EndDeviceControl struct {
 	OverrideDuration       uint16                  `xml:"overrideDuration"`
 	SetPoint               *SetPoint               `xml:"SetPoint"`
 	TargetReduction        *TargetReduction        `xml:"TargetReduction"`
-	EndDeviceControlr23    *Revision23Type         `xml:"EndDeviceControl2023"`
 	*RandomizableEvent
 }
 
 // EndDeviceControlList is A List element to hold EndDeviceControl objects.
 type EndDeviceControlList struct {
 	EndDeviceControl        []*EndDeviceControl `xml:"EndDeviceControl"`
-	EndDeviceControlListr23 *Revision23Type     `xml:"EndDeviceControlList2023"`
 	*SubscribableList
 }
 
@@ -740,7 +673,6 @@ type LoadShedAvailability struct {
 	DemandResponseProgramLink *DemandResponseProgramLink `xml:"DemandResponseProgramLink"`
 	SheddablePercent          *PerCent                   `xml:"sheddablePercent"`
 	SheddablePower            *ActivePower               `xml:"sheddablePower"`
-	LoadShedAvailabilityr23   *Revision23Type            `xml:"LoadShedAvailability2023"`
 	*Resource
 }
 
@@ -749,21 +681,18 @@ type Offset struct {
 	CoolingOffset                  uint8           `xml:"coolingOffset"`
 	HeatingOffset                  uint8           `xml:"heatingOffset"`
 	LoadAdjustmentPercentageOffset *PerCent        `xml:"loadAdjustmentPercentageOffset"`
-	Offsetr23                      *Revision23Type `xml:"Offset2023"`
 }
 
 // SetPoint is This attribute represents the heating temperature set point in degrees Celsius / 100. (Hundredths of a degree C)
 type SetPoint struct {
 	CoolingSetpoint int16           `xml:"coolingSetpoint"`
 	HeatingSetpoint int16           `xml:"heatingSetpoint"`
-	SetPointr23     *Revision23Type `xml:"SetPoint2023"`
 }
 
 // TargetReduction is Indicates the requested amount of the relevant commodity to be reduced.
 type TargetReduction struct {
 	Type               *UnitType       `xml:"type"`
 	Value              uint16          `xml:"value"`
-	TargetReductionr23 *Revision23Type `xml:"TargetReduction2023"`
 }
 
 // MeterReading is Set of values obtained from the meter.
@@ -772,14 +701,12 @@ type MeterReading struct {
 	ReadingLink           *ReadingLink           `xml:"ReadingLink"`
 	ReadingSetListLink    *ReadingSetListLink    `xml:"ReadingSetListLink"`
 	ReadingTypeLink       *ReadingTypeLink       `xml:"ReadingTypeLink"`
-	MeterReadingr23       *Revision23Type        `xml:"MeterReading2023"`
 	*MeterReadingBase
 }
 
 // MeterReadingList is A List element to hold MeterReading objects.
 type MeterReadingList struct {
 	MeterReading        []*MeterReading `xml:"MeterReading"`
-	MeterReadingListr23 *Revision23Type `xml:"MeterReadingList2023"`
 	*SubscribableList
 }
 
@@ -787,28 +714,24 @@ type MeterReadingList struct {
 type Reading struct {
 	SubscribableAttr *UInt8          `xml:"subscribable,attr,omitempty"`
 	LocalID          string          `xml:"localID"`
-	Readingr23       *Revision23Type `xml:"Reading2023"`
 	*ReadingBase
 }
 
 // ReadingList is A List element to hold Reading objects.
 type ReadingList struct {
 	Reading        []*Reading      `xml:"Reading"`
-	ReadingListr23 *Revision23Type `xml:"ReadingList2023"`
 	*SubscribableList
 }
 
 // ReadingSet is A set of Readings of the ReadingType indicated by the parent MeterReading.
 type ReadingSet struct {
 	ReadingListLink *ReadingListLink `xml:"ReadingListLink"`
-	ReadingSetr23   *Revision23Type  `xml:"ReadingSet2023"`
 	*ReadingSetBase
 }
 
 // ReadingSetList is A List element to hold ReadingSet objects.
 type ReadingSetList struct {
 	ReadingSet        []*ReadingSet   `xml:"ReadingSet"`
-	ReadingSetListr23 *Revision23Type `xml:"ReadingSetList2023"`
 	*SubscribableList
 }
 
@@ -831,7 +754,6 @@ type ReadingType struct {
 	SupplyLimit               uint64                     `xml:"supplyLimit"`
 	TieredConsumptionBlocks   bool                       `xml:"tieredConsumptionBlocks"`
 	Uom                       *UomType                   `xml:"uom"`
-	ReadingTyper23            *Revision23Type            `xml:"ReadingType2023"`
 	*Resource
 }
 
@@ -839,7 +761,6 @@ type ReadingType struct {
 type UsagePoint struct {
 	DeviceLFDI           string                `xml:"deviceLFDI"`
 	MeterReadingListLink *MeterReadingListLink `xml:"MeterReadingListLink"`
-	UsagePointr23        *Revision23Type       `xml:"UsagePoint2023"`
 	*UsagePointBase
 }
 
@@ -847,7 +768,6 @@ type UsagePoint struct {
 type UsagePointList struct {
 	PollRateAttr      uint32          `xml:"pollRate,attr,omitempty"`
 	UsagePoint        []*UsagePoint   `xml:"UsagePoint"`
-	UsagePointListr23 *Revision23Type `xml:"UsagePointList2023"`
 	*SubscribableList
 }
 
@@ -859,14 +779,12 @@ type ConsumptionTariffInterval struct {
 	EnvironmentalCost            []*EnvironmentalCost  `xml:"EnvironmentalCost"`
 	Price                        int                   `xml:"price"`
 	StartValue                   uint64                `xml:"startValue"`
-	ConsumptionTariffIntervalr23 *Revision23Type       `xml:"ConsumptionTariffInterval2023"`
 	*Resource
 }
 
 // ConsumptionTariffIntervalList is A List element to hold ConsumptionTariffInterval objects.
 type ConsumptionTariffIntervalList struct {
 	ConsumptionTariffInterval        []*ConsumptionTariffInterval `xml:"ConsumptionTariffInterval"`
-	ConsumptionTariffIntervalListr23 *Revision23Type              `xml:"ConsumptionTariffIntervalList2023"`
 	*List
 }
 
@@ -887,7 +805,6 @@ type EnvironmentalCost struct {
 	CostKind             *CostKindType   `xml:"costKind"`
 	CostLevel            uint8           `xml:"costLevel"`
 	NumCostLevels        uint8           `xml:"numCostLevels"`
-	EnvironmentalCostr23 *Revision23Type `xml:"EnvironmentalCost2023"`
 }
 
 // RateComponent is Specifies the roles that this usage point has been assigned.
@@ -898,14 +815,12 @@ type RateComponent struct {
 	ReadingTypeLink                  *ReadingTypeLink                  `xml:"ReadingTypeLink"`
 	RoleFlags                        *RoleFlagsType                    `xml:"roleFlags"`
 	TimeTariffIntervalListLink       *TimeTariffIntervalListLink       `xml:"TimeTariffIntervalListLink"`
-	RateComponentr23                 *Revision23Type                   `xml:"RateComponent2023"`
 	*IdentifiedObject
 }
 
 // RateComponentList is A List element to hold RateComponent objects.
 type RateComponentList struct {
 	RateComponent        []*RateComponent `xml:"RateComponent"`
-	RateComponentListr23 *Revision23Type  `xml:"RateComponentList2023"`
 	*List
 }
 
@@ -926,7 +841,6 @@ type TariffProfile struct {
 	RetailerLong                 string                    `xml:"retailerLong"`
 	ServiceCategoryKind          *ServiceKind              `xml:"serviceCategoryKind"`
 	TariffDescriptionExternalURI string                    `xml:"tariffDescriptionExternalURI"`
-	TariffProfiler23             *Revision23Type           `xml:"TariffProfile2023"`
 	*IdentifiedObject
 }
 
@@ -934,7 +848,6 @@ type TariffProfile struct {
 type TariffProfileList struct {
 	PollRateAttr         uint32           `xml:"pollRate,attr,omitempty"`
 	TariffProfile        []*TariffProfile `xml:"TariffProfile"`
-	TariffProfileListr23 *Revision23Type  `xml:"TariffProfileList2023"`
 	*SubscribableList
 }
 
@@ -942,14 +855,12 @@ type TariffProfileList struct {
 type TimeTariffInterval struct {
 	ConsumptionTariffIntervalListLink *ConsumptionTariffIntervalListLink `xml:"ConsumptionTariffIntervalListLink"`
 	TouTier                           *TOUType                           `xml:"touTier"`
-	TimeTariffIntervalr23             *Revision23Type                    `xml:"TimeTariffInterval2023"`
 	*RandomizableEvent
 }
 
 // TimeTariffIntervalList is A List element to hold TimeTariffInterval objects.
 type TimeTariffIntervalList struct {
 	TimeTariffInterval        []*TimeTariffInterval `xml:"TimeTariffInterval"`
-	TimeTariffIntervalListr23 *Revision23Type       `xml:"TimeTariffIntervalList2023"`
 	*SubscribableList
 }
 
@@ -959,7 +870,6 @@ type MessagingProgram struct {
 	Locale                    *LocaleType                `xml:"locale"`
 	Primacy                   *PrimacyType               `xml:"primacy"`
 	TextMessageListLink       *TextMessageListLink       `xml:"TextMessageListLink"`
-	MessagingProgramr23       *Revision23Type            `xml:"MessagingProgram2023"`
 	*SubscribableIdentifiedObject
 }
 
@@ -967,7 +877,6 @@ type MessagingProgram struct {
 type MessagingProgramList struct {
 	PollRateAttr            uint32              `xml:"pollRate,attr,omitempty"`
 	MessagingProgram        []*MessagingProgram `xml:"MessagingProgram"`
-	MessagingProgramListr23 *Revision23Type     `xml:"MessagingProgramList2023"`
 	*SubscribableList
 }
 
@@ -986,14 +895,12 @@ type TextMessage struct {
 	Originator     string          `xml:"originator"`
 	Priority       *PriorityType   `xml:"priority"`
 	TextMessage    string          `xml:"textMessage"`
-	TextMessager23 *Revision23Type `xml:"TextMessage2023"`
 	*Event
 }
 
 // TextMessageList is A List element to hold TextMessage objects.
 type TextMessageList struct {
 	TextMessage        []*TextMessage  `xml:"TextMessage"`
-	TextMessageListr23 *Revision23Type `xml:"TextMessageList2023"`
 	*SubscribableList
 }
 
@@ -1003,14 +910,12 @@ type BillingPeriod struct {
 	BillToDate       int64             `xml:"billToDate"`
 	Interval         *DateTimeInterval `xml:"interval"`
 	StatusTimeStamp  *TimeType         `xml:"statusTimeStamp"`
-	BillingPeriodr23 *Revision23Type   `xml:"BillingPeriod2023"`
 	*Resource
 }
 
 // BillingPeriodList is A List element to hold BillingPeriod objects.
 type BillingPeriodList struct {
 	BillingPeriod        []*BillingPeriod `xml:"BillingPeriod"`
-	BillingPeriodListr23 *Revision23Type  `xml:"BillingPeriodList2023"`
 	*SubscribableList
 }
 
@@ -1018,35 +923,30 @@ type BillingPeriodList struct {
 type BillingMeterReadingBase struct {
 	BillingReadingSetListLink  *BillingReadingSetListLink `xml:"BillingReadingSetListLink"`
 	ReadingTypeLink            *ReadingTypeLink           `xml:"ReadingTypeLink"`
-	BillingMeterReadingBaser23 *Revision23Type            `xml:"BillingMeterReadingBase2023"`
 	*MeterReadingBase
 }
 
 // BillingReading is Data captured at regular intervals of time. Interval data could be captured as incremental data, absolute data, or relative data. The source for the data is usually a tariff quantity or an engineering quantity. Data is typically captured in time-tagged, uniform, fixed-length intervals of 5 min, 10 min, 15 min, 30 min, or 60 min. However, consumption aggregations can also be represented with this class.
 type BillingReading struct {
 	Charge            []*Charge       `xml:"Charge"`
-	BillingReadingr23 *Revision23Type `xml:"BillingReading2023"`
 	*ReadingBase
 }
 
 // BillingReadingList is A List element to hold BillingReading objects.
 type BillingReadingList struct {
 	BillingReading        []*BillingReading `xml:"BillingReading"`
-	BillingReadingListr23 *Revision23Type   `xml:"BillingReadingList2023"`
 	*List
 }
 
 // BillingReadingSet is Time sequence of readings of the same reading type.
 type BillingReadingSet struct {
 	BillingReadingListLink *BillingReadingListLink `xml:"BillingReadingListLink"`
-	BillingReadingSetr23   *Revision23Type         `xml:"BillingReadingSet2023"`
 	*ReadingSetBase
 }
 
 // BillingReadingSetList is A List element to hold BillingReadingSet objects.
 type BillingReadingSetList struct {
 	BillingReadingSet        []*BillingReadingSet `xml:"BillingReadingSet"`
-	BillingReadingSetListr23 *Revision23Type      `xml:"BillingReadingSetList2023"`
 	*SubscribableList
 }
 
@@ -1055,7 +955,6 @@ type Charge struct {
 	Description string          `xml:"description"`
 	Kind        *ChargeKind     `xml:"kind"`
 	Value       int             `xml:"value"`
-	Charger23   *Revision23Type `xml:"Charge2023"`
 }
 
 // ChargeKind is Kind of charge.
@@ -1076,7 +975,6 @@ type CustomerAccount struct {
 	CustomerName              string                     `xml:"customerName"`
 	PricePowerOfTenMultiplier *PowerOfTenMultiplierType  `xml:"pricePowerOfTenMultiplier"`
 	ServiceSupplierLink       *ServiceSupplierLink       `xml:"ServiceSupplierLink"`
-	CustomerAccountr23        *Revision23Type            `xml:"CustomerAccount2023"`
 	*IdentifiedObject
 }
 
@@ -1084,7 +982,6 @@ type CustomerAccount struct {
 type CustomerAccountList struct {
 	PollRateAttr           uint32             `xml:"pollRate,attr,omitempty"`
 	CustomerAccount        []*CustomerAccount `xml:"CustomerAccount"`
-	CustomerAccountListr23 *Revision23Type    `xml:"CustomerAccountList2023"`
 	*SubscribableList
 }
 
@@ -1102,53 +999,45 @@ type CustomerAgreement struct {
 	TargetReadingListLink           *TargetReadingListLink           `xml:"TargetReadingListLink"`
 	TariffProfileLink               *TariffProfileLink               `xml:"TariffProfileLink"`
 	UsagePointLink                  *UsagePointLink                  `xml:"UsagePointLink"`
-	CustomerAgreementr23            *Revision23Type                  `xml:"CustomerAgreement2023"`
 	*IdentifiedObject
 }
 
 // CustomerAgreementList is A List element to hold CustomerAgreement objects.
 type CustomerAgreementList struct {
 	CustomerAgreement        []*CustomerAgreement `xml:"CustomerAgreement"`
-	CustomerAgreementListr23 *Revision23Type      `xml:"CustomerAgreementList2023"`
 	*SubscribableList
 }
 
 // HistoricalReading is To be used to present readings that have been processed and possibly corrected (as allowed, due to missing or incorrect data) by backend systems. This includes quality codes valid, verified, estimated, and derived / corrected.
 type HistoricalReading struct {
-	HistoricalReadingr23 *Revision23Type `xml:"HistoricalReading2023"`
 	*BillingMeterReadingBase
 }
 
 // HistoricalReadingList is A List element to hold HistoricalReading objects.
 type HistoricalReadingList struct {
 	HistoricalReading        []*HistoricalReading `xml:"HistoricalReading"`
-	HistoricalReadingListr23 *Revision23Type      `xml:"HistoricalReadingList2023"`
 	*List
 }
 
 // ProjectionReading is Contains values that forecast a future reading for the time or interval specified.
 type ProjectionReading struct {
-	ProjectionReadingr23 *Revision23Type `xml:"ProjectionReading2023"`
 	*BillingMeterReadingBase
 }
 
 // ProjectionReadingList is A List element to hold ProjectionReading objects.
 type ProjectionReadingList struct {
 	ProjectionReading        []*ProjectionReading `xml:"ProjectionReading"`
-	ProjectionReadingListr23 *Revision23Type      `xml:"ProjectionReadingList2023"`
 	*List
 }
 
 // TargetReading is Contains readings that specify a target or goal, such as a consumption target, to which billing incentives or other contractual ramifications may be associated.
 type TargetReading struct {
-	TargetReadingr23 *Revision23Type `xml:"TargetReading2023"`
 	*BillingMeterReadingBase
 }
 
 // TargetReadingList is A List element to hold TargetReading objects.
 type TargetReadingList struct {
 	TargetReading        []*TargetReading `xml:"TargetReading"`
-	TargetReadingListr23 *Revision23Type  `xml:"TargetReadingList2023"`
 	*List
 }
 
@@ -1158,7 +1047,6 @@ type ServiceSupplier struct {
 	Phone              string          `xml:"phone"`
 	ProviderID         uint32          `xml:"providerID"`
 	Web                string          `xml:"web"`
-	ServiceSupplierr23 *Revision23Type `xml:"ServiceSupplier2023"`
 	*IdentifiedObject
 }
 
@@ -1168,7 +1056,6 @@ type AccountBalance struct {
 	CreditStatus          *CreditStatusType `xml:"creditStatus"`
 	EmergencyCredit       *AccountingUnit   `xml:"emergencyCredit"`
 	EmergencyCreditStatus *CreditStatusType `xml:"emergencyCreditStatus"`
-	AccountBalancer23     *Revision23Type   `xml:"AccountBalance2023"`
 	*Resource
 }
 
@@ -1178,7 +1065,6 @@ type AccountingUnit struct {
 	MonetaryUnit      *CurrencyCode             `xml:"monetaryUnit"`
 	Multiplier        *PowerOfTenMultiplierType `xml:"multiplier"`
 	Value             int                       `xml:"value"`
-	AccountingUnitr23 *Revision23Type           `xml:"AccountingUnit2023"`
 }
 
 // CreditRegister is Token is security data that authenticates the legitimacy of the transaction. The details of this token are not defined by IEEE 2030.5. How a Prepayment server handles this field is left as vendor specific implementation or will be defined by one or more other standards.
@@ -1187,14 +1073,12 @@ type CreditRegister struct {
 	CreditType        *CreditTypeType `xml:"creditType"`
 	EffectiveTime     *TimeType       `xml:"effectiveTime"`
 	Token             string          `xml:"token"`
-	CreditRegisterr23 *Revision23Type `xml:"CreditRegister2023"`
 	*IdentifiedObject
 }
 
 // CreditRegisterList is A List element to hold CreditRegister objects.
 type CreditRegisterList struct {
 	CreditRegister        []*CreditRegister `xml:"CreditRegister"`
-	CreditRegisterListr23 *Revision23Type   `xml:"CreditRegisterList2023"`
 	*List
 }
 
@@ -1212,7 +1096,6 @@ type Prepayment struct {
 	SupplyInterruptionOverrideListLink       *SupplyInterruptionOverrideListLink       `xml:"SupplyInterruptionOverrideListLink"`
 	UsagePoint                               []*UsagePoint                             `xml:"UsagePoint"`
 	UsagePointLink                           *UsagePointLink                           `xml:"UsagePointLink"`
-	Prepaymentr23                            *Revision23Type                           `xml:"Prepayment2023"`
 	*IdentifiedObject
 }
 
@@ -1220,7 +1103,6 @@ type Prepayment struct {
 type PrepaymentList struct {
 	PollRateAttr      uint32          `xml:"pollRate,attr,omitempty"`
 	Prepayment        []*Prepayment   `xml:"Prepayment"`
-	PrepaymentListr23 *Revision23Type `xml:"PrepaymentList2023"`
 	*SubscribableList
 }
 
@@ -1239,7 +1121,6 @@ type PrepayOperationStatus struct {
 	CreditTypeInUse          *CreditTypeType    `xml:"creditTypeInUse"`
 	ServiceChange            *ServiceChange     `xml:"serviceChange"`
 	ServiceStatus            *ServiceStatusType `xml:"serviceStatus"`
-	PrepayOperationStatusr23 *Revision23Type    `xml:"PrepayOperationStatus2023"`
 	*Resource
 }
 
@@ -1247,21 +1128,18 @@ type PrepayOperationStatus struct {
 type ServiceChange struct {
 	NewStatus        *ServiceStatusType `xml:"newStatus"`
 	StartTime        *TimeType          `xml:"startTime"`
-	ServiceChanger23 *Revision23Type    `xml:"ServiceChange2023"`
 }
 
 // SupplyInterruptionOverride is Interval defines the period of time during which supply should not be interrupted.
 type SupplyInterruptionOverride struct {
 	Description                   string            `xml:"description"`
 	Interval                      *DateTimeInterval `xml:"interval"`
-	SupplyInterruptionOverrider23 *Revision23Type   `xml:"SupplyInterruptionOverride2023"`
 	*Resource
 }
 
 // SupplyInterruptionOverrideList is A List element to hold SupplyInterruptionOverride objects.
 type SupplyInterruptionOverrideList struct {
 	SupplyInterruptionOverride        []*SupplyInterruptionOverride `xml:"SupplyInterruptionOverride"`
-	SupplyInterruptionOverrideListr23 *Revision23Type               `xml:"SupplyInterruptionOverrideList2023"`
 	*List
 }
 
@@ -1287,7 +1165,6 @@ type CreditTypeType struct {
 type CreditTypeChange struct {
 	NewType             *CreditTypeType `xml:"newType"`
 	StartTime           *TimeType       `xml:"startTime"`
-	CreditTypeChanger23 *Revision23Type `xml:"CreditTypeChange2023"`
 }
 
 // ServiceStatusType is 0 - Connected
@@ -1308,7 +1185,6 @@ type ServiceStatusType struct {
 type RequestStatus struct {
 	DateTime         *TimeType       `xml:"dateTime"`
 	RequestStatus    uint8           `xml:"requestStatus"`
-	RequestStatusr23 *Revision23Type `xml:"RequestStatus2023"`
 }
 
 // FlowReservationRequest is Indicates the sustained level of power, in Watts, that is requested. For charging this is calculated by the storage device and it represents the charging system capability (which for an electric vehicle must also account for any power limitations due to the EVSE control pilot). For discharging, a lower value than the inverter capability can be used as a target.
@@ -1319,7 +1195,6 @@ type FlowReservationRequest struct {
 	IntervalRequested         *DateTimeInterval `xml:"intervalRequested"`
 	PowerRequested            *ActivePower      `xml:"powerRequested"`
 	RequestStatus             *RequestStatus    `xml:"RequestStatus"`
-	FlowReservationRequestr23 *Revision23Type   `xml:"FlowReservationRequest2023"`
 	*IdentifiedObject
 }
 
@@ -1327,7 +1202,6 @@ type FlowReservationRequest struct {
 type FlowReservationRequestList struct {
 	PollRateAttr                  uint32                    `xml:"pollRate,attr,omitempty"`
 	FlowReservationRequest        []*FlowReservationRequest `xml:"FlowReservationRequest"`
-	FlowReservationRequestListr23 *Revision23Type           `xml:"FlowReservationRequestList2023"`
 	*List
 }
 
@@ -1336,7 +1210,6 @@ type FlowReservationResponse struct {
 	EnergyAvailable            *SignedRealEnergy `xml:"energyAvailable"`
 	PowerAvailable             *ActivePower      `xml:"powerAvailable"`
 	Subject                    *MRIDType         `xml:"subject"`
-	FlowReservationResponser23 *Revision23Type   `xml:"FlowReservationResponse2023"`
 	*Event
 }
 
@@ -1344,7 +1217,6 @@ type FlowReservationResponse struct {
 type FlowReservationResponseList struct {
 	PollRateAttr                   uint32                     `xml:"pollRate,attr,omitempty"`
 	FlowReservationResponse        []*FlowReservationResponse `xml:"FlowReservationResponse"`
-	FlowReservationResponseListr23 *Revision23Type            `xml:"FlowReservationResponseList2023"`
 	*SubscribableList
 }
 
@@ -1352,7 +1224,6 @@ type FlowReservationResponseList struct {
 type DERList struct {
 	PollRateAttr uint32          `xml:"pollRate,attr,omitempty"`
 	DER          []*DER          `xml:"DER"`
-	DERListr23   *Revision23Type `xml:"DERList2023"`
 	*List
 }
 
@@ -1367,7 +1238,6 @@ type DER struct {
 	DERComponentListLink         *DERComponentListLink         `xml:"DERComponentListLink"`
 	DERSettingsLink              *DERSettingsLink              `xml:"DERSettingsLink"`
 	DERStatusLink                *DERStatusLink                `xml:"DERStatusLink"`
-	DERr23                       *Revision23Type               `xml:"DER2023"`
 	*SubscribableResource
 }
 
@@ -1414,14 +1284,12 @@ type CurrentDERControls struct {
 	OpModWattPF                 *DERCurveControlType                  `xml:"opModWattPF"`
 	OpModWattVar                *DERCurveControlType                  `xml:"opModWattVar"`
 	UpdatedTime                 *TimeType                             `xml:"updatedTime"`
-	CurrentDERControlsr23       *Revision23Type                       `xml:"CurrentDERControls2023"`
 	*SubscribableResource
 }
 
 // DERComponentList is A List element to hold DERComponent resources. These DERComponents are components of their parent DER.
 type DERComponentList struct {
 	DERComponent        []*DERComponent `xml:"DERComponent"`
-	DERComponentListr23 *Revision23Type `xml:"DERComponentList2023"`
 	*List
 }
 
@@ -1432,14 +1300,12 @@ type DERComponentBase struct {
 	DERCapabilityLink        *DERCapabilityLink        `xml:"DERCapabilityLink"`
 	DERSettingsLink          *DERSettingsLink          `xml:"DERSettingsLink"`
 	DERStatusLink            *DERStatusLink            `xml:"DERStatusLink"`
-	DERComponentBaser23      *Revision23Type           `xml:"DERComponentBase2023"`
 	*SubscribableResource
 }
 
 // DERComponent is The LFDI of the DERComponent.
 type DERComponent struct {
 	LFDI            string          `xml:"lFDI"`
-	DERComponentr23 *Revision23Type `xml:"DERComponent2023"`
 	*DERComponentBase
 }
 
@@ -1454,7 +1320,6 @@ type DERAvailability struct {
 	StatVarAvail         *ReactivePower         `xml:"statVarAvail"`
 	StatWAbsorbAvail     *UnsignedActivePower   `xml:"statWAbsorbAvail"`
 	StatWAvail           *ActivePower           `xml:"statWAvail"`
-	DERAvailabilityr23   *Revision23Type        `xml:"DERAvailability2023"`
 	*SubscribableResource
 }
 
@@ -1486,7 +1351,6 @@ type DERCapability struct {
 	RtgUnderExcitedW       *ActivePower         `xml:"rtgUnderExcitedW"`
 	RtgVNom                *VoltageRMS          `xml:"rtgVNom"`
 	Type                   *DERType             `xml:"type"`
-	DERCapabilityr23       *Revision23Type      `xml:"DERCapability2023"`
 	*Resource
 }
 
@@ -1522,7 +1386,6 @@ type DERSettings struct {
 	SetVRef               *VoltageRMS      `xml:"setVRef"`
 	SetVRefOfs            *VoltageRMS      `xml:"setVRefOfs"`
 	UpdatedTime           *TimeType        `xml:"updatedTime"`
-	DERSettingsr23        *Revision23Type  `xml:"DERSettings2023"`
 	*SubscribableResource
 }
 
@@ -1540,7 +1403,6 @@ type DERStatus struct {
 	StateOfChargeStatus    *StateOfChargeStatusType    `xml:"stateOfChargeStatus"`
 	StorageModeStatus      *StorageModeStatusType      `xml:"storageModeStatus"`
 	StorConnectStatus      *ConnectStatusType          `xml:"storConnectStatus"`
-	DERStatusr23           *Revision23Type             `xml:"DERStatus2023"`
 	*SubscribableResource
 }
 
@@ -1548,7 +1410,6 @@ type DERStatus struct {
 type DERProgramList struct {
 	PollRateAttr      uint32          `xml:"pollRate,attr,omitempty"`
 	DERProgram        []*DERProgram   `xml:"DERProgram"`
-	DERProgramListr23 *Revision23Type `xml:"DERProgramList2023"`
 	*SubscribableList
 }
 
@@ -1559,7 +1420,6 @@ type DERProgram struct {
 	DERControlListLink       *DERControlListLink       `xml:"DERControlListLink"`
 	DERCurveListLink         *DERCurveListLink         `xml:"DERCurveListLink"`
 	Primacy                  *PrimacyType              `xml:"primacy"`
-	DERProgramr23            *Revision23Type           `xml:"DERProgram2023"`
 	*SubscribableIdentifiedObject
 }
 
@@ -1606,7 +1466,6 @@ type DERControlBase struct {
 	OpModWattPF                 *DERCurveLink                         `xml:"opModWattPF"`
 	OpModWattVar                *DERCurveLink                         `xml:"opModWattVar"`
 	RampTms                     uint16                                `xml:"rampTms"`
-	DERControlBaser23           *Revision23Type                       `xml:"DERControlBase2023"`
 }
 
 // DefaultDERControl is Specifies the time at which the DefaultDERControl was last updated. Provides an additional mechanism to mRID and version for clients to determine when a DefaultDERControl has been updated.
@@ -1622,14 +1481,12 @@ type DefaultDERControl struct {
 	SetGradW             uint16          `xml:"setGradW"`
 	SetSoftGradW         uint16          `xml:"setSoftGradW"`
 	UpdatedTime          *TimeType       `xml:"updatedTime"`
-	DefaultDERControlr23 *Revision23Type `xml:"DefaultDERControl2023"`
 	*RespondableSubscribableIdentifiedObject
 }
 
 // DERControlList is A List element to hold DERControl objects.
 type DERControlList struct {
 	DERControl        []*DERControl   `xml:"DERControl"`
-	DERControlListr23 *Revision23Type `xml:"DERControlList2023"`
 	*SubscribableList
 }
 
@@ -1637,14 +1494,12 @@ type DERControlList struct {
 type DERControl struct {
 	DERControlBase *DERControlBase     `xml:"DERControlBase"`
 	DeviceCategory *DeviceCategoryType `xml:"deviceCategory"`
-	DERControlr23  *Revision23Type     `xml:"DERControl2023"`
 	*RandomizableEvent
 }
 
 // DERCurveList is A List element to hold DERCurve objects.
 type DERCurveList struct {
 	DERCurve        []*DERCurve     `xml:"DERCurve"`
-	DERCurveListr23 *Revision23Type `xml:"DERCurveList2023"`
 	*List
 }
 
@@ -1663,14 +1518,12 @@ type DERCurve struct {
 	XMultiplier                *PowerOfTenMultiplierType `xml:"xMultiplier"`
 	YMultiplier                *PowerOfTenMultiplierType `xml:"yMultiplier"`
 	YRefType                   *DERUnitRefType           `xml:"yRefType"`
-	DERCurver23                *Revision23Type           `xml:"DERCurve2023"`
 	*IdentifiedObject
 }
 
 // DERCurveControlType ...
 type DERCurveControlType struct {
 	DisabledAttr           bool            `xml:"disabled,attr,omitempty"`
-	DERCurveControlTyper23 *Revision23Type `xml:"DERCurveControlType2023"`
 	*DERCurve
 }
 
@@ -1679,7 +1532,6 @@ type CurveData struct {
 	Excitation   bool            `xml:"excitation"`
 	Xvalue       int             `xml:"xvalue"`
 	Yvalue       int             `xml:"yvalue"`
-	CurveDatar23 *Revision23Type `xml:"CurveData2023"`
 }
 
 // DERCurveType is 0 - opModFreqWatt (Frequency-Watt Curve DERControl Mode)
@@ -1706,13 +1558,11 @@ type DERCurveType struct {
 type ActivePower struct {
 	Multiplier     *PowerOfTenMultiplierType `xml:"multiplier"`
 	Value          int16                     `xml:"value"`
-	ActivePowerr23 *Revision23Type           `xml:"ActivePower2023"`
 }
 
 // ActivePowerControlType ...
 type ActivePowerControlType struct {
 	DisabledAttr              bool            `xml:"disabled,attr,omitempty"`
-	ActivePowerControlTyper23 *Revision23Type `xml:"ActivePowerControlType2023"`
 	*ActivePower
 }
 
@@ -1720,7 +1570,6 @@ type ActivePowerControlType struct {
 type ActivePowerDeltaControlType struct {
 	BidirectionalAttr              *UInt8          `xml:"bidirectional,attr,omitempty"`
 	DisabledAttr                   bool            `xml:"disabled,attr,omitempty"`
-	ActivePowerDeltaControlTyper23 *Revision23Type `xml:"ActivePowerDeltaControlType2023"`
 	*ActivePower
 }
 
@@ -1728,13 +1577,11 @@ type ActivePowerDeltaControlType struct {
 type UnsignedActivePower struct {
 	Multiplier             *PowerOfTenMultiplierType `xml:"multiplier"`
 	Value                  uint16                    `xml:"value"`
-	UnsignedActivePowerr23 *Revision23Type           `xml:"UnsignedActivePower2023"`
 }
 
 // UnsignedActivePowerControlType ...
 type UnsignedActivePowerControlType struct {
 	DisabledAttr                      bool            `xml:"disabled,attr,omitempty"`
-	UnsignedActivePowerControlTyper23 *Revision23Type `xml:"UnsignedActivePowerControlType2023"`
 	*UnsignedActivePower
 }
 
@@ -1742,48 +1589,41 @@ type UnsignedActivePowerControlType struct {
 type AmpereHour struct {
 	Multiplier    *PowerOfTenMultiplierType `xml:"multiplier"`
 	Value         uint16                    `xml:"value"`
-	AmpereHourr23 *Revision23Type           `xml:"AmpereHour2023"`
 }
 
 // ApparentPower is Value in volt-amperes (uom 61)
 type ApparentPower struct {
 	Multiplier       *PowerOfTenMultiplierType `xml:"multiplier"`
 	Value            uint16                    `xml:"value"`
-	ApparentPowerr23 *Revision23Type           `xml:"ApparentPower2023"`
 }
 
 // CurrentRMS is Value in amperes RMS (uom 5)
 type CurrentRMS struct {
 	Multiplier    *PowerOfTenMultiplierType `xml:"multiplier"`
 	Value         uint16                    `xml:"value"`
-	CurrentRMSr23 *Revision23Type           `xml:"CurrentRMS2023"`
 }
 
 // FixedPointType is Dimensionless value
 type FixedPointType struct {
 	Multiplier        *PowerOfTenMultiplierType `xml:"multiplier"`
 	Value             int16                     `xml:"value"`
-	FixedPointTyper23 *Revision23Type           `xml:"FixedPointType2023"`
 }
 
 // UnsignedFixedPointType is Dimensionless value
 type UnsignedFixedPointType struct {
 	Multiplier                *PowerOfTenMultiplierType `xml:"multiplier"`
 	Value                     uint16                    `xml:"value"`
-	UnsignedFixedPointTyper23 *Revision23Type           `xml:"UnsignedFixedPointType2023"`
 }
 
 // FixedVar is Specify a signed setpoint for reactive power in % (see 'refType' for context).
 type FixedVar struct {
 	RefType     *DERUnitRefType `xml:"refType"`
 	Value       *SignedPerCent  `xml:"value"`
-	FixedVarr23 *Revision23Type `xml:"FixedVar2023"`
 }
 
 // FixedVarControlType ...
 type FixedVarControlType struct {
 	DisabledAttr           bool            `xml:"disabled,attr,omitempty"`
-	FixedVarControlTyper23 *Revision23Type `xml:"FixedVarControlType2023"`
 	*FixedVar
 }
 
@@ -1791,13 +1631,11 @@ type FixedVarControlType struct {
 type UnsignedFixedVar struct {
 	RefType             *DERUnitRefType `xml:"refType"`
 	Value               *PerCent        `xml:"value"`
-	UnsignedFixedVarr23 *Revision23Type `xml:"UnsignedFixedVar2023"`
 }
 
 // UnsignedFixedVarControlType ...
 type UnsignedFixedVarControlType struct {
 	DisabledAttr                   bool            `xml:"disabled,attr,omitempty"`
-	UnsignedFixedVarControlTyper23 *Revision23Type `xml:"UnsignedFixedVarControlType2023"`
 	*UnsignedFixedVar
 }
 
@@ -1810,7 +1648,6 @@ type FreqDroopType struct {
 	KUF              uint16          `xml:"kUF"`
 	OpenLoopTms      uint16          `xml:"openLoopTms"`
 	PMin             *ActivePower    `xml:"pMin"`
-	FreqDroopTyper23 *Revision23Type `xml:"FreqDroopType2023"`
 }
 
 // PerCentControlType ...
@@ -1823,7 +1660,6 @@ type PerCentControlType struct {
 type PowerFactor struct {
 	Displacement   uint16                    `xml:"displacement"`
 	Multiplier     *PowerOfTenMultiplierType `xml:"multiplier"`
-	PowerFactorr23 *Revision23Type           `xml:"PowerFactor2023"`
 }
 
 // PowerFactorWithExcitation is Specifies exponent of 'displacement'.
@@ -1831,13 +1667,11 @@ type PowerFactorWithExcitation struct {
 	Displacement                 uint16                    `xml:"displacement"`
 	Excitation                   bool                      `xml:"excitation"`
 	Multiplier                   *PowerOfTenMultiplierType `xml:"multiplier"`
-	PowerFactorWithExcitationr23 *Revision23Type           `xml:"PowerFactorWithExcitation2023"`
 }
 
 // PowerFactorWithExcitationControlType ...
 type PowerFactorWithExcitationControlType struct {
 	DisabledAttr                            bool            `xml:"disabled,attr,omitempty"`
-	PowerFactorWithExcitationControlTyper23 *Revision23Type `xml:"PowerFactorWithExcitationControlType2023"`
 	*PowerFactorWithExcitation
 }
 
@@ -1845,13 +1679,11 @@ type PowerFactorWithExcitationControlType struct {
 type ReactivePower struct {
 	Multiplier       *PowerOfTenMultiplierType `xml:"multiplier"`
 	Value            int16                     `xml:"value"`
-	ReactivePowerr23 *Revision23Type           `xml:"ReactivePower2023"`
 }
 
 // ReactivePowerControlType ...
 type ReactivePowerControlType struct {
 	DisabledAttr                bool            `xml:"disabled,attr,omitempty"`
-	ReactivePowerControlTyper23 *Revision23Type `xml:"ReactivePowerControlType2023"`
 	*ReactivePower
 }
 
@@ -1859,7 +1691,6 @@ type ReactivePowerControlType struct {
 type ReactivePowerDeltaControlType struct {
 	BidirectionalAttr                *UInt8          `xml:"bidirectional,attr,omitempty"`
 	DisabledAttr                     bool            `xml:"disabled,attr,omitempty"`
-	ReactivePowerDeltaControlTyper23 *Revision23Type `xml:"ReactivePowerDeltaControlType2023"`
 	*ReactivePower
 }
 
@@ -1867,13 +1698,11 @@ type ReactivePowerDeltaControlType struct {
 type UnsignedReactivePower struct {
 	Multiplier               *PowerOfTenMultiplierType `xml:"multiplier"`
 	Value                    uint16                    `xml:"value"`
-	UnsignedReactivePowerr23 *Revision23Type           `xml:"UnsignedReactivePower2023"`
 }
 
 // UnsignedReactivePowerControlType ...
 type UnsignedReactivePowerControlType struct {
 	DisabledAttr                        bool            `xml:"disabled,attr,omitempty"`
-	UnsignedReactivePowerControlTyper23 *Revision23Type `xml:"UnsignedReactivePowerControlType2023"`
 	*UnsignedReactivePower
 }
 
@@ -1881,7 +1710,6 @@ type UnsignedReactivePowerControlType struct {
 type ReactiveSusceptance struct {
 	Multiplier             *PowerOfTenMultiplierType `xml:"multiplier"`
 	Value                  uint16                    `xml:"value"`
-	ReactiveSusceptancer23 *Revision23Type           `xml:"ReactiveSusceptance2023"`
 }
 
 // SignedPerCentControlType ...
@@ -1894,13 +1722,11 @@ type SignedPerCentControlType struct {
 type VoltageRMS struct {
 	Multiplier    *PowerOfTenMultiplierType `xml:"multiplier"`
 	Value         uint16                    `xml:"value"`
-	VoltageRMSr23 *Revision23Type           `xml:"VoltageRMS2023"`
 }
 
 // VoltageRMSControlType ...
 type VoltageRMSControlType struct {
 	DisabledAttr             bool            `xml:"disabled,attr,omitempty"`
-	VoltageRMSControlTyper23 *Revision23Type `xml:"VoltageRMSControlType2023"`
 	*VoltageRMS
 }
 
@@ -1908,21 +1734,18 @@ type VoltageRMSControlType struct {
 type WattHour struct {
 	Multiplier  *PowerOfTenMultiplierType `xml:"multiplier"`
 	Value       uint16                    `xml:"value"`
-	WattHourr23 *Revision23Type           `xml:"WattHour2023"`
 }
 
 // ConnectStatusType is The value indicating the state.
 type ConnectStatusType struct {
 	DateTime             *TimeType       `xml:"dateTime"`
 	Value                string          `xml:"value"`
-	ConnectStatusTyper23 *Revision23Type `xml:"ConnectStatusType2023"`
 }
 
 // ConnectStatusType2 is The value indicating the state.
 type ConnectStatusType2 struct {
 	DateTime              *TimeType       `xml:"dateTime"`
 	Value                 string          `xml:"value"`
-	ConnectStatusType2r23 *Revision23Type `xml:"ConnectStatusType22023"`
 }
 
 // DefaultDERControlType is DefaultDERControl elements. Bit positions SHALL be defined as follows:
@@ -2047,69 +1870,59 @@ type DERUnitRefType struct {
 type InverterStatusType struct {
 	DateTime              *TimeType       `xml:"dateTime"`
 	Value                 uint8           `xml:"value"`
-	InverterStatusTyper23 *Revision23Type `xml:"InverterStatusType2023"`
 }
 
 // LocalControlModeStatusType is The value indicating the state.
 type LocalControlModeStatusType struct {
 	DateTime                      *TimeType       `xml:"dateTime"`
 	Value                         uint8           `xml:"value"`
-	LocalControlModeStatusTyper23 *Revision23Type `xml:"LocalControlModeStatusType2023"`
 }
 
 // ManufacturerStatusType is The value indicating the state.
 type ManufacturerStatusType struct {
 	DateTime                  *TimeType       `xml:"dateTime"`
 	Value                     string          `xml:"value"`
-	ManufacturerStatusTyper23 *Revision23Type `xml:"ManufacturerStatusType2023"`
 }
 
 // OperationalModeStatusType is The value indicating the state.
 type OperationalModeStatusType struct {
 	DateTime                     *TimeType       `xml:"dateTime"`
 	Value                        uint8           `xml:"value"`
-	OperationalModeStatusTyper23 *Revision23Type `xml:"OperationalModeStatusType2023"`
 }
 
 // StateOfChargeStatusType is The value indicating the state.
 type StateOfChargeStatusType struct {
 	DateTime                   *TimeType       `xml:"dateTime"`
 	Value                      *PerCent        `xml:"value"`
-	StateOfChargeStatusTyper23 *Revision23Type `xml:"StateOfChargeStatusType2023"`
 }
 
 // StorageModeStatusType is The value indicating the state.
 type StorageModeStatusType struct {
 	DateTime                 *TimeType       `xml:"dateTime"`
 	Value                    uint8           `xml:"value"`
-	StorageModeStatusTyper23 *Revision23Type `xml:"StorageModeStatusType2023"`
 }
 
 // CurrentDERProgramLink is DEPRECATED
 // SHALL NOT be included by servers, but clients should note that it may be included by servers compliant with previous revisions of IEEE 2030.5.
 type CurrentDERProgramLink struct {
-	CurrentDERProgramLinkr23 *Revision23Type `xml:"CurrentDERProgramLink2023"`
 	*Link
 }
 
 // AggregationPriority is Contains the order in which an aggregation with a priority distribution is to be prioritized. If an aggregation has a distribution of Priority, then this resource SHALL be present. If an aggregation does not have a distribution of Priority, then this resource SHALL NOT be present. PriorityData SHALL be listed in order of priority, with the highest priority listed first. Note that if there are a large number of PriorityData, then  this resource could grow large. Devices SHOULD use Range / Content-Range for transferring large resources as well as HTTP HEAD or other HTTP mechanisms to determine the size of the resource.
 type AggregationPriority struct {
 	PriorityData           []*PriorityData `xml:"PriorityData"`
-	AggregationPriorityr23 *Revision23Type `xml:"AggregationPriority2023"`
 	*IdentifiedObject
 }
 
 // PriorityData is Contains an instance identifying data with which to prioritize an aggregation with a priority distribution.
 type PriorityData struct {
 	LFDI            string          `xml:"lFDI"`
-	PriorityDatar23 *Revision23Type `xml:"PriorityData2023"`
 }
 
 // AggregatedDeviceList is A List element to hold AggregatedDevice objects.
 type AggregatedDeviceList struct {
 	PollRateAttr            uint32              `xml:"pollRate,attr,omitempty"`
 	AggregatedDevice        []*AggregatedDevice `xml:"AggregatedDevice"`
-	AggregatedDeviceListr23 *Revision23Type     `xml:"AggregatedDeviceList2023"`
 	*SubscribableList
 }
 
@@ -2120,7 +1933,6 @@ type AggregatedDevice struct {
 	Enabled             bool                `xml:"enabled"`
 	LFDI                string              `xml:"lFDI"`
 	SFDI                *SFDIType           `xml:"sFDI"`
-	AggregatedDevicer23 *Revision23Type     `xml:"AggregatedDevice2023"`
 	*Resource
 }
 
@@ -2136,7 +1948,6 @@ type AggregationDistributionType struct {
 
 // ProxiedDevice is Asset container that performs one or more end device functions. Contains information about individual devices that are proxied by another device.
 type ProxiedDevice struct {
-	ProxiedDevicer23 *Revision23Type `xml:"ProxiedDevice2023"`
 	*ExternalDevice
 }
 
@@ -2144,589 +1955,493 @@ type ProxiedDevice struct {
 type ProxiedDeviceList struct {
 	PollRateAttr         uint32           `xml:"pollRate,attr,omitempty"`
 	ProxiedDevice        []*ProxiedDevice `xml:"ProxiedDevice"`
-	ProxiedDeviceListr23 *Revision23Type  `xml:"ProxiedDeviceList2023"`
 	*SubscribableList
 }
 
 // AccountBalanceLink is SHALL contain a Link to an instance of AccountBalance.
 type AccountBalanceLink struct {
-	AccountBalanceLinkr23 *Revision23Type `xml:"AccountBalanceLink2023"`
 	*Link
 }
 
 // AggregatedDeviceListLink is SHALL contain a Link to a List of AggregatedDevice instances.
 // An AbstractDevice (and its derivatives) MAY be an aggregation of multiple assets. If so, it MAY contain an AggregatedDeviceList.
 type AggregatedDeviceListLink struct {
-	AggregatedDeviceListLinkr23 *Revision23Type `xml:"AggregatedDeviceListLink2023"`
 	*ListLink
 }
 
 // AggregationPriorityLink is SHALL contain a Link to an instance of AggregationPriority. If present, this resource contains the order in which an aggregation with a priority distribution is to be prioritized.
 type AggregationPriorityLink struct {
-	AggregationPriorityLinkr23 *Revision23Type `xml:"AggregationPriorityLink2023"`
 	*Link
 }
 
 // AssociatedDERProgramListLink is SHALL contain a Link to a List of DERPrograms having the DERControl(s) for this DER.
 type AssociatedDERProgramListLink struct {
-	AssociatedDERProgramListLinkr23 *Revision23Type `xml:"AssociatedDERProgramListLink2023"`
 	*ListLink
 }
 
 // AssociatedUsagePointLink is SHALL contain a Link to an instance of UsagePoint.  If present, this is the submeter that monitors the DER output. This is also the point of reference, or reference point of applicability, for voltage, limits, controls, etc.
 type AssociatedUsagePointLink struct {
-	AssociatedUsagePointLinkr23 *Revision23Type `xml:"AssociatedUsagePointLink2023"`
 	*Link
 }
 
 // BillingPeriodListLink is SHALL contain a Link to a List of BillingPeriod instances.
 type BillingPeriodListLink struct {
-	BillingPeriodListLinkr23 *Revision23Type `xml:"BillingPeriodListLink2023"`
 	*ListLink
 }
 
 // BillingReadingListLink is SHALL contain a Link to a List of BillingReading instances.
 type BillingReadingListLink struct {
-	BillingReadingListLinkr23 *Revision23Type `xml:"BillingReadingListLink2023"`
 	*ListLink
 }
 
 // BillingReadingSetListLink is SHALL contain a Link to a List of BillingReadingSet instances.
 type BillingReadingSetListLink struct {
-	BillingReadingSetListLinkr23 *Revision23Type `xml:"BillingReadingSetListLink2023"`
 	*ListLink
 }
 
 // ConfigurationLink is SHALL contain a Link to an instance of Configuration.
 type ConfigurationLink struct {
-	ConfigurationLinkr23 *Revision23Type `xml:"ConfigurationLink2023"`
 	*Link
 }
 
 // ConsumptionTariffIntervalListLink is SHALL contain a Link to a List of ConsumptionTariffInterval instances.
 type ConsumptionTariffIntervalListLink struct {
-	ConsumptionTariffIntervalListLinkr23 *Revision23Type `xml:"ConsumptionTariffIntervalListLink2023"`
 	*ListLink
 }
 
 // CreditRegisterListLink is SHALL contain a Link to a List of CreditRegister instances.
 type CreditRegisterListLink struct {
-	CreditRegisterListLinkr23 *Revision23Type `xml:"CreditRegisterListLink2023"`
 	*ListLink
 }
 
 // CurrentDERControlsLink is SHALL contain a Link to the CurrentDERControls for this DER.
 type CurrentDERControlsLink struct {
-	CurrentDERControlsLinkr23 *Revision23Type `xml:"CurrentDERControlsLink2023"`
 	*Link
 }
 
 // CustomerAccountLink is SHALL contain a Link to an instance of CustomerAccount.
 type CustomerAccountLink struct {
-	CustomerAccountLinkr23 *Revision23Type `xml:"CustomerAccountLink2023"`
 	*Link
 }
 
 // CustomerAccountListLink is SHALL contain a Link to a List of CustomerAccount instances.
 type CustomerAccountListLink struct {
-	CustomerAccountListLinkr23 *Revision23Type `xml:"CustomerAccountListLink2023"`
 	*ListLink
 }
 
 // CustomerAgreementListLink is SHALL contain a Link to a List of CustomerAgreement instances.
 type CustomerAgreementListLink struct {
-	CustomerAgreementListLinkr23 *Revision23Type `xml:"CustomerAgreementListLink2023"`
 	*ListLink
 }
 
 // DefaultDERControlLink is SHALL contain a Link to an instance of DefaultDERControl containing the default DERControl Mode(s) of the DER which MAY be overridden by DERControl events.
 type DefaultDERControlLink struct {
-	DefaultDERControlLinkr23 *Revision23Type `xml:"DefaultDERControlLink2023"`
 	*Link
 }
 
 // DemandResponseProgramLink is SHALL contain a Link to an instance of DemandResponseProgram.
 type DemandResponseProgramLink struct {
-	DemandResponseProgramLinkr23 *Revision23Type `xml:"DemandResponseProgramLink2023"`
 	*Link
 }
 
 // DemandResponseProgramListLink is SHALL contain a Link to a List of DemandResponseProgram instances.
 type DemandResponseProgramListLink struct {
-	DemandResponseProgramListLinkr23 *Revision23Type `xml:"DemandResponseProgramListLink2023"`
 	*ListLink
 }
 
 // DERAvailabilityLink is SHALL contain a Link to an instance of DERAvailability.
 type DERAvailabilityLink struct {
-	DERAvailabilityLinkr23 *Revision23Type `xml:"DERAvailabilityLink2023"`
 	*Link
 }
 
 // DERCapabilityLink is SHALL contain a Link to an instance of DERCapability.
 type DERCapabilityLink struct {
-	DERCapabilityLinkr23 *Revision23Type `xml:"DERCapabilityLink2023"`
 	*Link
 }
 
 // DERComponentListLink is SHALL contain a Link to a List of DERComponent instances.
 type DERComponentListLink struct {
-	DERComponentListLinkr23 *Revision23Type `xml:"DERComponentListLink2023"`
 	*ListLink
 }
 
 // DERControlListLink is SHALL contain a Link to a List of DERControl instances.
 type DERControlListLink struct {
-	DERControlListLinkr23 *Revision23Type `xml:"DERControlListLink2023"`
 	*ListLink
 }
 
 // DERCurveLink is SHALL contain a Link to an instance of DERCurve.
 type DERCurveLink struct {
 	DisabledAttr    bool            `xml:"disabled,attr,omitempty"`
-	DERCurveLinkr23 *Revision23Type `xml:"DERCurveLink2023"`
 	*Link
 }
 
 // DERCurveListLink is SHALL contain a Link to a List of DERCurve instances.
 type DERCurveListLink struct {
-	DERCurveListLinkr23 *Revision23Type `xml:"DERCurveListLink2023"`
 	*ListLink
 }
 
 // DERLink is SHALL contain a Link to an instance of DER.
 type DERLink struct {
-	DERLinkr23 *Revision23Type `xml:"DERLink2023"`
 	*Link
 }
 
 // DERListLink is SHALL contain a Link to a List of DER instances.
 type DERListLink struct {
-	DERListLinkr23 *Revision23Type `xml:"DERListLink2023"`
 	*ListLink
 }
 
 // DERProgramLink is SHALL contain a Link to an instance of DERProgram.
 type DERProgramLink struct {
-	DERProgramLinkr23 *Revision23Type `xml:"DERProgramLink2023"`
 	*Link
 }
 
 // DERProgramListLink is SHALL contain a Link to a List of DERProgram instances.
 type DERProgramListLink struct {
-	DERProgramListLinkr23 *Revision23Type `xml:"DERProgramListLink2023"`
 	*ListLink
 }
 
 // DERSettingsLink is SHALL contain a Link to an instance of DERSettings.
 type DERSettingsLink struct {
-	DERSettingsLinkr23 *Revision23Type `xml:"DERSettingsLink2023"`
 	*Link
 }
 
 // DERStatusLink is SHALL contain a Link to an instance of DERStatus.
 type DERStatusLink struct {
-	DERStatusLinkr23 *Revision23Type `xml:"DERStatusLink2023"`
 	*Link
 }
 
 // DeviceCapabilityLink is SHALL contain a Link to an instance of DeviceCapability.
 type DeviceCapabilityLink struct {
-	DeviceCapabilityLinkr23 *Revision23Type `xml:"DeviceCapabilityLink2023"`
 	*Link
 }
 
 // DeviceInformationLink is SHALL contain a Link to an instance of DeviceInformation.
 type DeviceInformationLink struct {
-	DeviceInformationLinkr23 *Revision23Type `xml:"DeviceInformationLink2023"`
 	*Link
 }
 
 // DeviceStatusLink is SHALL contain a Link to an instance of DeviceStatus.
 type DeviceStatusLink struct {
-	DeviceStatusLinkr23 *Revision23Type `xml:"DeviceStatusLink2023"`
 	*Link
 }
 
 // EndDeviceControlListLink is SHALL contain a Link to a List of EndDeviceControl instances.
 type EndDeviceControlListLink struct {
-	EndDeviceControlListLinkr23 *Revision23Type `xml:"EndDeviceControlListLink2023"`
 	*ListLink
 }
 
 // EndDeviceLink is SHALL contain a Link to an instance of EndDevice.
 type EndDeviceLink struct {
-	EndDeviceLinkr23 *Revision23Type `xml:"EndDeviceLink2023"`
 	*Link
 }
 
 // EndDeviceListLink is SHALL contain a Link to a List of EndDevice instances.
 type EndDeviceListLink struct {
-	EndDeviceListLinkr23 *Revision23Type `xml:"EndDeviceListLink2023"`
 	*ListLink
 }
 
 // FileLink is This element SHALL be set to the URI of the most recent File being loaded/activated by the LD. In the case of file status 0, this element SHALL be omitted.
 type FileLink struct {
-	FileLinkr23 *Revision23Type `xml:"FileLink2023"`
 	*Link
 }
 
 // FileListLink is SHALL contain a Link to a List of File instances.
 type FileListLink struct {
-	FileListLinkr23 *Revision23Type `xml:"FileListLink2023"`
 	*ListLink
 }
 
 // FileStatusLink is SHALL contain a Link to an instance of FileStatus.
 type FileStatusLink struct {
-	FileStatusLinkr23 *Revision23Type `xml:"FileStatusLink2023"`
 	*Link
 }
 
 // FlowReservationRequestListLink is SHALL contain a Link to a List of FlowReservationRequest instances.
 type FlowReservationRequestListLink struct {
-	FlowReservationRequestListLinkr23 *Revision23Type `xml:"FlowReservationRequestListLink2023"`
 	*ListLink
 }
 
 // FlowReservationResponseListLink is SHALL contain a Link to a List of FlowReservationResponse instances.
 type FlowReservationResponseListLink struct {
-	FlowReservationResponseListLinkr23 *Revision23Type `xml:"FlowReservationResponseListLink2023"`
 	*ListLink
 }
 
 // FunctionSetAssignmentsListLink is SHALL contain a Link to a List of FunctionSetAssignments instances.
 type FunctionSetAssignmentsListLink struct {
-	FunctionSetAssignmentsListLinkr23 *Revision23Type `xml:"FunctionSetAssignmentsListLink2023"`
 	*ListLink
 }
 
 // HistoricalReadingListLink is SHALL contain a Link to a List of HistoricalReading instances.
 type HistoricalReadingListLink struct {
-	HistoricalReadingListLinkr23 *Revision23Type `xml:"HistoricalReadingListLink2023"`
 	*ListLink
 }
 
 // IPAddrListLink is SHALL contain a Link to a List of IPAddr instances.
 type IPAddrListLink struct {
-	IPAddrListLinkr23 *Revision23Type `xml:"IPAddrListLink2023"`
 	*ListLink
 }
 
 // IPInterfaceListLink is SHALL contain a Link to a List of IPInterface instances.
 type IPInterfaceListLink struct {
-	IPInterfaceListLinkr23 *Revision23Type `xml:"IPInterfaceListLink2023"`
 	*ListLink
 }
 
 // LLInterfaceListLink is SHALL contain a Link to a List of LLInterface instances.
 type LLInterfaceListLink struct {
-	LLInterfaceListLinkr23 *Revision23Type `xml:"LLInterfaceListLink2023"`
 	*ListLink
 }
 
 // LoadShedAvailabilityListLink is SHALL contain a Link to a List of LoadShedAvailability instances.
 type LoadShedAvailabilityListLink struct {
-	LoadShedAvailabilityListLinkr23 *Revision23Type `xml:"LoadShedAvailabilityListLink2023"`
 	*ListLink
 }
 
 // LogEventListLink is SHALL contain a Link to a List of LogEvent instances.
 type LogEventListLink struct {
-	LogEventListLinkr23 *Revision23Type `xml:"LogEventListLink2023"`
 	*ListLink
 }
 
 // MessagingProgramListLink is SHALL contain a Link to a List of MessagingProgram instances.
 type MessagingProgramListLink struct {
-	MessagingProgramListLinkr23 *Revision23Type `xml:"MessagingProgramListLink2023"`
 	*ListLink
 }
 
 // MeterReadingLink is SHALL contain a Link to an instance of MeterReading.
 type MeterReadingLink struct {
-	MeterReadingLinkr23 *Revision23Type `xml:"MeterReadingLink2023"`
 	*Link
 }
 
 // MeterReadingListLink is SHALL contain a Link to a List of MeterReading instances.
 type MeterReadingListLink struct {
-	MeterReadingListLinkr23 *Revision23Type `xml:"MeterReadingListLink2023"`
 	*ListLink
 }
 
 // MirrorUsagePointListLink is SHALL contain a Link to a List of MirrorUsagePoint instances.
 type MirrorUsagePointListLink struct {
-	MirrorUsagePointListLinkr23 *Revision23Type `xml:"MirrorUsagePointListLink2023"`
 	*ListLink
 }
 
 // NeighborListLink is SHALL contain a Link to a List of Neighbor instances.
 type NeighborListLink struct {
-	NeighborListLinkr23 *Revision23Type `xml:"NeighborListLink2023"`
 	*ListLink
 }
 
 // NotificationListLink is SHALL contain a Link to a List of Notification instances.
 type NotificationListLink struct {
-	NotificationListLinkr23 *Revision23Type `xml:"NotificationListLink2023"`
 	*ListLink
 }
 
 // PowerStatusLink is SHALL contain a Link to an instance of PowerStatus.
 type PowerStatusLink struct {
-	PowerStatusLinkr23 *Revision23Type `xml:"PowerStatusLink2023"`
 	*Link
 }
 
 // PrepaymentLink is SHALL contain a Link to an instance of Prepayment.
 type PrepaymentLink struct {
-	PrepaymentLinkr23 *Revision23Type `xml:"PrepaymentLink2023"`
 	*Link
 }
 
 // PrepaymentListLink is SHALL contain a Link to a List of Prepayment instances.
 type PrepaymentListLink struct {
-	PrepaymentListLinkr23 *Revision23Type `xml:"PrepaymentListLink2023"`
 	*ListLink
 }
 
 // PrepayOperationStatusLink is SHALL contain a Link to an instance of PrepayOperationStatus.
 type PrepayOperationStatusLink struct {
-	PrepayOperationStatusLinkr23 *Revision23Type `xml:"PrepayOperationStatusLink2023"`
 	*Link
 }
 
 // PriceResponseCfgListLink is SHALL contain a Link to a List of PriceResponseCfg instances.
 type PriceResponseCfgListLink struct {
-	PriceResponseCfgListLinkr23 *Revision23Type `xml:"PriceResponseCfgListLink2023"`
 	*ListLink
 }
 
 // ProjectionReadingListLink is SHALL contain a Link to a List of ProjectionReading instances.
 type ProjectionReadingListLink struct {
-	ProjectionReadingListLinkr23 *Revision23Type `xml:"ProjectionReadingListLink2023"`
 	*ListLink
 }
 
 // ProxiedDeviceListLink is SHALL contain a Link to a List of Proxied EndDevice instances.
 type ProxiedDeviceListLink struct {
-	ProxiedDeviceListLinkr23 *Revision23Type `xml:"ProxiedDeviceListLink2023"`
 	*ListLink
 }
 
 // RateComponentLink is SHALL contain a Link to an instance of RateComponent.
 type RateComponentLink struct {
-	RateComponentLinkr23 *Revision23Type `xml:"RateComponentLink2023"`
 	*Link
 }
 
 // RateComponentListLink is SHALL contain a Link to a List of RateComponent instances.
 type RateComponentListLink struct {
-	RateComponentListLinkr23 *Revision23Type `xml:"RateComponentListLink2023"`
 	*ListLink
 }
 
 // ReadingLink is A Link to a Reading.
 type ReadingLink struct {
-	ReadingLinkr23 *Revision23Type `xml:"ReadingLink2023"`
 	*Link
 }
 
 // ReadingListLink is SHALL contain a Link to a List of Reading instances.
 type ReadingListLink struct {
-	ReadingListLinkr23 *Revision23Type `xml:"ReadingListLink2023"`
 	*ListLink
 }
 
 // ReadingSetListLink is SHALL contain a Link to a List of ReadingSet instances.
 type ReadingSetListLink struct {
-	ReadingSetListLinkr23 *Revision23Type `xml:"ReadingSetListLink2023"`
 	*ListLink
 }
 
 // ReadingTypeLink is SHALL contain a Link to an instance of ReadingType.
 type ReadingTypeLink struct {
-	ReadingTypeLinkr23 *Revision23Type `xml:"ReadingTypeLink2023"`
 	*Link
 }
 
 // RegistrationLink is SHALL contain a Link to an instance of Registration.
 type RegistrationLink struct {
-	RegistrationLinkr23 *Revision23Type `xml:"RegistrationLink2023"`
 	*Link
 }
 
 // ResponseListLink is SHALL contain a Link to a List of Response instances.
 type ResponseListLink struct {
-	ResponseListLinkr23 *Revision23Type `xml:"ResponseListLink2023"`
 	*ListLink
 }
 
 // ResponseSetListLink is SHALL contain a Link to a List of ResponseSet instances.
 type ResponseSetListLink struct {
-	ResponseSetListLinkr23 *Revision23Type `xml:"ResponseSetListLink2023"`
 	*ListLink
 }
 
 // RPLInstanceListLink is SHALL contain a Link to a List of RPLInterface instances.
 type RPLInstanceListLink struct {
-	RPLInstanceListLinkr23 *Revision23Type `xml:"RPLInstanceListLink2023"`
 	*ListLink
 }
 
 // RPLSourceRoutesListLink is SHALL contain a Link to a List of RPLSourceRoutes instances.
 type RPLSourceRoutesListLink struct {
-	RPLSourceRoutesListLinkr23 *Revision23Type `xml:"RPLSourceRoutesListLink2023"`
 	*ListLink
 }
 
 // SelfDeviceLink is SHALL contain a Link to an instance of SelfDevice.
 type SelfDeviceLink struct {
-	SelfDeviceLinkr23 *Revision23Type `xml:"SelfDeviceLink2023"`
 	*Link
 }
 
 // ServiceSupplierLink is SHALL contain a Link to an instance of ServiceSupplier.
 type ServiceSupplierLink struct {
-	ServiceSupplierLinkr23 *Revision23Type `xml:"ServiceSupplierLink2023"`
 	*Link
 }
 
 // SubscriptionListLink is SHALL contain a Link to a List of Subscription instances.
 type SubscriptionListLink struct {
-	SubscriptionListLinkr23 *Revision23Type `xml:"SubscriptionListLink2023"`
 	*ListLink
 }
 
 // SupplyInterruptionOverrideListLink is SHALL contain a Link to a List of SupplyInterruptionOverride instances.
 type SupplyInterruptionOverrideListLink struct {
-	SupplyInterruptionOverrideListLinkr23 *Revision23Type `xml:"SupplyInterruptionOverrideListLink2023"`
 	*ListLink
 }
 
 // SupportedLocaleListLink is SHALL contain a Link to a List of SupportedLocale instances.
 type SupportedLocaleListLink struct {
-	SupportedLocaleListLinkr23 *Revision23Type `xml:"SupportedLocaleListLink2023"`
 	*ListLink
 }
 
 // TargetReadingListLink is SHALL contain a Link to a List of TargetReading instances.
 type TargetReadingListLink struct {
-	TargetReadingListLinkr23 *Revision23Type `xml:"TargetReadingListLink2023"`
 	*ListLink
 }
 
 // TariffProfileLink is SHALL contain a Link to an instance of TariffProfile.
 type TariffProfileLink struct {
-	TariffProfileLinkr23 *Revision23Type `xml:"TariffProfileLink2023"`
 	*Link
 }
 
 // TariffProfileListLink is SHALL contain a Link to a List of TariffProfile instances.
 type TariffProfileListLink struct {
-	TariffProfileListLinkr23 *Revision23Type `xml:"TariffProfileListLink2023"`
 	*ListLink
 }
 
 // TextMessageListLink is SHALL contain a Link to a List of TextMessage instances.
 type TextMessageListLink struct {
-	TextMessageListLinkr23 *Revision23Type `xml:"TextMessageListLink2023"`
 	*ListLink
 }
 
 // TimeLink is SHALL contain a Link to an instance of Time.
 type TimeLink struct {
-	TimeLinkr23 *Revision23Type `xml:"TimeLink2023"`
 	*Link
 }
 
 // TimeTariffIntervalListLink is SHALL contain a Link to a List of TimeTariffInterval instances.
 type TimeTariffIntervalListLink struct {
-	TimeTariffIntervalListLinkr23 *Revision23Type `xml:"TimeTariffIntervalListLink2023"`
 	*ListLink
 }
 
 // UsagePointLink is SHALL contain a Link to an instance of UsagePoint.
 type UsagePointLink struct {
-	UsagePointLinkr23 *Revision23Type `xml:"UsagePointLink2023"`
 	*Link
 }
 
 // UsagePointListLink is SHALL contain a Link to a List of UsagePoint instances.
 type UsagePointListLink struct {
-	UsagePointListLinkr23 *Revision23Type `xml:"UsagePointListLink2023"`
 	*ListLink
 }
 
 // ActiveBillingPeriodListLink is DEPRECATED
 // SHALL NOT be included by servers, but clients should note that it may be included by servers compliant with previous revisions of IEEE 2030.5.
 type ActiveBillingPeriodListLink struct {
-	ActiveBillingPeriodListLinkr23 *Revision23Type `xml:"ActiveBillingPeriodListLink2023"`
 	*ListLink
 }
 
 // ActiveCreditRegisterListLink is DEPRECATED
 // SHALL NOT be included by servers, but clients should note that it may be included by servers compliant with previous revisions of IEEE 2030.5.
 type ActiveCreditRegisterListLink struct {
-	ActiveCreditRegisterListLinkr23 *Revision23Type `xml:"ActiveCreditRegisterListLink2023"`
 	*ListLink
 }
 
 // ActiveDERControlListLink is DEPRECATED
 // SHALL NOT be included by servers, but clients should note that it may be included by servers compliant with previous revisions of IEEE 2030.5.
 type ActiveDERControlListLink struct {
-	ActiveDERControlListLinkr23 *Revision23Type `xml:"ActiveDERControlListLink2023"`
 	*ListLink
 }
 
 // ActiveEndDeviceControlListLink is DEPRECATED
 // SHALL NOT be included by servers, but clients should note that it may be included by servers compliant with previous revisions of IEEE 2030.5.
 type ActiveEndDeviceControlListLink struct {
-	ActiveEndDeviceControlListLinkr23 *Revision23Type `xml:"ActiveEndDeviceControlListLink2023"`
 	*ListLink
 }
 
 // ActiveFlowReservationListLink is DEPRECATED
 // SHALL NOT be included by servers, but clients should note that it may be included by servers compliant with previous revisions of IEEE 2030.5.
 type ActiveFlowReservationListLink struct {
-	ActiveFlowReservationListLinkr23 *Revision23Type `xml:"ActiveFlowReservationListLink2023"`
 	*ListLink
 }
 
 // ActiveProjectionReadingListLink is DEPRECATED
 // SHALL NOT be included by servers, but clients should note that it may be included by servers compliant with previous revisions of IEEE 2030.5.
 type ActiveProjectionReadingListLink struct {
-	ActiveProjectionReadingListLinkr23 *Revision23Type `xml:"ActiveProjectionReadingListLink2023"`
 	*ListLink
 }
 
 // ActiveSupplyInterruptionOverrideListLink is DEPRECATED
 // SHALL NOT be included by servers, but clients should note that it may be included by servers compliant with previous revisions of IEEE 2030.5.
 type ActiveSupplyInterruptionOverrideListLink struct {
-	ActiveSupplyInterruptionOverrideListLinkr23 *Revision23Type `xml:"ActiveSupplyInterruptionOverrideListLink2023"`
 	*ListLink
 }
 
 // ActiveTargetReadingListLink is DEPRECATED
 // SHALL NOT be included by servers, but clients should note that it may be included by servers compliant with previous revisions of IEEE 2030.5.
 type ActiveTargetReadingListLink struct {
-	ActiveTargetReadingListLinkr23 *Revision23Type `xml:"ActiveTargetReadingListLink2023"`
 	*ListLink
 }
 
 // ActiveTextMessageListLink is DEPRECATED
 // SHALL NOT be included by servers, but clients should note that it may be included by servers compliant with previous revisions of IEEE 2030.5.
 type ActiveTextMessageListLink struct {
-	ActiveTextMessageListLinkr23 *Revision23Type `xml:"ActiveTextMessageListLink2023"`
 	*ListLink
 }
 
 // ActiveTimeTariffIntervalListLink is DEPRECATED
 // SHALL NOT be included by servers, but clients should note that it may be included by servers compliant with previous revisions of IEEE 2030.5.
 type ActiveTimeTariffIntervalListLink struct {
-	ActiveTimeTariffIntervalListLinkr23 *Revision23Type `xml:"ActiveTimeTariffIntervalListLink2023"`
 	*ListLink
 }
 
@@ -2735,35 +2450,30 @@ type IdentifiedObject struct {
 	MRID                *MRIDType       `xml:"mRID"`
 	Description         string          `xml:"description"`
 	Version             *VersionType    `xml:"version"`
-	IdentifiedObjectr23 *Revision23Type `xml:"IdentifiedObject2023"`
 	*Resource
 }
 
 // Link is Links provide a reference, via URI, to another resource.
 type Link struct {
 	HrefAttr string          `xml:"href,attr"`
-	Linkr23  *Revision23Type `xml:"Link2023"`
 }
 
 // List is Container to hold a collection of object instances or references. See Design Pattern section for additional details.
 type List struct {
 	AllAttr     uint32          `xml:"all,attr"`
 	ResultsAttr uint32          `xml:"results,attr"`
-	Listr23     *Revision23Type `xml:"List2023"`
 	*Resource
 }
 
 // ListLink is ListLinks provide a reference, via URI, to a List.
 type ListLink struct {
 	AllAttr     uint32          `xml:"all,attr,omitempty"`
-	ListLinkr23 *Revision23Type `xml:"ListLink2023"`
 	*Link
 }
 
 // Resource is A resource is an addressable unit of information, either a collection (List) or instance of an object (identifiedObject, or simply, Resource)
 type Resource struct {
 	HrefAttr    string          `xml:"href,attr,omitempty"`
-	Resourcer23 *Revision23Type `xml:"Resource2023"`
 }
 
 // RespondableIdentifiedObject is Contains the version number of the object. See the type definition for details.
@@ -2771,7 +2481,6 @@ type RespondableIdentifiedObject struct {
 	MRID                           *MRIDType       `xml:"mRID"`
 	Description                    string          `xml:"description"`
 	Version                        *VersionType    `xml:"version"`
-	RespondableIdentifiedObjectr23 *Revision23Type `xml:"RespondableIdentifiedObject2023"`
 	*RespondableResource
 }
 
@@ -2779,7 +2488,6 @@ type RespondableIdentifiedObject struct {
 type RespondableResource struct {
 	ReplyToAttr            string          `xml:"replyTo,attr,omitempty"`
 	ResponseRequiredAttr   string          `xml:"responseRequired,attr,omitempty"`
-	RespondableResourcer23 *Revision23Type `xml:"RespondableResource2023"`
 	*Resource
 }
 
@@ -2789,7 +2497,6 @@ type RespondableSubscribableIdentifiedObject struct {
 	MRID                                       *MRIDType       `xml:"mRID"`
 	Description                                string          `xml:"description"`
 	Version                                    *VersionType    `xml:"version"`
-	RespondableSubscribableIdentifiedObjectr23 *Revision23Type `xml:"RespondableSubscribableIdentifiedObject2023"`
 	*RespondableResource
 }
 
@@ -2798,7 +2505,6 @@ type SubscribableIdentifiedObject struct {
 	MRID                            *MRIDType       `xml:"mRID"`
 	Description                     string          `xml:"description"`
 	Version                         *VersionType    `xml:"version"`
-	SubscribableIdentifiedObjectr23 *Revision23Type `xml:"SubscribableIdentifiedObject2023"`
 	*SubscribableResource
 }
 
@@ -2806,14 +2512,12 @@ type SubscribableIdentifiedObject struct {
 type SubscribableList struct {
 	AllAttr             uint32          `xml:"all,attr"`
 	ResultsAttr         uint32          `xml:"results,attr"`
-	SubscribableListr23 *Revision23Type `xml:"SubscribableList2023"`
 	*SubscribableResource
 }
 
 // SubscribableResource is A Resource to which a Subscription can be requested.
 type SubscribableResource struct {
 	SubscribableAttr        *UInt8          `xml:"subscribable,attr,omitempty"`
-	SubscribableResourcer23 *Revision23Type `xml:"SubscribableResource2023"`
 	*Resource
 }
 
@@ -2828,7 +2532,6 @@ type SubscribableResource struct {
 type Error struct {
 	MaxRetryDuration uint16          `xml:"maxRetryDuration"`
 	ReasonCode       uint16          `xml:"reasonCode"`
-	Errorr23         *Revision23Type `xml:"Error2023"`
 }
 
 // Event is The period during which the Event applies.
@@ -2836,7 +2539,6 @@ type Event struct {
 	CreationTime *TimeType         `xml:"creationTime"`
 	EventStatus  *EventStatus      `xml:"EventStatus"`
 	Interval     *DateTimeInterval `xml:"interval"`
-	Eventr23     *Revision23Type   `xml:"Event2023"`
 	*RespondableSubscribableIdentifiedObject
 }
 
@@ -2847,14 +2549,12 @@ type EventStatus struct {
 	PotentiallySuperseded     bool            `xml:"potentiallySuperseded"`
 	PotentiallySupersededTime *TimeType       `xml:"potentiallySupersededTime"`
 	Reason                    string          `xml:"reason"`
-	EventStatusr23            *Revision23Type `xml:"EventStatus2023"`
 }
 
 // RandomizableEvent is Number of seconds boundary inside which a random value must be selected to be applied to the associated interval start time, to avoid sudden synchronized demand changes. If related to price level changes, sign may be ignored. Valid range is -3600 to 3600. If not specified, 0 is the default.
 type RandomizableEvent struct {
 	RandomizeDuration    *OneHourRangeType `xml:"randomizeDuration"`
 	RandomizeStart       *OneHourRangeType `xml:"randomizeStart"`
-	RandomizableEventr23 *Revision23Type   `xml:"RandomizableEvent2023"`
 	*Event
 }
 
@@ -2970,7 +2670,6 @@ type DataQualifierType struct {
 type DateTimeInterval struct {
 	Duration            uint32          `xml:"duration"`
 	Start               *TimeType       `xml:"start"`
-	DateTimeIntervalr23 *Revision23Type `xml:"DateTimeInterval2023"`
 }
 
 // DeviceCategoryType is The Device category types defined.
@@ -3075,14 +2774,12 @@ type FlowDirectionType struct {
 type GeographicLocationType struct {
 	Country                   *CountryType     `xml:"country"`
 	Subdivision               *SubdivisionType `xml:"subdivision"`
-	GeographicLocationTyper23 *Revision23Type  `xml:"GeographicLocationType2023"`
 }
 
 // GPSLocationType is Specifies the longitude from Greenwich Meridian. -180 (west) to +180 (east) in decimal degrees.
 type GPSLocationType struct {
 	Lat                string          `xml:"lat"`
 	Lon                string          `xml:"lon"`
-	GPSLocationTyper23 *Revision23Type `xml:"GPSLocationType2023"`
 }
 
 // KindType is 0 = Not Applicable (default, if not specified)
@@ -3176,7 +2873,6 @@ type PrimacyType struct {
 type RealEnergy struct {
 	Multiplier    *PowerOfTenMultiplierType `xml:"multiplier"`
 	Value         uint64                    `xml:"value"`
-	RealEnergyr23 *Revision23Type           `xml:"RealEnergy2023"`
 }
 
 // RoleFlagsType is Specifies the roles that apply to a usage point.
@@ -3219,7 +2915,6 @@ type SignedPerCent struct {
 type SignedRealEnergy struct {
 	Multiplier          *PowerOfTenMultiplierType `xml:"multiplier"`
 	Value               int64                     `xml:"value"`
-	SignedRealEnergyr23 *Revision23Type           `xml:"SignedRealEnergy2023"`
 }
 
 // SubdivisionType is [ISO 3166-2] subdivision code of a country
@@ -3290,7 +2985,6 @@ type UnitValueType struct {
 	Multiplier       *PowerOfTenMultiplierType `xml:"multiplier"`
 	Unit             *UomType                  `xml:"unit"`
 	Value            int                       `xml:"value"`
-	UnitValueTyper23 *Revision23Type           `xml:"UnitValueType2023"`
 }
 
 // UomType is The following values are recommended values sourced from the unit of measure enumeration in IEC 61968-9 [61968]. Other values from the unit of measure enumeration in IEC 61968-9 [61968] MAY be used.
@@ -3423,27 +3117,23 @@ type MirrorMeterReading struct {
 	NextUpdateTime        *TimeType           `xml:"nextUpdateTime"`
 	Reading               *Reading            `xml:"Reading"`
 	ReadingType           *ReadingType        `xml:"ReadingType"`
-	MirrorMeterReadingr23 *Revision23Type     `xml:"MirrorMeterReading2023"`
 	*MeterReadingBase
 }
 
 // MirrorMeterReadingList is A List of MirrorMeterReading instances.
 type MirrorMeterReadingList struct {
 	MirrorMeterReading        []*MirrorMeterReading `xml:"MirrorMeterReading"`
-	MirrorMeterReadingListr23 *Revision23Type       `xml:"MirrorMeterReadingList2023"`
 	*List
 }
 
 // MeterReadingBase is A container for associating ReadingType, Readings and ReadingSets.
 type MeterReadingBase struct {
-	MeterReadingBaser23 *Revision23Type `xml:"MeterReadingBase2023"`
 	*IdentifiedObject
 }
 
 // MirrorReadingSet is A set of Readings of the ReadingType indicated by the parent MeterReading.
 type MirrorReadingSet struct {
 	Reading             []*Reading      `xml:"Reading"`
-	MirrorReadingSetr23 *Revision23Type `xml:"MirrorReadingSet2023"`
 	*ReadingSetBase
 }
 
@@ -3454,7 +3144,6 @@ type MirrorUsagePoint struct {
 	MirrorMeterReading  []*MirrorMeterReading `xml:"MirrorMeterReading"`
 	PostRate            uint32                `xml:"postRate"`
 	UsagePointLink      *UsagePointLink       `xml:"UsagePointLink"`
-	MirrorUsagePointr23 *Revision23Type       `xml:"MirrorUsagePoint2023"`
 	*UsagePointBase
 }
 
@@ -3462,7 +3151,6 @@ type MirrorUsagePoint struct {
 type MirrorUsagePointList struct {
 	PollRateAttr            uint32              `xml:"pollRate,attr,omitempty"`
 	MirrorUsagePoint        []*MirrorUsagePoint `xml:"MirrorUsagePoint"`
-	MirrorUsagePointListr23 *Revision23Type     `xml:"MirrorUsagePointList2023"`
 	*SubscribableList
 }
 
@@ -3473,14 +3161,12 @@ type ReadingBase struct {
 	TimePeriod       *DateTimeInterval     `xml:"timePeriod"`
 	TouTier          *TOUType              `xml:"touTier"`
 	Value            int64                 `xml:"value"`
-	ReadingBaser23   *Revision23Type       `xml:"ReadingBase2023"`
 	*Resource
 }
 
 // ReadingSetBase is Specifies the time range during which the contained readings were taken.
 type ReadingSetBase struct {
 	TimePeriod        *DateTimeInterval `xml:"timePeriod"`
-	ReadingSetBaser23 *Revision23Type   `xml:"ReadingSetBase2023"`
 	*IdentifiedObject
 }
 
@@ -3491,7 +3177,6 @@ type UsagePointBase struct {
 	RoleFlags           *RoleFlagsType  `xml:"roleFlags"`
 	ServiceCategoryKind *ServiceKind    `xml:"serviceCategoryKind"`
 	Status              uint8           `xml:"status"`
-	UsagePointBaser23   *Revision23Type `xml:"UsagePointBase2023"`
 	*IdentifiedObject
 }
 

@@ -21,11 +21,7 @@ func NewHandler(repo *memory.Repository) *Handler {
 
 func (h *Handler) GetDeviceCapability(w http.ResponseWriter, req *http.Request) {
 	cert := req.TLS.PeerCertificates[0]
-	fmt.Printf("cert: %s", cert.Raw)
-
 	lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]
-
-	fmt.Printf("Get DCAP: %s", lfdi)
 
 	_, err := h.repo.GetEntity(lfdi)
 	if err != nil {
