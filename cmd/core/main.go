@@ -7,6 +7,8 @@ import (
 
 	"github.com/Tylores/egot/internal/core/handler"
 	"github.com/Tylores/egot/internal/core/repository/memory"
+	"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/uri"
 )
 
 func main() {
@@ -15,12 +17,16 @@ func main() {
 		ClientAuth: tls.RequireAndVerifyClientCert,
 	}
 	server := http.Server{
-		Addr:      "egot.internal.com:4443",
+		Addr:      routes.Core,
 		TLSConfig: cfg,
 	}
-	repo := memory.NewRepository(1)
+
+	repo := memory.NewRepository(10)
+	repo.InitRepository("./ssl")
+
 	h := handler.NewHandler(repo)
-	http.Handle("/dcap", http.HandlerFunc(h.GetDeviceCapability))
+	http.Handle(uri.DeviceCapability, http.HandlerFunc(h.GetDeviceCapability))
+
 	err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
 	if err != nil {
 		log.Fatal(err)

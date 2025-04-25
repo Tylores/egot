@@ -6,6 +6,10 @@ import (
 	"encoding/xml"
 )
 
+const (
+	ContentType                     = "application/sep-xml"
+)
+
 // DeviceCapability is Returned by the URI provided by DNS-SD, to allow clients to find the URIs to the resources in which they are interested.
 type DeviceCapability struct {
 	PollRateAttr             uint32                    `xml:"pollRate,attr,omitempty"`
