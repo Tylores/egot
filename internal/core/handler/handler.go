@@ -23,41 +23,84 @@ func (h *Handler) GetDeviceCapability(w http.ResponseWriter, req *http.Request) 
 	cert := req.TLS.PeerCertificates[0]
 	lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]
 
-	e, err := h.repo.GetEntity(lfdi)
+	_, err := h.repo.GetEntity(lfdi)
 	if err != nil {
 		log.Printf("Repository get error: %v\n", err)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	err = xml.NewEncoder(w).Encode(h.repo.GetDeviceCapability(e))
+	w.Header().Set("Content-Type", sep.ContentType)
+	err = xml.NewEncoder(w).Encode(h.repo.GetDeviceCapability())
 	if err != nil {
 		log.Printf("Response encode error: %v\n", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Set("Content-Type", sep.ContentType)
 }
 
 func (h *Handler) HeadDeviceCapability(w http.ResponseWriter, req *http.Request) {
 	cert := req.TLS.PeerCertificates[0]
 	lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]
 
-	e, err := h.repo.GetEntity(lfdi)
+	_, err := h.repo.GetEntity(lfdi)
 	if err != nil {
 		log.Printf("Repository get error: %v\n", err)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	xml_bytes, err := xml.Marshal(h.repo.GetDeviceCapability(e))
+	w.Header().Set("Content-Type", "application/sep+xml")
+	xml_bytes, err := xml.Marshal(h.repo.GetDeviceCapability())
 	if err != nil {
 		log.Printf("Response encode error: %v\n", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
+	w.Header().Set("ContentLength", string(len(xml_bytes)))
+}
+
+func (h *Handler) GetTime(w http.ResponseWriter, req *http.Request) {
+	cert := req.TLS.PeerCertificates[0]
+	lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]
+
+	_, err := h.repo.GetEntity(lfdi)
+	if err != nil {
+		log.Printf("Repository get error: %v\n", err)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
 	w.Header().Set("Content-Type", sep.ContentType)
+	err = xml.NewEncoder(w).Encode(h.repo.GetTime())
+	if err != nil {
+		log.Printf("Response encode error: %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+}
+
+func (h *Handler) HeadTime(w http.ResponseWriter, req *http.Request) {
+	cert := req.TLS.PeerCertificates[0]
+	lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]
+
+	_, err := h.repo.GetEntity(lfdi)
+	if err != nil {
+		log.Printf("Repository get error: %v\n", err)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	xml_bytes, err := xml.Marshal(h.repo.GetTime())
+	if err != nil {
+		log.Printf("Response encode error: %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("ContentLength", string(len(xml_bytes)))
 }

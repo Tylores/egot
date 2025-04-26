@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	ContentType                     = "application/sep-xml"
+	ContentType                     = "application/sep+xml"
 )
 
 // DeviceCapability is Returned by the URI provided by DNS-SD, to allow clients to find the URIs to the resources in which they are interested.
@@ -2931,14 +2931,10 @@ type SubdivisionType struct {
 type SubscribableType uint8
 
 // TimeOffsetType is A signed time offset, typically applied to a Time value, expressed in seconds.
-type TimeOffsetType struct {
-	*Int32
-}
+type TimeOffsetType int32
 
 // TimeType is Time is a signed 64 bit value representing the number of seconds since 0 hours, 0 minutes, 0 seconds, on the 1st of January, 1970, in UTC, not counting leap seconds.
-type TimeType struct {
-	*Int64
-}
+type TimeType int64
 
 // TOUType is 0 = Not Applicable (default, if not specified)
 // 1 = TOU A

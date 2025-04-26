@@ -40,4 +40,43 @@ func main() {
 	}
 
 	fmt.Printf("%s\n", dump)
+
+	resp, err = client.Head("https://" + routes.Core + uri.DeviceCapability)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	dump, err = httputil.DumpResponse(resp, true)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%s\n", dump)
+
+	resp, err = client.Get("https://" + routes.Core + uri.Time)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	dump, err = httputil.DumpResponse(resp, true)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%s\n", dump)
+
+	resp, err = client.Head("https://" + routes.Core + uri.Time)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	dump, err = httputil.DumpResponse(resp, true)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%s\n", dump)
 }

@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/Tylores/egot/internal/core/repository"
 	"github.com/Tylores/egot/internal/sep"
@@ -128,29 +129,42 @@ func (r *Repository) TagEntity(tag string, e Entity) error {
 	return nil
 }
 
-func (r *Repository) GetDeviceCapability(id Entity) sep.DeviceCapability {
-	r.RLock()
-	defer r.RUnlock()
-	return sep.DeviceCapability{
-		PollRateAttr: 10,
-		FunctionSetAssignmentsBase: &sep.FunctionSetAssignmentsBase{
-			Resource: &sep.Resource{
-				HrefAttr: uri.DeviceCapability,
-			},
-			TimeLink: &sep.TimeLink{
-				Link: &sep.Link{
-					HrefAttr: uri.Time,
-				},
-			},
+func (r *Repository) GetDeviceCapability() sep.DeviceCapability {
+	return StaticDeviceCapability
+}
+
+func (r *Repository) GetTime() sep.Time {
+	t := time.Now()
+	_, tz_offset := t.Zone()
+	start, end := t.ZoneBounds()
+	offset := 1
+
+	// need to flip values and offset end by a year if not DST
+	if !t.IsDST() {
+		offset = 0
+		start, end = end, start
+		end.AddDate(1, 0, 0)
+	}
+
+	current := sep.TimeType(t.UTC().Unix())
+	local := sep.TimeType(t.Unix())
+	dst_start := sep.TimeType(start.Unix())
+	dst_end := sep.TimeType(end.Unix())
+	dst_offset := sep.TimeOffsetType(offset)
+	t_offset := sep.TimeOffsetType(tz_offset)
+
+	return sep.Time{
+		PollRateAttr: PollRate,
+		Resource: &sep.Resource{
+			HrefAttr: uri.Time,
 		},
-		EndDeviceListLink: &sep.EndDeviceListLink{
-			ListLink: &sep.ListLink{
-				Link: &sep.Link{
-					HrefAttr: uri.EndDeviceList,
-				},
-				AllAttr: 1,
-			},
-		},
+		CurrentTime:  &current,
+		DstStartTime: &dst_start,
+		DstEndTime:   &dst_end,
+		DstOffset:    &dst_offset,
+		LocalTime:    &local,
+		TzOffset:     &t_offset,
+		Quality:      3,
 	}
 }
 

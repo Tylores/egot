@@ -3,6 +3,13 @@ Smart Energy Profile using Go
 
 ## Setup
 
+### Host
+For testing you will need to ensure your server address is recognized on your system. Simply add it to your localhost for internal testing in the **/etc/hosts** file for linux systems.
+
+```shell
+127.0.0.1   egot.internal.com
+```
+
 ### SSL
 I found a super handy tool for setting yourself as a CA and generating tls certificates for clients and servers.
 
