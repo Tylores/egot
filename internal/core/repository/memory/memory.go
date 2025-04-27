@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/Tylores/egot/internal/core/repository"
 	"github.com/Tylores/egot/internal/sep"
@@ -130,40 +129,24 @@ func (r *Repository) TagEntity(tag string, e Entity) error {
 }
 
 func (r *Repository) GetDeviceCapability() sep.DeviceCapability {
-	return StaticDeviceCapability
+	resource := sep.NewResource(uri.DeviceCapability)
+	fsab := sep.NewFunctionSetAssignmentsBase(resource)
+	fsab.TimeLink = &sep.TimeLink{
+		Link: sep.NewLink(uri.Time),
+	}
+	dcap := sep.NewDeviceCapability(fsab)
+	dcap.EndDeviceListLink = &sep.EndDeviceListLink{
+		ListLink: sep.NewListLink(
+			sep.NewLink(uri.EndDeviceList),
+			1),
+	}
+	return *dcap
 }
 
 func (r *Repository) GetTime() sep.Time {
-	t := time.Now()
-	_, tz_offset := t.Zone()
-	start, end := t.ZoneBounds()
-	offset := 60 * 60
+	resource := sep.NewResource(uri.Time)
+	return *sep.NewTime(resource)
 
-	// need to flip values and offset end by a year if not DST
-	if !t.IsDST() {
-		offset = 0
-		start, end = end, start
-		end.AddDate(1, 0, 0)
-	}
-
-	current := t.UTC().Unix()
-	local := t.Unix()
-	dst_start := start.Unix()
-	dst_end := end.Unix()
-
-	return sep.Time{
-		PollRateAttr: PollRate,
-		Resource: &sep.Resource{
-			HrefAttr: uri.Time,
-		},
-		CurrentTime:  &current,
-		DstStartTime: &dst_start,
-		DstEndTime:   &dst_end,
-		DstOffset:    &offset,
-		LocalTime:    &local,
-		TzOffset:     &tz_offset,
-		Quality:      3,
-	}
 }
 
 func (r *Repository) GetEndDevice(id Entity) sep.EndDevice {

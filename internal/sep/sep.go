@@ -61,8 +61,8 @@ type EndDeviceList struct {
 
 // EndDevice is Asset container that performs one or more end device functions. Contains information about individual devices in the network.
 type EndDevice struct {
-	ProxiedDeviceListLink *ProxiedDeviceListLink `xml:"ProxiedDeviceListLink"`
-	SubscriptionListLink  *SubscriptionListLink  `xml:"SubscriptionListLink"`
+	ProxiedDeviceListLink *ProxiedDeviceListLink `xml:"ProxiedDeviceListLink,omitempty"`
+	SubscriptionListLink  *SubscriptionListLink  `xml:"SubscriptionListLink,omitempty"`
 	*ExternalDevice
 }
 
@@ -255,13 +255,13 @@ type TextResponse struct {
 // Time is Local time zone offset from currentTime. Does not include any daylight savings time offsets. For American time zones, a negative tzOffset SHALL be used (eg, EST = GMT-5 which is -18000).
 type Time struct {
 	PollRateAttr uint32          `xml:"pollRate,attr,omitempty"`
-	CurrentTime  *TimeType       `xml:"currentTime"`
-	DstEndTime   *TimeType       `xml:"dstEndTime"`
-	DstOffset    *TimeOffsetType `xml:"dstOffset"`
-	DstStartTime *TimeType       `xml:"dstStartTime"`
-	LocalTime    *TimeType       `xml:"localTime"`
+	CurrentTime  TimeType       `xml:"currentTime"`
+	DstEndTime   TimeType       `xml:"dstEndTime"`
+	DstOffset    TimeOffsetType `xml:"dstOffset"`
+	DstStartTime TimeType       `xml:"dstStartTime"`
+	LocalTime    TimeType       `xml:"localTime"`
 	Quality      uint8           `xml:"quality"`
-	TzOffset     *TimeOffsetType `xml:"tzOffset"`
+	TzOffset     TimeOffsetType `xml:"tzOffset"`
 	*Resource
 }
 
@@ -2487,7 +2487,7 @@ type SubscribableList struct {
 
 // SubscribableResource is A Resource to which a Subscription can be requested.
 type SubscribableResource struct {
-	SubscribableAttr        *UInt8          `xml:"subscribable,attr,omitempty"`
+	SubscribableAttr        *SubscribableType          `xml:"subscribable,attr,omitempty"`
 	*Resource
 }
 
