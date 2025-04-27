@@ -137,7 +137,7 @@ func (r *Repository) GetTime() sep.Time {
 	t := time.Now()
 	_, tz_offset := t.Zone()
 	start, end := t.ZoneBounds()
-	offset := 1
+	offset := 60 * 60
 
 	// need to flip values and offset end by a year if not DST
 	if !t.IsDST() {
@@ -146,12 +146,10 @@ func (r *Repository) GetTime() sep.Time {
 		end.AddDate(1, 0, 0)
 	}
 
-	current := sep.TimeType(t.UTC().Unix())
-	local := sep.TimeType(t.Unix())
-	dst_start := sep.TimeType(start.Unix())
-	dst_end := sep.TimeType(end.Unix())
-	dst_offset := sep.TimeOffsetType(offset)
-	t_offset := sep.TimeOffsetType(tz_offset)
+	current := t.UTC().Unix()
+	local := t.Unix()
+	dst_start := start.Unix()
+	dst_end := end.Unix()
 
 	return sep.Time{
 		PollRateAttr: PollRate,
@@ -161,9 +159,9 @@ func (r *Repository) GetTime() sep.Time {
 		CurrentTime:  &current,
 		DstStartTime: &dst_start,
 		DstEndTime:   &dst_end,
-		DstOffset:    &dst_offset,
+		DstOffset:    &offset,
 		LocalTime:    &local,
-		TzOffset:     &t_offset,
+		TzOffset:     &tz_offset,
 		Quality:      3,
 	}
 }

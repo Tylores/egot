@@ -347,9 +347,7 @@ type PowerStatus struct {
 // 4 - emergency
 // 5 - unknown
 // All other values reserved.
-type PowerSourceType struct {
-	*UInt8
-}
+type PowerSourceType = UInt8
 
 // PEVInfo is This is the time that the parameters are updated, except for changes to TCIN.
 type PEVInfo struct {
@@ -793,9 +791,7 @@ type ConsumptionTariffIntervalList struct {
 // 2 - Nitrogen Oxides emissions, in grams per unit
 // 3 - Renewable generation, as a percentage of overall generation
 // All other values reserved.
-type CostKindType struct {
-	*UInt8
-}
+type CostKindType = UInt8
 
 // EnvironmentalCost is The number of all relative cost levels.
 //
@@ -886,9 +882,7 @@ type MessagingProgramList struct {
 // 2 - High
 // 3 - Critical
 // All other values reserved.
-type PriorityType struct {
-	*UInt8
-}
+type PriorityType = UInt8
 
 // TextMessage is The textMessage attribute contains the actual UTF-8 encoded text to be displayed in conjunction with the messageLength attribute which contains the overall length of the textMessage attribute.  Clients and servers SHALL support a reception of a Message of 100 bytes in length.  Messages that exceed the clients display size will be left to the client to choose what method to handle the message (truncation, scrolling, etc.).
 type TextMessage struct {
@@ -963,9 +957,7 @@ type Charge struct {
 // 2 - Auxiliary Charge
 // 3 - Demand Charge
 // 4 - Tax Charge
-type ChargeKind struct {
-	*UInt8
-}
+type ChargeKind = UInt8
 
 // CustomerAccount is Indicates the power of ten multiplier for the prices in this function set.
 type CustomerAccount struct {
@@ -1111,9 +1103,7 @@ type PrepaymentList struct {
 // 2 - Local
 // 3 - Credit
 // All other values reserved.
-type PrepayModeType struct {
-	*UInt8
-}
+type PrepayModeType = UInt8
 
 // PrepayOperationStatus is ServiceStatus identifies whether the service is connected or disconnected, or armed for connection or disconnection.
 type PrepayOperationStatus struct {
@@ -1148,18 +1138,14 @@ type SupplyInterruptionOverrideList struct {
 // 2 - Credit Exhausted
 // 3 - Credit Negative
 // All other values reserved.
-type CreditStatusType struct {
-	*UInt8
-}
+type CreditStatusType = UInt8
 
 // CreditTypeType is 0 - Regular
 // 1 - Emergency
 // 2 - Regular, then Emergency
 // 3 - Emergency, then Regular
 // All other values reserved.
-type CreditTypeType struct {
-	*UInt8
-}
+type CreditTypeType = UInt8
 
 // CreditTypeChange is The date/time when the change is to take effect.
 type CreditTypeChange struct {
@@ -1174,9 +1160,7 @@ type CreditTypeChange struct {
 // 4 - No Contactor
 // 5 - Load Limited
 // All other values reserved.
-type ServiceStatusType struct {
-	*UInt8
-}
+type ServiceStatusType = UInt8
 
 // RequestStatus is Field representing the request status type.
 // 0 = Requested
@@ -1550,9 +1534,7 @@ type CurveData struct {
 // 13 - opModWattPF (Watt-PowerFactor DERControl Mode)
 // 14 - opModWattVar (Watt-Var DERControl Mode)
 // All other values reserved.
-type DERCurveType struct {
-	*UInt8
-}
+type DERCurveType = UInt8
 
 // ActivePower is Value in watts (uom 38)
 type ActivePower struct {
@@ -1759,9 +1741,7 @@ type ConnectStatusType2 struct {
 // 7 - setGradW
 // 8 - setSoftGradW
 // All other values reserved.
-type DefaultDERControlType struct {
-	*HexBinary32
-}
+type DefaultDERControlType = HexBinary32
 
 // DeltaBidirectionalType is Specifies the behavior of a delta DERControl Mode regarding switching from absorbing/receiving to injecting/delivering or vice versa.
 // 0 = MAY (default)
@@ -1774,7 +1754,7 @@ type DefaultDERControlType struct {
 // If possible and capable, device SHALL NOT switch from absorbing/receiving to injecting/delivering or vice versa.
 //
 // All other values reserved.
-type DeltaBidirectionalType uint8
+type DeltaBidirectionalType = uint8
 
 // DERControlType is DERControl Modes for DER. Bit positions SHALL be defined as follows:
 // 0 - Charge mode
@@ -1811,9 +1791,7 @@ type DeltaBidirectionalType uint8
 // 29 = opModFixedV
 // 30 = opModGridConnectPermit
 // 31 = opModIslandPermit
-type DERControlType struct {
-	*HexBinary32
-}
+type DERControlType = HexBinary32
 
 // DERControlType2 is Additional DERControl Modes for DER. Added in the IEEE 2030.5-2023 revision. Bit positions SHALL be defined as follows:
 // 0 = opModMaxLimPctVAAbsorb
@@ -1827,9 +1805,7 @@ type DERControlType struct {
 // 8 = opModMaxLimWInject
 // 9 = opModTargetV
 // All other values reserved.
-type DERControlType2 struct {
-	*HexBinary32
-}
+type DERControlType2 = HexBinary32
 
 // DERType is 0 - Not applicable / Unknown
 // 1 - Virtual or mixed DER
@@ -1843,9 +1819,7 @@ type DERControlType2 struct {
 // 82 - EVSE
 // 83 - Combined PV and storage
 // All other values reserved.
-type DERType struct {
-	*UInt8
-}
+type DERType = UInt8
 
 // DERUnitRefType is Specifies context for interpreting percent values:
 // 0 - N/A
@@ -1862,9 +1836,7 @@ type DERType struct {
 // For %setMaxVar, if the device supports both setMaxVar and setMaxVarNeg, then %setMaxVar uses the percentage of setMaxVarNeg for negative values. If the device only supports setMaxVar, then %setMaxVar uses the percentage of (-1 * setMaxVar) for negative values.
 //
 // For %setMaxW, if the values are negative, %setMaxChargeRateW is used. For %setMaxW, if the values are positive, either %setMaxW or %setMaxDischargeRateW can be used.
-type DERUnitRefType struct {
-	*UInt8
-}
+type DERUnitRefType = UInt8
 
 // InverterStatusType is The value indicating the state.
 type InverterStatusType struct {
@@ -1942,9 +1914,7 @@ type AggregatedDevice struct {
 // 2 - Prorate: use an equal percentage of nameplate rating
 // 3 - Priority: prioritized based on the given AggregationPriority, with each member of the AggregationPriority completely utilized before proceeding to the next member of the AggregationPriority
 // All other values reserved.
-type AggregationDistributionType struct {
-	*UInt8
-}
+type AggregationDistributionType = UInt8
 
 // ProxiedDevice is Asset container that performs one or more end device functions. Contains information about individual devices that are proxied by another device.
 type ProxiedDevice struct {
@@ -2583,9 +2553,7 @@ type RandomizableEvent struct {
 // Typically measured over the fastest period of time allowed by the definition of the metric (usually milliseconds or tens of milliseconds.) (Note: “Instantaneous” was moved to attribute #3 in 61968-9Ed2 from attribute #1 in 61968-9Ed1.)
 //
 // All other values reserved.
-type AccumulationBehaviourType struct {
-	*UInt8
-}
+type AccumulationBehaviourType = UInt8
 
 // ApplianceLoadReductionType is 0 - Delay Appliance Load
 // Parameter requesting the appliance to respond by providing a moderate load reduction for the duration of a delay period.  Typically referring to a “non-emergency” event in which appliances can continue operating if already in a load consuming period.
@@ -2596,9 +2564,7 @@ type AccumulationBehaviourType struct {
 // * Full definition of how appliances react when receiving each parameter is document in the EPA document - ENERGY STAR® Program Requirements, Product Specification for Residential Refrigerators and Freezers, Eligibility Criteria 5, Draft 2 Version 5.0.
 //
 // All other values reserved.
-type ApplianceLoadReductionType struct {
-	*UInt8
-}
+type ApplianceLoadReductionType = UInt8
 
 // CommodityType is 0 = Not Applicable (default, if not specified)
 // 1 = Electricity secondary metered value (a premises meter is typically on the low voltage, or secondary, side of a service transformer)
@@ -2612,9 +2578,7 @@ type ApplianceLoadReductionType struct {
 // 12 = HeatingFluid
 // 13 = CoolingFluid
 // All other values reserved.
-type CommodityType struct {
-	*UInt8
-}
+type CommodityType = UInt8
 
 // ConsumptionBlockType is 0 = Not Applicable (default, if not specified)
 // 1 = Block 1
@@ -2634,14 +2598,10 @@ type CommodityType struct {
 // 15 = Block 15
 // 16 = Block 16
 // All other values reserved.
-type ConsumptionBlockType struct {
-	*UInt8
-}
+type ConsumptionBlockType = UInt8
 
 // CountryType is [ISO 3166-1] Alpha-2 code of a country
-type CountryType struct {
-	*String2
-}
+type CountryType = String2
 
 // CurrencyCode is Follows codes defined in [ISO 4217].
 // 0 - Not Applicable (default, if not specified)
@@ -2650,9 +2610,7 @@ type CountryType struct {
 // 840 - US Dollar
 // 978 - Euro
 // This is not a complete list.
-type CurrencyCode struct {
-	*UInt16
-}
+type CurrencyCode = UInt16
 
 // DataQualifierType is 0 = Not Applicable (default, if not specified)
 // 2 = Average
@@ -2662,9 +2620,7 @@ type CurrencyCode struct {
 // 29 = Standard Deviation of a Population (typically indicated by a lower case sigma)
 // 30 = Standard Deviation of a Sample Drawn from a Population (typically indicated by a lower case 's')
 // All other values reserved.
-type DataQualifierType struct {
-	*UInt8
-}
+type DataQualifierType = UInt8
 
 // DateTimeInterval is Date and time of the start of the interval.
 type DateTimeInterval struct {
@@ -2702,9 +2658,7 @@ type DateTimeInterval struct {
 // 25 - Other Storage System
 // 26 - Microgrid Controller
 // All other values reserved.
-type DeviceCategoryType struct {
-	*HexBinary32
-}
+type DeviceCategoryType = HexBinary32
 
 // DstRuleType is Bit map encoded rule from which is calculated the start or end time, within the current year, to which daylight savings time offset must be applied.
 //
@@ -2736,9 +2690,7 @@ type DeviceCategoryType struct {
 // Day of Month: 0
 // Operator: 4
 // Month: 3
-type DstRuleType struct {
-	*HexBinary32
-}
+type DstRuleType = HexBinary32
 
 // FlowDirectionType is The following are recommended values sourced from the flow direction enumeration in IEC 61968-9 [61968]. Note that IEEE 2030.5 uses the Generator/Producer frame of reference, where "Forward" is defined as flow from a generator to a load. Example generators include DER such as solar inverters as well as flow from a grid to a premises.
 //
@@ -2766,9 +2718,7 @@ type DstRuleType struct {
 // Values using the TotalByPhase flow direction are incremented when the sum of the absolute values of the phases is greater than zero. The TotalByPhase flow direction SHOULD NOT be used for single phase measurement data. Values using the TotalByPhase flow direction SHALL be positive.
 //
 // Other values from the flow direction enumeration in Table C.4 of IEC 61968-9 [61968] Edition 1.0 (2009-09) MAY be used. All other values reserved.
-type FlowDirectionType struct {
-	*UInt8
-}
+type FlowDirectionType = UInt8
 
 // GeographicLocationType is [ISO 3166-2] subdivision code of a country
 type GeographicLocationType struct {
@@ -2788,14 +2738,10 @@ type GPSLocationType struct {
 // 12 = Energy
 // 37 = Power
 // All other values reserved.
-type KindType struct {
-	*UInt8
-}
+type KindType = UInt8
 
 // LocaleType is [RFC 5646] identifier of a language-region
-type LocaleType struct {
-	*String42
-}
+type LocaleType = String32
 
 // MRIDType is A master resource identifier. The IANA PEN [PEN] provider ID SHALL be specified in bits 0-31, the least-significant bits, and objects created by that provider SHALL be assigned unique IDs with the remaining 96 bits.
 // 0xFFFFFFFFFFFFFFFFFFFFFFFF[XXXXXXXX], where [XXXXXXXX] is the PEN, is reserved for a object that is being created (e.g., a ReadingSet for the current time that is still accumulating).
@@ -2806,19 +2752,13 @@ type MRIDType struct {
 }
 
 // OneHourRangeType is A signed time offset, typically applied to a Time value, expressed in seconds, with range -3600 to 3600.
-type OneHourRangeType struct {
-	*Int16
-}
+type OneHourRangeType = Int32
 
 // PENType is IANA Private Enterprise Number [PEN].
-type PENType struct {
-	*UInt32
-}
+type PENType = UInt32
 
 // PerCent is Used for percentages, specified in hundredths of a percent, 0 - 10000. (10000 = 100%)
-type PerCent struct {
-	*UInt16
-}
+type PerCent = UInt16
 
 // PhaseCode is 0 = Not Applicable (default, if not specified)
 // 32 = Phase C (and S2)
@@ -2832,15 +2772,12 @@ type PerCent struct {
 // 132 = Phase AB
 // 224 = Phase ABC
 // All other values reserved.
-type PhaseCode struct {
-	*UInt8
-}
+type PhaseCode = UInt16
 
 // PINType is 6 digit unsigned decimal integer (0 - 999999).
 // (Note that this only requires 20 bits, if it can be allocated.)
-type PINType struct {
-	*UInt32
-}
+type PINType = UInt32
+
 
 // PowerOfTenMultiplierType is -9 = nano=x10^-9
 // -6 = micro=x10^-6
@@ -2852,9 +2789,7 @@ type PINType struct {
 // 6 = Mega=x10^6
 // 9 = Giga=x10^9
 // This is not a complete list. Any integer between -9 and 9 SHALL be supported, indicating the power of ten multiplier for the units.
-type PowerOfTenMultiplierType struct {
-	*Int8
-}
+type PowerOfTenMultiplierType = Int8
 
 // PrimacyType is Values possible for indication of "Primary" provider:
 // 0: In home energy management system
@@ -2865,9 +2800,7 @@ type PowerOfTenMultiplierType struct {
 // 192 - 255: Reserved
 //
 // Lower numbers indicate higher priority.
-type PrimacyType struct {
-	*UInt8
-}
+type PrimacyType = UInt8
 
 // RealEnergy is Value of the energy in Watt-hours. (uom 72)
 type RealEnergy struct {
@@ -2884,9 +2817,7 @@ type RealEnergy struct {
 // Bit 5 - isDC - SHALL be set if the usage point measures direct current
 // Bit 6 - isSubmeter - SHALL be set if the usage point is not a premises aggregation point
 // Bit 7-15 - Reserved
-type RoleFlagsType struct {
-	*HexBinary16
-}
+type RoleFlagsType = HexBinary16
 
 // ServiceKind is Service kind
 // 0 - electricity
@@ -2897,19 +2828,13 @@ type RoleFlagsType struct {
 // 5 - heat
 // 6 - cooling
 // All other values reserved.
-type ServiceKind struct {
-	*UInt8
-}
+type ServiceKind = UInt8
 
 // SFDIType is Unsigned integer, max inclusive 687194767359, which is 2^36-1 (68719476735), with added check digit. See Section 6.3.3 for check digit calculation.
-type SFDIType struct {
-	*UInt40
-}
+type SFDIType = UInt40
 
 // SignedPerCent is Used for signed percentages, specified in hundredths of a percent, -10000 - 10000. (10000 = 100%)
-type SignedPerCent struct {
-	*Int16
-}
+type SignedPerCent = Int16
 
 // SignedRealEnergy is Value of the energy in Watt-hours. (uom 72)
 type SignedRealEnergy struct {
@@ -2918,9 +2843,7 @@ type SignedRealEnergy struct {
 }
 
 // SubdivisionType is [ISO 3166-2] subdivision code of a country
-type SubdivisionType struct {
-	*String3
-}
+type SubdivisionType = String3
 
 // SubscribableType is The subscribable values.
 // 0 - Resource does not support subscriptions
@@ -2928,13 +2851,13 @@ type SubdivisionType struct {
 // 2 - Resource supports conditional subscriptions
 // 3 - Resource supports both conditional and non-conditional subscriptions
 // All other values reserved.
-type SubscribableType uint8
+type SubscribableType = UInt8
 
 // TimeOffsetType is A signed time offset, typically applied to a Time value, expressed in seconds.
-type TimeOffsetType int32
+type TimeOffsetType = Int32
 
 // TimeType is Time is a signed 64 bit value representing the number of seconds since 0 hours, 0 minutes, 0 seconds, on the 1st of January, 1970, in UTC, not counting leap seconds.
-type TimeType int64
+type TimeType = Int64
 
 // TOUType is 0 = Not Applicable (default, if not specified)
 // 1 = TOU A
@@ -2953,9 +2876,7 @@ type TimeType int64
 // 14 = TOU N
 // 15 = TOU O
 // All other values reserved.
-type TOUType struct {
-	*UInt8
-}
+type TOUType = UInt8
 
 // UnitType is The unit types defined for end device control target reductions.
 // 0 - kWh
@@ -2972,9 +2893,7 @@ type TOUType struct {
 // 11 - Mega Joule
 // 12 - Unitless
 // All other values reserved.
-type UnitType struct {
-	*UInt8
-}
+type UnitType = UInt8
 
 // UnitValueType is Value in units specified
 type UnitValueType struct {
@@ -3016,95 +2935,91 @@ type UnitValueType struct {
 // 140 = PA(gauge)
 // 155 = PA(absolute)
 // 169 = Therm
-type UomType struct {
-	*UInt8
-}
+type UomType = UInt8
 
 // VersionType is Version SHALL indicate a distinct identifier for each revision of an IdentifiedObject. If not specified, a default version of "0" (initial version) SHALL be assumed. Upon modification of any IdentifiedObject, the mRID SHALL remain the same, but the version SHALL be incremented. Servers MAY NOT modify objects that they did not create, unless they were notified of the change from the entity controlling the object's PEN.
-type VersionType struct {
-	*UInt16
-}
+type VersionType = UInt16
 
 // HexBinary8 is An 8-bit field encoded as a hex string (2 hex characters). Where applicable, bit 0, or the least significant bit, goes on the right. Note that hexBinary requires pairs of hex characters, so an odd number of characters requires a leading "0".
-type HexBinary8 string
+type HexBinary8 = string
 
 // HexBinary16 is A 16-bit field encoded as a hex string (4 hex characters max). Where applicable, bit 0, or the least significant bit, goes on the right. Note that hexBinary requires pairs of hex characters, so an odd number of characters requires a leading "0".
-type HexBinary16 string
+type HexBinary16 = string
 
 // HexBinary32 is A 32-bit field encoded as a hex string (8 hex characters max). Where applicable, bit 0, or the least significant bit, goes on the right. Note that hexBinary requires pairs of hex characters, so an odd number of characters requires a leading "0".
-type HexBinary32 string
+type HexBinary32 = string
 
 // HexBinary48 is A 48-bit field encoded as a hex string (12 hex characters max). Where applicable, bit 0, or the least significant bit, goes on the right. Note that hexBinary requires pairs of hex characters, so an odd number of characters requires a leading "0".
-type HexBinary48 string
+type HexBinary48 = string
 
 // HexBinary64 is A 64-bit field encoded as a hex string (16 hex characters max). Where applicable, bit 0, or the least significant bit, goes on the right. Note that hexBinary requires pairs of hex characters, so an odd number of characters requires a leading "0".
-type HexBinary64 string
+type HexBinary64 = string
 
 // HexBinary128 is A 128-bit field encoded as a hex string (32 hex characters max). Where applicable, bit 0, or the least significant bit, goes on the right. Note that hexBinary requires pairs of hex characters, so an odd number of characters requires a leading "0".
-type HexBinary128 string
+type HexBinary128 = string
 
 // HexBinary160 is A 160-bit field encoded as a hex string (40 hex characters max). Where applicable, bit 0, or the least significant bit, goes on the right. Note that hexBinary requires pairs of hex characters, so an odd number of characters requires a leading "0".
-type HexBinary160 string
+type HexBinary160 = string
 
 // String2 is Character string of max length 2. In order to limit internal storage, implementations SHALL reduce the length of strings using multi-byte characters so that the string may be stored using "maxLength" octets in the given encoding.
-type String2 string
+type String2 = string
 
 // String3 is Character string of max length 3. In order to limit internal storage, implementations SHALL reduce the length of strings using multi-byte characters so that the string may be stored using "maxLength" octets in the given encoding.
-type String3 string
+type String3 = string
 
 // String6 is Character string of max length 6. In order to limit internal storage, implementations SHALL reduce the length of strings using multi-byte characters so that the string may be stored using "maxLength" octets in the given encoding.
-type String6 string
+type String6 = string
 
 // String16 is Character string of max length 16. In order to limit internal storage, implementations SHALL reduce the length of strings using multi-byte characters so that the string may be stored using "maxLength" octets in the given encoding.
-type String16 string
+type String16 = string
 
 // String20 is Character string of max length 20. In order to limit internal storage, implementations SHALL reduce the length of strings using multi-byte characters so that the string may be stored using "maxLength" octets in the given encoding.
-type String20 string
+type String20 = string
 
 // String32 is Character string of max length 32. In order to limit internal storage, implementations SHALL reduce the length of strings using multi-byte characters so that the string may be stored using "maxLength" octets in the given encoding.
-type String32 string
+type String32 = string
 
 // String42 is Character string of max length 42. In order to limit internal storage, implementations SHALL reduce the length of strings using multi-byte characters so that the string may be stored using "maxLength" octets in the given encoding.
-type String42 string
+type String42 = string
 
 // String192 is Character string of max length 192. For all string types, in order to limit internal storage, implementations SHALL reduce the length of strings using multi-byte characters so that the string may be stored using "maxLength" octets in the given encoding.
-type String192 string
+type String192 = string
 
 // UInt8 is Unsigned integer, max inclusive 255 (2^8-1)
-type UInt8 uint8
+type UInt8 = uint8
 
 // UInt16 is Unsigned integer, max inclusive 65535 (2^16-1)
-type UInt16 uint16
+type UInt16 = uint16
 
 // UInt32 is Unsigned integer, max inclusive 4294967295 (2^32-1)
-type UInt32 uint32
+type UInt32 = uint32
 
 // UInt40 is Unsigned integer, max inclusive 1099511627775 (2^40-1)
-type UInt40 uint64
+type UInt40 = uint64
 
 // UInt48 is Unsigned integer, max inclusive 281474976710655 (2^48-1)
-type UInt48 uint64
+type UInt48 = uint64
 
 // UInt64 is Unsigned integer, max inclusive 18446744073709551615 (2^64-1)
-type UInt64 uint64
+type UInt64 = uint64
 
 // Int8 is Signed integer, min -128 max +127
-type Int8 int8
+type Int8 = int8
 
 // Int16 is Signed integer, min -32768 max +32767
-type Int16 int16
+type Int16 = int16
 
 // Int32 is Signed integer, max inclusive 2147483647 (2^31), min inclusive -2147483647 (same as xs:int)
-type Int32 int
+type Int32 = int
 
 // Int48 is Signed integer, max inclusive 140737488355328 (2^47), min inclusive -140737488355328
-type Int48 int64
+type Int48 = int64
 
 // Int64 is Signed integer, max inclusive 9223372036854775807 (2^63), min inclusive -9223372036854775808 (same as xs:long)
-type Int64 int64
+type Int64 = int64
 
 // SEPVersion is A version string, restricted to a pair of digits separated by a decimal (e.g., "2.2").
-type SEPVersion string
+type SEPVersion = string
 
 // MirrorMeterReading is The date and time of the next planned update.
 type MirrorMeterReading struct {
