@@ -45,3 +45,11 @@ Run the server in the background and then test a client.
 go run server/server.go &
 go run client/client.go
 ```
+
+## Build 
+
+Building creates executables that can be installed directly to your local bin
+
+```shell
+go build -o bin/ ./cmd/...
+```
