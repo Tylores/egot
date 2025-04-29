@@ -20,7 +20,7 @@ func main() {
 	}
 	time.Sleep(100 * time.Millisecond)
 
-	client := exec.Command("./bin/client")
+	client := exec.Command("./bin/crawler")
 	client.Stdout = os.Stdout
 	client.Stderr = os.Stderr
 
