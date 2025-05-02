@@ -12,15 +12,16 @@ const (
 
 // DeviceCapability is Returned by the URI provided by DNS-SD, to allow clients to find the URIs to the resources in which they are interested.
 type DeviceCapability struct {
+	*FunctionSetAssignmentsBase
 	PollRateAttr             uint32                    `xml:"pollRate,attr,omitempty"`
 	EndDeviceListLink        *EndDeviceListLink        `xml:"EndDeviceListLink"`
 	MirrorUsagePointListLink *MirrorUsagePointListLink `xml:"MirrorUsagePointListLink"`
 	SelfDeviceLink           *SelfDeviceLink           `xml:"SelfDeviceLink"`
-	*FunctionSetAssignmentsBase
 }
 
 // AbstractDevice is Short form of device identifier, WITH the checksum digit. See the Security section for additional details.
 type AbstractDevice struct {
+	*SubscribableResource
 	AggregatedDeviceListLink     *AggregatedDeviceListLink     `xml:"AggregatedDeviceListLink"`
 	AggregationPriorityLink      *AggregationPriorityLink      `xml:"AggregationPriorityLink"`
 	ConfigurationLink            *ConfigurationLink            `xml:"ConfigurationLink"`
@@ -37,11 +38,11 @@ type AbstractDevice struct {
 	Phase                        *PhaseCode                    `xml:"phase"`
 	PowerStatusLink              *PowerStatusLink              `xml:"PowerStatusLink"`
 	SFDI                         *SFDIType                     `xml:"sFDI"`
-	*SubscribableResource
 }
 
 // DeviceStatus is Total time device has operated: re-settable: Accumulated time in seconds since the last time the counter was reset.
 type DeviceStatus struct {
+	*Resource
 	PollRateAttr    uint32          `xml:"pollRate,attr,omitempty"`
 	ChangedTime     *TimeType       `xml:"changedTime"`
 	OnCount         uint16          `xml:"onCount"`
@@ -49,25 +50,25 @@ type DeviceStatus struct {
 	OpTime          uint32          `xml:"opTime"`
 	Temperature     []*Temperature  `xml:"Temperature"`
 	TimeLink        *TimeLink       `xml:"TimeLink"`
-	*Resource
 }
 
 // EndDeviceList is A List element to hold EndDevice objects.
 type EndDeviceList struct {
+	*SubscribableList
 	PollRateAttr     uint32          `xml:"pollRate,attr,omitempty"`
 	EndDevice        []*EndDevice    `xml:"EndDevice"`
-	*SubscribableList
 }
 
 // EndDevice is Asset container that performs one or more end device functions. Contains information about individual devices in the network.
 type EndDevice struct {
+	*ExternalDevice
 	ProxiedDeviceListLink *ProxiedDeviceListLink `xml:"ProxiedDeviceListLink,omitempty"`
 	SubscriptionListLink  *SubscriptionListLink  `xml:"SubscriptionListLink,omitempty"`
-	*ExternalDevice
 }
 
 // ExternalDevice is POST rate, or how often EndDevice and subordinate resources should be POSTed, in seconds. A client MAY indicate a preferred postRate when POSTing EndDevice. A server MAY add or modify postRate to indicate its preferred posting rate. If not specified, a default of 900 seconds (15 minutes) is used.
 type ExternalDevice struct {
+	*AbstractDevice
 	ChangedTime                     *TimeType                        `xml:"changedTime"`
 	Enabled                         bool                             `xml:"enabled"`
 	FlowReservationRequestListLink  *FlowReservationRequestListLink  `xml:"FlowReservationRequestListLink"`
@@ -75,22 +76,21 @@ type ExternalDevice struct {
 	FunctionSetAssignmentsListLink  *FunctionSetAssignmentsListLink  `xml:"FunctionSetAssignmentsListLink"`
 	PostRate                        uint32                           `xml:"postRate"`
 	RegistrationLink                *RegistrationLink                `xml:"RegistrationLink"`
-	*AbstractDevice
 }
 
 // Registration is Contains the registration PIN number associated with the device, including the checksum digit.
 type Registration struct {
+	*Resource
 	PollRateAttr       uint32          `xml:"pollRate,attr,omitempty"`
 	DateTimeRegistered *TimeType       `xml:"dateTimeRegistered"`
 	PIN                *PINType        `xml:"pIN"`
-	*Resource
 }
 
 // SelfDevice is Asset container for the host serving the resources available within DeviceCapability. Contains information about the given host device/entity.
 type SelfDevice struct {
+	*AbstractDevice
 	PollRateAttr          uint32                 `xml:"pollRate,attr,omitempty"`
 	ProxiedDeviceListLink *ProxiedDeviceListLink `xml:"ProxiedDeviceListLink"`
-	*AbstractDevice
 }
 
 // Temperature is Value in Degrees Celsius (uom 23).
@@ -102,6 +102,7 @@ type Temperature struct {
 
 // FunctionSetAssignmentsBase is Defines a collection of function set instances that are to be used by one or more devices as indicated by the EndDevice object(s) of the server.
 type FunctionSetAssignmentsBase struct {
+	*Resource
 	CustomerAccountListLink       *CustomerAccountListLink       `xml:"CustomerAccountListLink"`
 	DemandResponseProgramListLink *DemandResponseProgramListLink `xml:"DemandResponseProgramListLink"`
 	DERProgramListLink            *DERProgramListLink            `xml:"DERProgramListLink"`
@@ -112,23 +113,22 @@ type FunctionSetAssignmentsBase struct {
 	TariffProfileListLink         *TariffProfileListLink         `xml:"TariffProfileListLink"`
 	TimeLink                      *TimeLink                      `xml:"TimeLink"`
 	UsagePointListLink            *UsagePointListLink            `xml:"UsagePointListLink"`
-	*Resource
 }
 
 // FunctionSetAssignments is Contains the version number of the object. See the type definition for details.
 type FunctionSetAssignments struct {
+	*FunctionSetAssignmentsBase
 	SubscribableAttr          *UInt8          `xml:"subscribable,attr,omitempty"`
 	MRID                      *MRIDType       `xml:"mRID"`
 	Description               string          `xml:"description"`
 	Version                   *VersionType    `xml:"version"`
-	*FunctionSetAssignmentsBase
 }
 
 // FunctionSetAssignmentsList is A List element to hold FunctionSetAssignments objects.
 type FunctionSetAssignmentsList struct {
+	*SubscribableList
 	PollRateAttr                  uint32                    `xml:"pollRate,attr,omitempty"`
 	FunctionSetAssignments        []*FunctionSetAssignments `xml:"FunctionSetAssignments"`
-	*SubscribableList
 }
 
 // Condition is The value of the upper threshold
@@ -140,95 +140,95 @@ type Condition struct {
 
 // SubscriptionBase is The resource for which the subscription applies. Query string parameters SHALL NOT be specified when subscribing to list resources.  Should a query string parameter be specified, servers SHALL ignore them.
 type SubscriptionBase struct {
-	SubscribedResource  string          `xml:"subscribedResource"`
 	*Resource
+	SubscribedResource  string          `xml:"subscribedResource"`
 }
 
 // Subscription is The resource to which to post the notifications about the requested subscribed resource. Because this URI will exist on a server other than the one being POSTed to, this attribute SHALL be a fully-qualified absolute URI, not a relative reference.
 type Subscription struct {
+	*SubscriptionBase
 	Condition       *Condition      `xml:"Condition"`
 	Encoding        uint8           `xml:"encoding"`
 	Level           string          `xml:"level"`
 	Limit           uint32          `xml:"limit"`
 	NotificationURI string          `xml:"notificationURI"`
-	*SubscriptionBase
 }
 
 // SubscriptionList is A List element to hold Subscription objects.
 type SubscriptionList struct {
+	*List
 	PollRateAttr        uint32          `xml:"pollRate,attr,omitempty"`
 	Subscription        []*Subscription `xml:"Subscription"`
-	*List
 }
 
 // Notification is The subscription from which this notification was triggered. This attribute SHALL be a fully-qualified absolute URI, not a relative reference.
 type Notification struct {
+	*SubscriptionBase
 	CreatedDateTime *TimeType       `xml:"createdDateTime"`
 	NewResourceURI  string          `xml:"newResourceURI"`
 	Resource        *Resource       `xml:"Resource"`
 	Status          uint8           `xml:"status"`
 	SubscriptionURI string          `xml:"subscriptionURI"`
-	*SubscriptionBase
 }
 
 // NotificationList is A List element to hold Notification objects.
 type NotificationList struct {
-	Notification        []*Notification `xml:"Notification"`
 	*List
+	Notification        []*Notification `xml:"Notification"`
 }
 
 // ResponseSetList is A List element to hold ResponseSet objects.
 type ResponseSetList struct {
+	*List
 	PollRateAttr       uint32          `xml:"pollRate,attr,omitempty"`
 	ResponseSet        []*ResponseSet  `xml:"ResponseSet"`
-	*List
 }
 
 // ResponseSet is A container for a ResponseList.
 type ResponseSet struct {
-	ResponseListLink *ResponseListLink `xml:"ResponseListLink"`
 	*IdentifiedObject
+	ResponseListLink *ResponseListLink `xml:"ResponseListLink"`
 }
 
 // ResponseList is A List element to hold Response objects.
 type ResponseList struct {
-	Response        []*Response     `xml:"Response"`
 	*List
+	Response        []*Response     `xml:"Response"`
 }
 
 // Response is The subject field provides a method to match the response with the originating event. It is populated with the mRID of the original object.
 type Response struct {
+	*Resource
 	CreatedDateTime *TimeType       `xml:"createdDateTime"`
 	EndDeviceLFDI   string          `xml:"endDeviceLFDI"`
 	Status          uint8           `xml:"status"`
 	Subject         *MRIDType       `xml:"subject"`
-	*Resource
 }
 
 // DefaultDERControlResponse is Indicates additional individual DERControl Modes for which the DefaultDERControlResponse applies.
 type DefaultDERControlResponse struct {
+	*Response
 	DefaultsResponded            *DefaultDERControlType `xml:"defaultsResponded"`
 	ModesResponded               *DERControlType        `xml:"modesResponded"`
 	ModesResponded2              *DERControlType2       `xml:"modesResponded2"`
-	*Response
 }
 
 // DERControlResponse is Indicates additional individual DERControl Modes for which the DERControlResponse applies. It should be noted that in previous revisions of IEEE 2030.5 this field was not defined. When the field is not present, the additional individual DERControl Modes for which the DERControlResponse applies is none (as none of those DERControl Modes existed in previous revisions of IEEE 2030.5).
 type DERControlResponse struct {
+	*Response
 	ModesResponded        *DERControlType  `xml:"modesResponded"`
 	ModesResponded2       *DERControlType2 `xml:"modesResponded2"`
-	*Response
 }
 
 // DrResponse is Indicates the amount of time, in seconds, that the client partially opts-out during the demand response event. When overriding within the allowed override duration, the client SHALL send a partial opt-out (Response status code 8) for partial opt-out upon completion, with the total time the event was overridden (this attribute) populated. The client SHALL send a no participation status response (status type 10) if the user partially opts-out for longer than EndDeviceControl.overrideDuration.
 type DrResponse struct {
+	*Response
 	ApplianceLoadReduction *ApplianceLoadReduction `xml:"ApplianceLoadReduction"`
 	AppliedTargetReduction *AppliedTargetReduction `xml:"AppliedTargetReduction"`
 	DutyCycle              *DutyCycle              `xml:"DutyCycle"`
 	Offset                 *Offset                 `xml:"Offset"`
 	OverrideDuration       uint16                  `xml:"overrideDuration"`
 	SetPoint               *SetPoint               `xml:"SetPoint"`
-	*Response
 }
 
 // AppliedTargetReduction is Indicates the requested amount of the relevant commodity to be reduced.
@@ -254,6 +254,7 @@ type TextResponse struct {
 
 // Time is Local time zone offset from currentTime. Does not include any daylight savings time offsets. For American time zones, a negative tzOffset SHALL be used (eg, EST = GMT-5 which is -18000).
 type Time struct {
+	*Resource
 	PollRateAttr uint32          `xml:"pollRate,attr,omitempty"`
 	CurrentTime  TimeType       `xml:"currentTime"`
 	DstEndTime   TimeType       `xml:"dstEndTime"`
@@ -262,11 +263,11 @@ type Time struct {
 	LocalTime    TimeType       `xml:"localTime"`
 	Quality      uint8           `xml:"quality"`
 	TzOffset     TimeOffsetType `xml:"tzOffset"`
-	*Resource
 }
 
 // DeviceInformation is Currently running software version
 type DeviceInformation struct {
+	*Resource
 	PollRateAttr            uint32                   `xml:"pollRate,attr,omitempty"`
 	ConnectionPointID       string                   `xml:"connectionPointID"`
 	DRLCCapabilities        *DRLCCapabilities        `xml:"DRLCCapabilities"`
@@ -284,7 +285,6 @@ type DeviceInformation struct {
 	SupportedLocaleListLink *SupportedLocaleListLink `xml:"SupportedLocaleListLink"`
 	SwActTime               *TimeType                `xml:"swActTime"`
 	SwVer                   string                   `xml:"swVer"`
-	*Resource
 }
 
 // DRLCCapabilities is Bitmap indicating the DRLC options implemented by the device.
@@ -316,18 +316,19 @@ type DRLCCapabilities struct {
 
 // SupportedLocale is The code for a locale that is supported
 type SupportedLocale struct {
-	Locale             *LocaleType     `xml:"locale"`
 	*Resource
+	Locale             *LocaleType     `xml:"locale"`
 }
 
 // SupportedLocaleList is A List element to hold SupportedLocale objects.
 type SupportedLocaleList struct {
-	SupportedLocale        []*SupportedLocale `xml:"SupportedLocale"`
 	*List
+	SupportedLocale        []*SupportedLocale `xml:"SupportedLocale"`
 }
 
 // PowerStatus is If the device has a battery, this is the total time the device has been on battery power, in seconds. It may be reset when the battery is replaced.
 type PowerStatus struct {
+	*Resource
 	PollRateAttr             uint32           `xml:"pollRate,attr,omitempty"`
 	BatteryStatus            uint8            `xml:"batteryStatus"`
 	ChangedTime              *TimeType        `xml:"changedTime"`
@@ -337,7 +338,6 @@ type PowerStatus struct {
 	PEVInfo                  *PEVInfo         `xml:"PEVInfo"`
 	SessionTimeOnBattery     uint32           `xml:"sessionTimeOnBattery"`
 	TotalTimeOnBattery       uint32           `xml:"totalTimeOnBattery"`
-	*Resource
 }
 
 // PowerSourceType is 0 - none
@@ -370,19 +370,20 @@ type IEEE802154 struct {
 
 // IPAddr is An IP address value.
 type IPAddr struct {
+	*Resource
 	Address             string               `xml:"address"`
 	RPLInstanceListLink *RPLInstanceListLink `xml:"RPLInstanceListLink"`
-	*Resource
 }
 
 // IPAddrList is List of IPAddr instances.
 type IPAddrList struct {
-	IPAddr        []*IPAddr       `xml:"IPAddr"`
 	*List
+	IPAddr        []*IPAddr       `xml:"IPAddr"`
 }
 
 // IPInterface is The date/time of the reported status.
 type IPInterface struct {
+	*Resource
 	IfDescr             string               `xml:"ifDescr"`
 	IfHighSpeed         uint32               `xml:"ifHighSpeed"`
 	IfInBroadcastPkts   uint32               `xml:"ifInBroadcastPkts"`
@@ -409,18 +410,18 @@ type IPInterface struct {
 	LastResetTime       int64                `xml:"lastResetTime"`
 	LastUpdatedTime     int64                `xml:"lastUpdatedTime"`
 	LLInterfaceListLink *LLInterfaceListLink `xml:"LLInterfaceListLink"`
-	*Resource
 }
 
 // IPInterfaceList is List of IPInterface instances.
 type IPInterfaceList struct {
+	*List
 	PollRateAttr       uint32          `xml:"pollRate,attr,omitempty"`
 	IPInterface        []*IPInterface  `xml:"IPInterface"`
-	*List
 }
 
 // LLInterface is Number of receive security errors.
 type LLInterface struct {
+	*Resource
 	CRCerrors         uint32          `xml:"CRCerrors"`
 	EUI64             string          `xml:"EUI64"`
 	IEEE802154        *IEEE802154     `xml:"IEEE_802_15_4"`
@@ -437,13 +438,12 @@ type LLInterface struct {
 	LLRetryCount      uint32          `xml:"LLRetryCount"`
 	LLSecurityErrorRx uint32          `xml:"LLSecurityErrorRx"`
 	LoWPAN            *LoWPAN         `xml:"loWPAN"`
-	*Resource
 }
 
 // LLInterfaceList is List of LLInterface instances.
 type LLInterfaceList struct {
-	LLInterface        []*LLInterface  `xml:"LLInterface"`
 	*List
+	LLInterface        []*LLInterface  `xml:"LLInterface"`
 }
 
 // LoWPAN is Number of errors receiving fragments
@@ -458,20 +458,21 @@ type LoWPAN struct {
 
 // Neighbor is As defined by IEEE 802.15.4
 type Neighbor struct {
+	*Resource
 	IsChild      bool            `xml:"isChild"`
 	LinkQuality  uint8           `xml:"linkQuality"`
 	ShortAddress uint16          `xml:"shortAddress"`
-	*Resource
 }
 
 // NeighborList is List of 15.4 neighbors.
 type NeighborList struct {
-	Neighbor        []*Neighbor     `xml:"Neighbor"`
 	*List
+	Neighbor        []*Neighbor     `xml:"Neighbor"`
 }
 
 // RPLInstance is See [RFC 6550].
 type RPLInstance struct {
+	*Resource
 	DODAGid                 uint8                    `xml:"DODAGid"`
 	DODAGroot               bool                     `xml:"DODAGroot"`
 	Flags                   uint8                    `xml:"flags"`
@@ -482,26 +483,25 @@ type RPLInstance struct {
 	RPLInstanceID           uint8                    `xml:"RPLInstanceID"`
 	RPLSourceRoutesListLink *RPLSourceRoutesListLink `xml:"RPLSourceRoutesListLink"`
 	VersionNumber           uint8                    `xml:"versionNumber"`
-	*Resource
 }
 
 // RPLInstanceList is List of RPLInstances associated with the IPinterface.
 type RPLInstanceList struct {
-	RPLInstance        []*RPLInstance  `xml:"RPLInstance"`
 	*List
+	RPLInstance        []*RPLInstance  `xml:"RPLInstance"`
 }
 
 // RPLSourceRoutes is See [RFC 6554].
 type RPLSourceRoutes struct {
+	*Resource
 	DestAddress        string          `xml:"DestAddress"`
 	SourceRoute        string          `xml:"SourceRoute"`
-	*Resource
 }
 
 // RPLSourceRoutesList is List or RPL source routes if the hosting device is the DODAGroot
 type RPLSourceRoutesList struct {
-	RPLSourceRoutes        []*RPLSourceRoutes `xml:"RPLSourceRoutes"`
 	*List
+	RPLSourceRoutes        []*RPLSourceRoutes `xml:"RPLSourceRoutes"`
 }
 
 // LogEvent is The profileID identifies which profile (HA, BA, SE, etc) defines the following event information.
@@ -512,6 +512,7 @@ type RPLSourceRoutesList struct {
 // 4Building Automation
 // All other values are reserved.
 type LogEvent struct {
+	*Resource
 	CreatedDateTime *TimeType       `xml:"createdDateTime"`
 	Details         string          `xml:"details"`
 	ExtendedData    uint32          `xml:"extendedData"`
@@ -520,25 +521,24 @@ type LogEvent struct {
 	LogEventID      uint16          `xml:"logEventID"`
 	LogEventPEN     *PENType        `xml:"logEventPEN"`
 	ProfileID       uint8           `xml:"profileID"`
-	*Resource
 }
 
 // LogEventList is A List element to hold LogEvent objects.
 type LogEventList struct {
+	*SubscribableList
 	PollRateAttr    uint32          `xml:"pollRate,attr,omitempty"`
 	LogEvent        []*LogEvent     `xml:"LogEvent"`
-	*SubscribableList
 }
 
 // Configuration is User assigned, convenience name used for network browsing displays, etc.  Example "My Thermostat"
 type Configuration struct {
+	*SubscribableResource
 	PollRateAttr             uint32                    `xml:"pollRate,attr,omitempty"`
 	CurrentLocale            *LocaleType               `xml:"currentLocale"`
 	PowerConfiguration       *PowerConfiguration       `xml:"PowerConfiguration"`
 	PriceResponseCfgListLink *PriceResponseCfgListLink `xml:"PriceResponseCfgListLink"`
 	TimeConfiguration        *TimeConfiguration        `xml:"TimeConfiguration"`
 	UserDeviceName           string                    `xml:"userDeviceName"`
-	*SubscribableResource
 }
 
 // PowerConfiguration is In context of the PowerStatus resource, this is the value of EstimatedTimeRemaining below which BatteryStatus "low" is indicated and the PS_LOW_BATTERY is raised.
@@ -549,16 +549,16 @@ type PowerConfiguration struct {
 
 // PriceResponseCfg is Price responsive clients acting upon the associated RateComponent SHOULD reduce consumption to the maximum extent possible while the price is greater than this threshold.
 type PriceResponseCfg struct {
+	*Resource
 	ConsumeThreshold      int                `xml:"consumeThreshold"`
 	MaxReductionThreshold int                `xml:"maxReductionThreshold"`
 	RateComponentLink     *RateComponentLink `xml:"RateComponentLink"`
-	*Resource
 }
 
 // PriceResponseCfgList is A List element to hold PriceResponseCfg objects.
 type PriceResponseCfgList struct {
-	PriceResponseCfg        []*PriceResponseCfg `xml:"PriceResponseCfg"`
 	*List
+	PriceResponseCfg        []*PriceResponseCfg `xml:"PriceResponseCfg"`
 }
 
 // TimeConfiguration is Local time zone offset from UTCTime. Does not include any daylight savings time offsets.
@@ -577,6 +577,7 @@ type TimeConfiguration struct {
 // 04–7FFF = reserved
 // 8000-FFFF = Manufacturer defined
 type File struct {
+	*Resource
 	ActivateTime *TimeType       `xml:"activateTime"`
 	FileURI      string          `xml:"fileURI"`
 	LFDI         string          `xml:"lFDI"`
@@ -587,18 +588,18 @@ type File struct {
 	MfVer        string          `xml:"mfVer"`
 	Size         uint32          `xml:"size"`
 	Type         string          `xml:"type"`
-	*Resource
 }
 
 // FileList is A List element to hold File objects.
 type FileList struct {
+	*List
 	PollRateAttr uint32          `xml:"pollRate,attr,omitempty"`
 	File         []*File         `xml:"File"`
-	*List
 }
 
 // FileStatus is This element SHALL be set to the time at which file status transitioned to the value indicated in the status element.
 type FileStatus struct {
+	*Resource
 	PollRateAttr       uint32          `xml:"pollRate,attr,omitempty"`
 	ActivateTime       *TimeType       `xml:"activateTime"`
 	FileLink           *FileLink       `xml:"FileLink"`
@@ -608,14 +609,13 @@ type FileStatus struct {
 	RequestFailCount   uint16          `xml:"requestFailCount"`
 	Status             uint8           `xml:"status"`
 	StatusTime         *TimeType       `xml:"statusTime"`
-	*Resource
 }
 
 // LoadShedAvailabilityList is A List element to hold LoadShedAvailability objects.
 type LoadShedAvailabilityList struct {
+	*List
 	PollRateAttr                uint32                  `xml:"pollRate,attr,omitempty"`
 	LoadShedAvailability        []*LoadShedAvailability `xml:"LoadShedAvailability"`
-	*List
 }
 
 // ApplianceLoadReduction is Indicates the type of appliance load reduction requested.
@@ -625,19 +625,19 @@ type ApplianceLoadReduction struct {
 
 // DemandResponseProgram is Indicates the relative primacy of the provider of this program.
 type DemandResponseProgram struct {
+	*IdentifiedObject
 	ActiveEndDeviceControlListLink           *ActiveEndDeviceControlListLink `xml:"ActiveEndDeviceControlListLink"`
 	AvailabilityUpdatePercentChangeThreshold *PerCent                        `xml:"availabilityUpdatePercentChangeThreshold"`
 	AvailabilityUpdatePowerChangeThreshold   *ActivePower                    `xml:"availabilityUpdatePowerChangeThreshold"`
 	EndDeviceControlListLink                 *EndDeviceControlListLink       `xml:"EndDeviceControlListLink"`
 	Primacy                                  *PrimacyType                    `xml:"primacy"`
-	*IdentifiedObject
 }
 
 // DemandResponseProgramList is A List element to hold DemandResponseProgram objects.
 type DemandResponseProgramList struct {
+	*SubscribableList
 	PollRateAttr                 uint32                   `xml:"pollRate,attr,omitempty"`
 	DemandResponseProgram        []*DemandResponseProgram `xml:"DemandResponseProgram"`
-	*SubscribableList
 }
 
 // DutyCycle is Contains the maximum On state duty cycle applied by the end device, as a percentage of time.  The field not present indicates that this field has not been used by the end device.
@@ -647,6 +647,7 @@ type DutyCycle struct {
 
 // EndDeviceControl is The overrideDuration attribute provides a duration, in seconds, for which a client device is allowed to override this EndDeviceControl and still meet the contractual agreement with a service provider without opting out. If overrideDuration is not specified, then it SHALL default to 0.
 type EndDeviceControl struct {
+	*RandomizableEvent
 	ApplianceLoadReduction *ApplianceLoadReduction `xml:"ApplianceLoadReduction"`
 	DeviceCategory         *DeviceCategoryType     `xml:"deviceCategory"`
 	DrProgramMandatory     bool                    `xml:"drProgramMandatory"`
@@ -656,22 +657,21 @@ type EndDeviceControl struct {
 	OverrideDuration       uint16                  `xml:"overrideDuration"`
 	SetPoint               *SetPoint               `xml:"SetPoint"`
 	TargetReduction        *TargetReduction        `xml:"TargetReduction"`
-	*RandomizableEvent
 }
 
 // EndDeviceControlList is A List element to hold EndDeviceControl objects.
 type EndDeviceControlList struct {
-	EndDeviceControl        []*EndDeviceControl `xml:"EndDeviceControl"`
 	*SubscribableList
+	EndDeviceControl        []*EndDeviceControl `xml:"EndDeviceControl"`
 }
 
 // LoadShedAvailability is Maximum amount of current operating load that is estimated to be sheddable, in Watts.
 type LoadShedAvailability struct {
+	*Resource
 	AvailabilityDuration      uint32                     `xml:"availabilityDuration"`
 	DemandResponseProgramLink *DemandResponseProgramLink `xml:"DemandResponseProgramLink"`
 	SheddablePercent          *PerCent                   `xml:"sheddablePercent"`
 	SheddablePower            *ActivePower               `xml:"sheddablePower"`
-	*Resource
 }
 
 // Offset is The value change requested for the load adjustment percentage. The value should be subtracted from the normal setting, or if loadShiftForward is true, then the value should be added to the normal setting.
@@ -695,46 +695,47 @@ type TargetReduction struct {
 
 // MeterReading is Set of values obtained from the meter.
 type MeterReading struct {
+	*MeterReadingBase
 	RateComponentListLink *RateComponentListLink `xml:"RateComponentListLink"`
 	ReadingLink           *ReadingLink           `xml:"ReadingLink"`
 	ReadingSetListLink    *ReadingSetListLink    `xml:"ReadingSetListLink"`
 	ReadingTypeLink       *ReadingTypeLink       `xml:"ReadingTypeLink"`
-	*MeterReadingBase
 }
 
 // MeterReadingList is A List element to hold MeterReading objects.
 type MeterReadingList struct {
-	MeterReading        []*MeterReading `xml:"MeterReading"`
 	*SubscribableList
+	MeterReading        []*MeterReading `xml:"MeterReading"`
 }
 
 // Reading is The local identifier for this reading within the reading set. localIDs are assigned in order of creation time. For interval data, this value SHALL increase with each interval time, and for block/tier readings, localID SHALL not be specified.
 type Reading struct {
+	*ReadingBase
 	SubscribableAttr *UInt8          `xml:"subscribable,attr,omitempty"`
 	LocalID          string          `xml:"localID"`
-	*ReadingBase
 }
 
 // ReadingList is A List element to hold Reading objects.
 type ReadingList struct {
-	Reading        []*Reading      `xml:"Reading"`
 	*SubscribableList
+	Reading        []*Reading      `xml:"Reading"`
 }
 
 // ReadingSet is A set of Readings of the ReadingType indicated by the parent MeterReading.
 type ReadingSet struct {
-	ReadingListLink *ReadingListLink `xml:"ReadingListLink"`
 	*ReadingSetBase
+	ReadingListLink *ReadingListLink `xml:"ReadingListLink"`
 }
 
 // ReadingSetList is A List element to hold ReadingSet objects.
 type ReadingSetList struct {
-	ReadingSet        []*ReadingSet   `xml:"ReadingSet"`
 	*SubscribableList
+	ReadingSet        []*ReadingSet   `xml:"ReadingSet"`
 }
 
 // ReadingType is Indicates the measurement type for the units of measure for the readings of this type.
 type ReadingType struct {
+	*Resource
 	AccumulationBehaviour     *AccumulationBehaviourType `xml:"accumulationBehaviour"`
 	CalorificValue            *UnitValueType             `xml:"calorificValue"`
 	Commodity                 *CommodityType             `xml:"commodity"`
@@ -752,38 +753,37 @@ type ReadingType struct {
 	SupplyLimit               uint64                     `xml:"supplyLimit"`
 	TieredConsumptionBlocks   bool                       `xml:"tieredConsumptionBlocks"`
 	Uom                       *UomType                   `xml:"uom"`
-	*Resource
 }
 
 // UsagePoint is The LFDI of the source device. This attribute SHALL be present when mirroring.
 type UsagePoint struct {
+	*UsagePointBase
 	DeviceLFDI           string                `xml:"deviceLFDI"`
 	MeterReadingListLink *MeterReadingListLink `xml:"MeterReadingListLink"`
-	*UsagePointBase
 }
 
 // UsagePointList is A List element to hold UsagePoint objects.
 type UsagePointList struct {
+	*SubscribableList
 	PollRateAttr      uint32          `xml:"pollRate,attr,omitempty"`
 	UsagePoint        []*UsagePoint   `xml:"UsagePoint"`
-	*SubscribableList
 }
 
 // ConsumptionTariffInterval is The lowest level of consumption that defines the starting point of this consumption step or block. Thresholds start at zero for each billing period.
 //
 // If specified, the first ConsumptionTariffInterval.startValue for a TimeTariffInteral instance SHALL begin at "0." Subsequent ConsumptionTariffInterval.startValue elements SHALL be greater than the previous one.
 type ConsumptionTariffInterval struct {
+	*Resource
 	ConsumptionBlock             *ConsumptionBlockType `xml:"consumptionBlock"`
 	EnvironmentalCost            []*EnvironmentalCost  `xml:"EnvironmentalCost"`
 	Price                        int                   `xml:"price"`
 	StartValue                   uint64                `xml:"startValue"`
-	*Resource
 }
 
 // ConsumptionTariffIntervalList is A List element to hold ConsumptionTariffInterval objects.
 type ConsumptionTariffIntervalList struct {
-	ConsumptionTariffInterval        []*ConsumptionTariffInterval `xml:"ConsumptionTariffInterval"`
 	*List
+	ConsumptionTariffInterval        []*ConsumptionTariffInterval `xml:"ConsumptionTariffInterval"`
 }
 
 // CostKindType is 0 - Carbon Dioxide emissions, in grams per unit
@@ -811,17 +811,17 @@ type RateComponent struct {
 	ReadingTypeLink                  *ReadingTypeLink                  `xml:"ReadingTypeLink"`
 	RoleFlags                        *RoleFlagsType                    `xml:"roleFlags"`
 	TimeTariffIntervalListLink       *TimeTariffIntervalListLink       `xml:"TimeTariffIntervalListLink"`
-	*IdentifiedObject
 }
 
 // RateComponentList is A List element to hold RateComponent objects.
 type RateComponentList struct {
-	RateComponent        []*RateComponent `xml:"RateComponent"`
 	*List
+	RateComponent        []*RateComponent `xml:"RateComponent"`
 }
 
 // TariffProfile is URI for information regarding the tariff. This may be a web page with a description of the tariff in machine or human readable form. This should describe the current tariff if there are multiple versions.
 type TariffProfile struct {
+	*IdentifiedObject
 	BindingPrices                bool                      `xml:"bindingPrices"`
 	Currency                     *CurrencyCode             `xml:"currency"`
 	DateAnnounced                *TimeType                 `xml:"dateAnnounced"`
@@ -837,43 +837,42 @@ type TariffProfile struct {
 	RetailerLong                 string                    `xml:"retailerLong"`
 	ServiceCategoryKind          *ServiceKind              `xml:"serviceCategoryKind"`
 	TariffDescriptionExternalURI string                    `xml:"tariffDescriptionExternalURI"`
-	*IdentifiedObject
 }
 
 // TariffProfileList is A List element to hold TariffProfile objects.
 type TariffProfileList struct {
+	*SubscribableList
 	PollRateAttr         uint32           `xml:"pollRate,attr,omitempty"`
 	TariffProfile        []*TariffProfile `xml:"TariffProfile"`
-	*SubscribableList
 }
 
 // TimeTariffInterval is Indicates the time of use tier related to the reading. If not specified, is assumed to be "0 - N/A".
 type TimeTariffInterval struct {
+	*RandomizableEvent
 	ConsumptionTariffIntervalListLink *ConsumptionTariffIntervalListLink `xml:"ConsumptionTariffIntervalListLink"`
 	TouTier                           *TOUType                           `xml:"touTier"`
-	*RandomizableEvent
 }
 
 // TimeTariffIntervalList is A List element to hold TimeTariffInterval objects.
 type TimeTariffIntervalList struct {
-	TimeTariffInterval        []*TimeTariffInterval `xml:"TimeTariffInterval"`
 	*SubscribableList
+	TimeTariffInterval        []*TimeTariffInterval `xml:"TimeTariffInterval"`
 }
 
 // MessagingProgram is Indicates the relative primacy of the provider of this program.
 type MessagingProgram struct {
+	*SubscribableIdentifiedObject
 	ActiveTextMessageListLink *ActiveTextMessageListLink `xml:"ActiveTextMessageListLink"`
 	Locale                    *LocaleType                `xml:"locale"`
 	Primacy                   *PrimacyType               `xml:"primacy"`
 	TextMessageListLink       *TextMessageListLink       `xml:"TextMessageListLink"`
-	*SubscribableIdentifiedObject
 }
 
 // MessagingProgramList is A List element to hold MessagingProgram objects.
 type MessagingProgramList struct {
+	*SubscribableList
 	PollRateAttr            uint32              `xml:"pollRate,attr,omitempty"`
 	MessagingProgram        []*MessagingProgram `xml:"MessagingProgram"`
-	*SubscribableList
 }
 
 // PriorityType is Indicates the priority of a message:
@@ -886,62 +885,62 @@ type PriorityType = UInt8
 
 // TextMessage is The textMessage attribute contains the actual UTF-8 encoded text to be displayed in conjunction with the messageLength attribute which contains the overall length of the textMessage attribute.  Clients and servers SHALL support a reception of a Message of 100 bytes in length.  Messages that exceed the clients display size will be left to the client to choose what method to handle the message (truncation, scrolling, etc.).
 type TextMessage struct {
+	*Event
 	Originator     string          `xml:"originator"`
 	Priority       *PriorityType   `xml:"priority"`
 	TextMessage    string          `xml:"textMessage"`
-	*Event
 }
 
 // TextMessageList is A List element to hold TextMessage objects.
 type TextMessageList struct {
-	TextMessage        []*TextMessage  `xml:"TextMessage"`
 	*SubscribableList
+	TextMessage        []*TextMessage  `xml:"TextMessage"`
 }
 
 // BillingPeriod is The date / time of the last update of this resource.
 type BillingPeriod struct {
+	*Resource
 	BillLastPeriod   int64             `xml:"billLastPeriod"`
 	BillToDate       int64             `xml:"billToDate"`
 	Interval         *DateTimeInterval `xml:"interval"`
 	StatusTimeStamp  *TimeType         `xml:"statusTimeStamp"`
-	*Resource
 }
 
 // BillingPeriodList is A List element to hold BillingPeriod objects.
 type BillingPeriodList struct {
-	BillingPeriod        []*BillingPeriod `xml:"BillingPeriod"`
 	*SubscribableList
+	BillingPeriod        []*BillingPeriod `xml:"BillingPeriod"`
 }
 
 // BillingMeterReadingBase is Contains historical, target, and projection readings of various types, possibly associated with charges.
 type BillingMeterReadingBase struct {
+	*MeterReadingBase
 	BillingReadingSetListLink  *BillingReadingSetListLink `xml:"BillingReadingSetListLink"`
 	ReadingTypeLink            *ReadingTypeLink           `xml:"ReadingTypeLink"`
-	*MeterReadingBase
 }
 
 // BillingReading is Data captured at regular intervals of time. Interval data could be captured as incremental data, absolute data, or relative data. The source for the data is usually a tariff quantity or an engineering quantity. Data is typically captured in time-tagged, uniform, fixed-length intervals of 5 min, 10 min, 15 min, 30 min, or 60 min. However, consumption aggregations can also be represented with this class.
 type BillingReading struct {
-	Charge            []*Charge       `xml:"Charge"`
 	*ReadingBase
+	Charge            []*Charge       `xml:"Charge"`
 }
 
 // BillingReadingList is A List element to hold BillingReading objects.
 type BillingReadingList struct {
-	BillingReading        []*BillingReading `xml:"BillingReading"`
 	*List
+	BillingReading        []*BillingReading `xml:"BillingReading"`
 }
 
 // BillingReadingSet is Time sequence of readings of the same reading type.
 type BillingReadingSet struct {
-	BillingReadingListLink *BillingReadingListLink `xml:"BillingReadingListLink"`
 	*ReadingSetBase
+	BillingReadingListLink *BillingReadingListLink `xml:"BillingReadingListLink"`
 }
 
 // BillingReadingSetList is A List element to hold BillingReadingSet objects.
 type BillingReadingSetList struct {
-	BillingReadingSet        []*BillingReadingSet `xml:"BillingReadingSet"`
 	*SubscribableList
+	BillingReadingSet        []*BillingReadingSet `xml:"BillingReadingSet"`
 }
 
 // Charge is A monetary charge.
@@ -961,24 +960,25 @@ type ChargeKind = UInt8
 
 // CustomerAccount is Indicates the power of ten multiplier for the prices in this function set.
 type CustomerAccount struct {
+	*IdentifiedObject
 	Currency                  uint16                     `xml:"currency"`
 	CustomerAccount           string                     `xml:"customerAccount"`
 	CustomerAgreementListLink *CustomerAgreementListLink `xml:"CustomerAgreementListLink"`
 	CustomerName              string                     `xml:"customerName"`
 	PricePowerOfTenMultiplier *PowerOfTenMultiplierType  `xml:"pricePowerOfTenMultiplier"`
 	ServiceSupplierLink       *ServiceSupplierLink       `xml:"ServiceSupplierLink"`
-	*IdentifiedObject
 }
 
 // CustomerAccountList is A List element to hold CustomerAccount objects.
 type CustomerAccountList struct {
+	*SubscribableList
 	PollRateAttr           uint32             `xml:"pollRate,attr,omitempty"`
 	CustomerAccount        []*CustomerAccount `xml:"CustomerAccount"`
-	*SubscribableList
 }
 
 // CustomerAgreement is The address or textual description of the service location.
 type CustomerAgreement struct {
+	*IdentifiedObject
 	ActiveBillingPeriodListLink     *ActiveBillingPeriodListLink     `xml:"ActiveBillingPeriodListLink"`
 	ActiveProjectionReadingListLink *ActiveProjectionReadingListLink `xml:"ActiveProjectionReadingListLink"`
 	ActiveTargetReadingListLink     *ActiveTargetReadingListLink     `xml:"ActiveTargetReadingListLink"`
@@ -991,13 +991,12 @@ type CustomerAgreement struct {
 	TargetReadingListLink           *TargetReadingListLink           `xml:"TargetReadingListLink"`
 	TariffProfileLink               *TariffProfileLink               `xml:"TariffProfileLink"`
 	UsagePointLink                  *UsagePointLink                  `xml:"UsagePointLink"`
-	*IdentifiedObject
 }
 
 // CustomerAgreementList is A List element to hold CustomerAgreement objects.
 type CustomerAgreementList struct {
-	CustomerAgreement        []*CustomerAgreement `xml:"CustomerAgreement"`
 	*SubscribableList
+	CustomerAgreement        []*CustomerAgreement `xml:"CustomerAgreement"`
 }
 
 // HistoricalReading is To be used to present readings that have been processed and possibly corrected (as allowed, due to missing or incorrect data) by backend systems. This includes quality codes valid, verified, estimated, and derived / corrected.
@@ -1007,8 +1006,8 @@ type HistoricalReading struct {
 
 // HistoricalReadingList is A List element to hold HistoricalReading objects.
 type HistoricalReadingList struct {
-	HistoricalReading        []*HistoricalReading `xml:"HistoricalReading"`
 	*List
+	HistoricalReading        []*HistoricalReading `xml:"HistoricalReading"`
 }
 
 // ProjectionReading is Contains values that forecast a future reading for the time or interval specified.
@@ -1018,8 +1017,8 @@ type ProjectionReading struct {
 
 // ProjectionReadingList is A List element to hold ProjectionReading objects.
 type ProjectionReadingList struct {
-	ProjectionReading        []*ProjectionReading `xml:"ProjectionReading"`
 	*List
+	ProjectionReading        []*ProjectionReading `xml:"ProjectionReading"`
 }
 
 // TargetReading is Contains readings that specify a target or goal, such as a consumption target, to which billing incentives or other contractual ramifications may be associated.
@@ -1029,26 +1028,26 @@ type TargetReading struct {
 
 // TargetReadingList is A List element to hold TargetReading objects.
 type TargetReadingList struct {
-	TargetReading        []*TargetReading `xml:"TargetReading"`
 	*List
+	TargetReading        []*TargetReading `xml:"TargetReading"`
 }
 
 // ServiceSupplier is Website URI address for this service supplier.
 type ServiceSupplier struct {
+	*IdentifiedObject
 	Email              string          `xml:"email"`
 	Phone              string          `xml:"phone"`
 	ProviderID         uint32          `xml:"providerID"`
 	Web                string          `xml:"web"`
-	*IdentifiedObject
 }
 
 // AccountBalance is EmergencyCreditStatus identifies whether the present value of emergencyCredit is considered OK, low, exhausted, or negative.
 type AccountBalance struct {
+	*Resource
 	AvailableCredit       *AccountingUnit   `xml:"availableCredit"`
 	CreditStatus          *CreditStatusType `xml:"creditStatus"`
 	EmergencyCredit       *AccountingUnit   `xml:"emergencyCredit"`
 	EmergencyCreditStatus *CreditStatusType `xml:"emergencyCreditStatus"`
-	*Resource
 }
 
 // AccountingUnit is Value of the monetary aspect
@@ -1061,21 +1060,22 @@ type AccountingUnit struct {
 
 // CreditRegister is Token is security data that authenticates the legitimacy of the transaction. The details of this token are not defined by IEEE 2030.5. How a Prepayment server handles this field is left as vendor specific implementation or will be defined by one or more other standards.
 type CreditRegister struct {
+	*IdentifiedObject
 	CreditAmount      *AccountingUnit `xml:"creditAmount"`
 	CreditType        *CreditTypeType `xml:"creditType"`
 	EffectiveTime     *TimeType       `xml:"effectiveTime"`
 	Token             string          `xml:"token"`
-	*IdentifiedObject
 }
 
 // CreditRegisterList is A List element to hold CreditRegister objects.
 type CreditRegisterList struct {
-	CreditRegister        []*CreditRegister `xml:"CreditRegister"`
 	*List
+	CreditRegister        []*CreditRegister `xml:"CreditRegister"`
 }
 
 // Prepayment is PrepayMode specifies whether the given Prepayment instance is operating in Credit, Central Wallet, ESI, or Local prepayment mode. The Credit mode indicates that prepayment is not presently in effect. The other modes are described in the Overview Section above.
 type Prepayment struct {
+	*IdentifiedObject
 	AccountBalanceLink                       *AccountBalanceLink                       `xml:"AccountBalanceLink"`
 	ActiveCreditRegisterListLink             *ActiveCreditRegisterListLink             `xml:"ActiveCreditRegisterListLink"`
 	ActiveSupplyInterruptionOverrideListLink *ActiveSupplyInterruptionOverrideListLink `xml:"ActiveSupplyInterruptionOverrideListLink"`
@@ -1088,14 +1088,13 @@ type Prepayment struct {
 	SupplyInterruptionOverrideListLink       *SupplyInterruptionOverrideListLink       `xml:"SupplyInterruptionOverrideListLink"`
 	UsagePoint                               []*UsagePoint                             `xml:"UsagePoint"`
 	UsagePointLink                           *UsagePointLink                           `xml:"UsagePointLink"`
-	*IdentifiedObject
 }
 
 // PrepaymentList is A List element to hold Prepayment objects.
 type PrepaymentList struct {
+	*SubscribableList
 	PollRateAttr      uint32          `xml:"pollRate,attr,omitempty"`
 	Prepayment        []*Prepayment   `xml:"Prepayment"`
-	*SubscribableList
 }
 
 // PrepayModeType is 0 - Central Wallet
@@ -1107,11 +1106,11 @@ type PrepayModeType = UInt8
 
 // PrepayOperationStatus is ServiceStatus identifies whether the service is connected or disconnected, or armed for connection or disconnection.
 type PrepayOperationStatus struct {
+	*Resource
 	CreditTypeChange         *CreditTypeChange  `xml:"creditTypeChange"`
 	CreditTypeInUse          *CreditTypeType    `xml:"creditTypeInUse"`
 	ServiceChange            *ServiceChange     `xml:"serviceChange"`
 	ServiceStatus            *ServiceStatusType `xml:"serviceStatus"`
-	*Resource
 }
 
 // ServiceChange is The date/time when the change is to take effect.
@@ -1122,15 +1121,15 @@ type ServiceChange struct {
 
 // SupplyInterruptionOverride is Interval defines the period of time during which supply should not be interrupted.
 type SupplyInterruptionOverride struct {
+	*Resource
 	Description                   string            `xml:"description"`
 	Interval                      *DateTimeInterval `xml:"interval"`
-	*Resource
 }
 
 // SupplyInterruptionOverrideList is A List element to hold SupplyInterruptionOverride objects.
 type SupplyInterruptionOverrideList struct {
-	SupplyInterruptionOverride        []*SupplyInterruptionOverride `xml:"SupplyInterruptionOverride"`
 	*List
+	SupplyInterruptionOverride        []*SupplyInterruptionOverride `xml:"SupplyInterruptionOverride"`
 }
 
 // CreditStatusType is 0 - Credit Ok
@@ -1173,46 +1172,47 @@ type RequestStatus struct {
 
 // FlowReservationRequest is Indicates the sustained level of power, in Watts, that is requested. For charging this is calculated by the storage device and it represents the charging system capability (which for an electric vehicle must also account for any power limitations due to the EVSE control pilot). For discharging, a lower value than the inverter capability can be used as a target.
 type FlowReservationRequest struct {
+	*IdentifiedObject
 	CreationTime              *TimeType         `xml:"creationTime"`
 	DurationRequested         uint16            `xml:"durationRequested"`
 	EnergyRequested           *SignedRealEnergy `xml:"energyRequested"`
 	IntervalRequested         *DateTimeInterval `xml:"intervalRequested"`
 	PowerRequested            *ActivePower      `xml:"powerRequested"`
 	RequestStatus             *RequestStatus    `xml:"RequestStatus"`
-	*IdentifiedObject
 }
 
 // FlowReservationRequestList is A List element to hold FlowReservationRequest objects.
 type FlowReservationRequestList struct {
+	*List
 	PollRateAttr                  uint32                    `xml:"pollRate,attr,omitempty"`
 	FlowReservationRequest        []*FlowReservationRequest `xml:"FlowReservationRequest"`
-	*List
 }
 
 // FlowReservationResponse is The subject field provides a method to match the response with the originating event. It is populated with the mRID of the corresponding FlowReservationRequest object.
 type FlowReservationResponse struct {
+	*Event
 	EnergyAvailable            *SignedRealEnergy `xml:"energyAvailable"`
 	PowerAvailable             *ActivePower      `xml:"powerAvailable"`
 	Subject                    *MRIDType         `xml:"subject"`
-	*Event
 }
 
 // FlowReservationResponseList is A List element to hold FlowReservationResponse objects.
 type FlowReservationResponseList struct {
+	*SubscribableList
 	PollRateAttr                   uint32                     `xml:"pollRate,attr,omitempty"`
 	FlowReservationResponse        []*FlowReservationResponse `xml:"FlowReservationResponse"`
-	*SubscribableList
 }
 
 // DERList is A List element to hold a DER object. More than one DER object SHALL NOT be included, but it should be noted that previous revisions of IEEE 2030.5 allowed more than one DER object. This single DER object represents the entire DER for the EndDevice and is the DER that acts upon DERControls. Components of this DER MAY be represented in the DERComponentList.
 type DERList struct {
+	*List
 	PollRateAttr uint32          `xml:"pollRate,attr,omitempty"`
 	DER          []*DER          `xml:"DER"`
-	*List
 }
 
 // DER is Contains links to DER resources.
 type DER struct {
+	*SubscribableResource
 	AssociatedDERProgramListLink *AssociatedDERProgramListLink `xml:"AssociatedDERProgramListLink"`
 	AssociatedUsagePointLink     *AssociatedUsagePointLink     `xml:"AssociatedUsagePointLink"`
 	CurrentDERControlsLink       *CurrentDERControlsLink       `xml:"CurrentDERControlsLink"`
@@ -1222,11 +1222,11 @@ type DER struct {
 	DERComponentListLink         *DERComponentListLink         `xml:"DERComponentListLink"`
 	DERSettingsLink              *DERSettingsLink              `xml:"DERSettingsLink"`
 	DERStatusLink                *DERStatusLink                `xml:"DERStatusLink"`
-	*SubscribableResource
 }
 
 // CurrentDERControls is Specifies the time at which the CurrentDERControls information was last updated.
 type CurrentDERControls struct {
+	*SubscribableResource
 	OpModConnect                bool                                  `xml:"opModConnect"`
 	OpModDeltaVar               *ReactivePowerDeltaControlType        `xml:"opModDeltaVar"`
 	OpModDeltaW                 *ActivePowerDeltaControlType          `xml:"opModDeltaW"`
@@ -1268,33 +1268,33 @@ type CurrentDERControls struct {
 	OpModWattPF                 *DERCurveControlType                  `xml:"opModWattPF"`
 	OpModWattVar                *DERCurveControlType                  `xml:"opModWattVar"`
 	UpdatedTime                 *TimeType                             `xml:"updatedTime"`
-	*SubscribableResource
 }
 
 // DERComponentList is A List element to hold DERComponent resources. These DERComponents are components of their parent DER.
 type DERComponentList struct {
-	DERComponent        []*DERComponent `xml:"DERComponent"`
 	*List
+	DERComponent        []*DERComponent `xml:"DERComponent"`
 }
 
 // DERComponentBase is DER and DERComponent common base.
 type DERComponentBase struct {
+	*SubscribableResource
 	AssociatedUsagePointLink *AssociatedUsagePointLink `xml:"AssociatedUsagePointLink"`
 	DERAvailabilityLink      *DERAvailabilityLink      `xml:"DERAvailabilityLink"`
 	DERCapabilityLink        *DERCapabilityLink        `xml:"DERCapabilityLink"`
 	DERSettingsLink          *DERSettingsLink          `xml:"DERSettingsLink"`
 	DERStatusLink            *DERStatusLink            `xml:"DERStatusLink"`
-	*SubscribableResource
 }
 
 // DERComponent is The LFDI of the DERComponent.
 type DERComponent struct {
-	LFDI            string          `xml:"lFDI"`
 	*DERComponentBase
+	LFDI            string          `xml:"lFDI"`
 }
 
 // DERAvailability is Estimated reserve active power for injection / delivery, in watts. This value is equal to (estimated maximum possible output at readingTime) - (current output at readingTime). Note that this value SHALL always be positive (defined as ActivePower for legacy reasons). Also note that "current output" is defined to be greater than or equal to zero (not negative).
 type DERAvailability struct {
+	*SubscribableResource
 	AvailabilityDuration uint32                 `xml:"availabilityDuration"`
 	MaxChargeDuration    uint32                 `xml:"maxChargeDuration"`
 	ReadingTime          *TimeType              `xml:"readingTime"`
@@ -1304,11 +1304,11 @@ type DERAvailability struct {
 	StatVarAvail         *ReactivePower         `xml:"statVarAvail"`
 	StatWAbsorbAvail     *UnsignedActivePower   `xml:"statWAbsorbAvail"`
 	StatWAvail           *ActivePower           `xml:"statWAvail"`
-	*SubscribableResource
 }
 
 // DERCapability is Type of DER; see DERType object
 type DERCapability struct {
+	*Resource
 	ModesSupported         *DERControlType      `xml:"modesSupported"`
 	ModesSupported2        *DERControlType2     `xml:"modesSupported2"`
 	RtgAbnormalCategory    uint8                `xml:"rtgAbnormalCategory"`
@@ -1335,11 +1335,11 @@ type DERCapability struct {
 	RtgUnderExcitedW       *ActivePower         `xml:"rtgUnderExcitedW"`
 	RtgVNom                *VoltageRMS          `xml:"rtgVNom"`
 	Type                   *DERType             `xml:"type"`
-	*Resource
 }
 
 // DERSettings is Specifies the time at which the DER information was last updated.
 type DERSettings struct {
+	*SubscribableResource
 	ModesEnabled          *DERControlType  `xml:"modesEnabled"`
 	ModesEnabled2         *DERControlType2 `xml:"modesEnabled2"`
 	SetESDelay            uint32           `xml:"setESDelay"`
@@ -1370,12 +1370,12 @@ type DERSettings struct {
 	SetVRef               *VoltageRMS      `xml:"setVRef"`
 	SetVRefOfs            *VoltageRMS      `xml:"setVRefOfs"`
 	UpdatedTime           *TimeType        `xml:"updatedTime"`
-	*SubscribableResource
 }
 
 // DERStatus is DEPRECATED
 // SHALL NOT be included, but note that it may be included by devices compliant with previous revisions of IEEE 2030.5.
 type DERStatus struct {
+	*SubscribableResource
 	AlarmStatus            string                      `xml:"alarmStatus"`
 	ConnectStatus          *ConnectStatusType2         `xml:"connectStatus"`
 	GenConnectStatus       *ConnectStatusType          `xml:"genConnectStatus"`
@@ -1387,24 +1387,23 @@ type DERStatus struct {
 	StateOfChargeStatus    *StateOfChargeStatusType    `xml:"stateOfChargeStatus"`
 	StorageModeStatus      *StorageModeStatusType      `xml:"storageModeStatus"`
 	StorConnectStatus      *ConnectStatusType          `xml:"storConnectStatus"`
-	*SubscribableResource
 }
 
 // DERProgramList is A List element to hold DERProgram objects.
 type DERProgramList struct {
+	*SubscribableList
 	PollRateAttr      uint32          `xml:"pollRate,attr,omitempty"`
 	DERProgram        []*DERProgram   `xml:"DERProgram"`
-	*SubscribableList
 }
 
 // DERProgram is Indicates the relative primacy of the provider of this Program.
 type DERProgram struct {
+	*SubscribableIdentifiedObject
 	ActiveDERControlListLink *ActiveDERControlListLink `xml:"ActiveDERControlListLink"`
 	DefaultDERControlLink    *DefaultDERControlLink    `xml:"DefaultDERControlLink"`
 	DERControlListLink       *DERControlListLink       `xml:"DERControlListLink"`
 	DERCurveListLink         *DERCurveListLink         `xml:"DERCurveListLink"`
 	Primacy                  *PrimacyType              `xml:"primacy"`
-	*SubscribableIdentifiedObject
 }
 
 // DERControlBase is Requested ramp time, in hundredths of a second, for the device to transition from the current DERControl Mode(s) to the new DERControl Mode(s). If absent, use default ramp rate (setGradW).  Resolution is 1/100 sec.
@@ -1454,6 +1453,7 @@ type DERControlBase struct {
 
 // DefaultDERControl is Specifies the time at which the DefaultDERControl was last updated. Provides an additional mechanism to mRID and version for clients to determine when a DefaultDERControl has been updated.
 type DefaultDERControl struct {
+	*RespondableSubscribableIdentifiedObject
 	DERControlBase       *DERControlBase `xml:"DERControlBase"`
 	SetESDelay           uint32          `xml:"setESDelay"`
 	SetESHighFreq        uint16          `xml:"setESHighFreq"`
@@ -1465,30 +1465,30 @@ type DefaultDERControl struct {
 	SetGradW             uint16          `xml:"setGradW"`
 	SetSoftGradW         uint16          `xml:"setSoftGradW"`
 	UpdatedTime          *TimeType       `xml:"updatedTime"`
-	*RespondableSubscribableIdentifiedObject
 }
 
 // DERControlList is A List element to hold DERControl objects.
 type DERControlList struct {
-	DERControl        []*DERControl   `xml:"DERControl"`
 	*SubscribableList
+	DERControl        []*DERControl   `xml:"DERControl"`
 }
 
 // DERControl is Specifies the bitmap indicating  the categories of devices that SHOULD respond. Devices SHOULD ignore events that do not indicate their device category. If not present, all devices SHOULD respond.
 type DERControl struct {
+	*RandomizableEvent
 	DERControlBase *DERControlBase     `xml:"DERControlBase"`
 	DeviceCategory *DeviceCategoryType `xml:"deviceCategory"`
-	*RandomizableEvent
 }
 
 // DERCurveList is A List element to hold DERCurve objects.
 type DERCurveList struct {
-	DERCurve        []*DERCurve     `xml:"DERCurve"`
 	*List
+	DERCurve        []*DERCurve     `xml:"DERCurve"`
 }
 
 // DERCurve is The Y-axis units context.
 type DERCurve struct {
+	*IdentifiedObject
 	AutonomousVRefEnable       bool                      `xml:"autonomousVRefEnable"`
 	AutonomousVRefTimeConstant uint32                    `xml:"autonomousVRefTimeConstant"`
 	CreationTime               *TimeType                 `xml:"creationTime"`
@@ -1502,13 +1502,12 @@ type DERCurve struct {
 	XMultiplier                *PowerOfTenMultiplierType `xml:"xMultiplier"`
 	YMultiplier                *PowerOfTenMultiplierType `xml:"yMultiplier"`
 	YRefType                   *DERUnitRefType           `xml:"yRefType"`
-	*IdentifiedObject
 }
 
 // DERCurveControlType ...
 type DERCurveControlType struct {
-	DisabledAttr           bool            `xml:"disabled,attr,omitempty"`
 	*DERCurve
+	DisabledAttr           bool            `xml:"disabled,attr,omitempty"`
 }
 
 // CurveData is The data value of the Y-axis (dependent) variable, depending on the curve type. See definitions in DERControlBase for further information. If yvalue is Power Factor, the excitation field SHALL be present and yvalue SHALL be a positive value. If yvalue is not Power Factor, the excitation field SHALL NOT be present.
@@ -1544,15 +1543,15 @@ type ActivePower struct {
 
 // ActivePowerControlType ...
 type ActivePowerControlType struct {
-	DisabledAttr              bool            `xml:"disabled,attr,omitempty"`
 	*ActivePower
+	DisabledAttr              bool            `xml:"disabled,attr,omitempty"`
 }
 
 // ActivePowerDeltaControlType ...
 type ActivePowerDeltaControlType struct {
+	*ActivePower
 	BidirectionalAttr              *UInt8          `xml:"bidirectional,attr,omitempty"`
 	DisabledAttr                   bool            `xml:"disabled,attr,omitempty"`
-	*ActivePower
 }
 
 // UnsignedActivePower is Value in watts (uom 38)
@@ -1563,8 +1562,8 @@ type UnsignedActivePower struct {
 
 // UnsignedActivePowerControlType ...
 type UnsignedActivePowerControlType struct {
-	DisabledAttr                      bool            `xml:"disabled,attr,omitempty"`
 	*UnsignedActivePower
+	DisabledAttr                      bool            `xml:"disabled,attr,omitempty"`
 }
 
 // AmpereHour is Value in ampere-hours (uom 106)
@@ -1605,8 +1604,8 @@ type FixedVar struct {
 
 // FixedVarControlType ...
 type FixedVarControlType struct {
-	DisabledAttr           bool            `xml:"disabled,attr,omitempty"`
 	*FixedVar
+	DisabledAttr           bool            `xml:"disabled,attr,omitempty"`
 }
 
 // UnsignedFixedVar is Specify an unsigned setpoint for reactive power in % (see 'refType' for context).
@@ -1617,8 +1616,8 @@ type UnsignedFixedVar struct {
 
 // UnsignedFixedVarControlType ...
 type UnsignedFixedVarControlType struct {
-	DisabledAttr                   bool            `xml:"disabled,attr,omitempty"`
 	*UnsignedFixedVar
+	DisabledAttr                   bool            `xml:"disabled,attr,omitempty"`
 }
 
 // FreqDroopType is If present, specifies the minimum active power output. Used, for example, for testing purposes to direct a device to be able to absorb active power.
@@ -1634,8 +1633,8 @@ type FreqDroopType struct {
 
 // PerCentControlType ...
 type PerCentControlType struct {
-	DisabledAttr bool `xml:"disabled,attr,omitempty"`
 	*PerCent
+	DisabledAttr bool `xml:"disabled,attr,omitempty"`
 }
 
 // PowerFactor is Specifies exponent of 'displacement'.
@@ -1653,8 +1652,8 @@ type PowerFactorWithExcitation struct {
 
 // PowerFactorWithExcitationControlType ...
 type PowerFactorWithExcitationControlType struct {
-	DisabledAttr                            bool            `xml:"disabled,attr,omitempty"`
 	*PowerFactorWithExcitation
+	DisabledAttr                            bool            `xml:"disabled,attr,omitempty"`
 }
 
 // ReactivePower is Value in volt-amperes reactive (var) (uom 63)
@@ -1665,15 +1664,15 @@ type ReactivePower struct {
 
 // ReactivePowerControlType ...
 type ReactivePowerControlType struct {
-	DisabledAttr                bool            `xml:"disabled,attr,omitempty"`
 	*ReactivePower
+	DisabledAttr                bool            `xml:"disabled,attr,omitempty"`
 }
 
 // ReactivePowerDeltaControlType ...
 type ReactivePowerDeltaControlType struct {
+	*ReactivePower
 	BidirectionalAttr                *UInt8          `xml:"bidirectional,attr,omitempty"`
 	DisabledAttr                     bool            `xml:"disabled,attr,omitempty"`
-	*ReactivePower
 }
 
 // UnsignedReactivePower is Value in volt-amperes reactive (var) (uom 63)
@@ -1684,8 +1683,8 @@ type UnsignedReactivePower struct {
 
 // UnsignedReactivePowerControlType ...
 type UnsignedReactivePowerControlType struct {
-	DisabledAttr                        bool            `xml:"disabled,attr,omitempty"`
 	*UnsignedReactivePower
+	DisabledAttr                        bool            `xml:"disabled,attr,omitempty"`
 }
 
 // ReactiveSusceptance is Value in siemens (uom 53)
@@ -1696,8 +1695,8 @@ type ReactiveSusceptance struct {
 
 // SignedPerCentControlType ...
 type SignedPerCentControlType struct {
-	DisabledAttr bool `xml:"disabled,attr,omitempty"`
 	*SignedPerCent
+	DisabledAttr bool `xml:"disabled,attr,omitempty"`
 }
 
 // VoltageRMS is Value in volts RMS (uom 29)
@@ -1708,8 +1707,8 @@ type VoltageRMS struct {
 
 // VoltageRMSControlType ...
 type VoltageRMSControlType struct {
-	DisabledAttr             bool            `xml:"disabled,attr,omitempty"`
 	*VoltageRMS
+	DisabledAttr             bool            `xml:"disabled,attr,omitempty"`
 }
 
 // WattHour is Value in watt-hours (uom 72)
@@ -1882,8 +1881,8 @@ type CurrentDERProgramLink struct {
 
 // AggregationPriority is Contains the order in which an aggregation with a priority distribution is to be prioritized. If an aggregation has a distribution of Priority, then this resource SHALL be present. If an aggregation does not have a distribution of Priority, then this resource SHALL NOT be present. PriorityData SHALL be listed in order of priority, with the highest priority listed first. Note that if there are a large number of PriorityData, then  this resource could grow large. Devices SHOULD use Range / Content-Range for transferring large resources as well as HTTP HEAD or other HTTP mechanisms to determine the size of the resource.
 type AggregationPriority struct {
-	PriorityData           []*PriorityData `xml:"PriorityData"`
 	*IdentifiedObject
+	PriorityData           []*PriorityData `xml:"PriorityData"`
 }
 
 // PriorityData is Contains an instance identifying data with which to prioritize an aggregation with a priority distribution.
@@ -1893,19 +1892,19 @@ type PriorityData struct {
 
 // AggregatedDeviceList is A List element to hold AggregatedDevice objects.
 type AggregatedDeviceList struct {
+	*SubscribableList
 	PollRateAttr            uint32              `xml:"pollRate,attr,omitempty"`
 	AggregatedDevice        []*AggregatedDevice `xml:"AggregatedDevice"`
-	*SubscribableList
 }
 
 // AggregatedDevice is Long form of device identifier. See the Security section for additional details.
 type AggregatedDevice struct {
+	*Resource
 	ChangedTime         *TimeType           `xml:"changedTime"`
 	DeviceCategory      *DeviceCategoryType `xml:"deviceCategory"`
 	Enabled             bool                `xml:"enabled"`
 	LFDI                string              `xml:"lFDI"`
 	SFDI                *SFDIType           `xml:"sFDI"`
-	*Resource
 }
 
 // AggregationDistributionType is Specifies how to distribute a control across the population of aggregated devices to achieve the specified total:
@@ -1923,9 +1922,9 @@ type ProxiedDevice struct {
 
 // ProxiedDeviceList is A List element to hold ProxiedDevice objects.
 type ProxiedDeviceList struct {
+	*SubscribableList
 	PollRateAttr         uint32           `xml:"pollRate,attr,omitempty"`
 	ProxiedDevice        []*ProxiedDevice `xml:"ProxiedDevice"`
-	*SubscribableList
 }
 
 // AccountBalanceLink is SHALL contain a Link to an instance of AccountBalance.
@@ -2041,8 +2040,8 @@ type DERControlListLink struct {
 
 // DERCurveLink is SHALL contain a Link to an instance of DERCurve.
 type DERCurveLink struct {
-	DisabledAttr    bool            `xml:"disabled,attr,omitempty"`
 	*Link
+	DisabledAttr    bool            `xml:"disabled,attr,omitempty"`
 }
 
 // DERCurveListLink is SHALL contain a Link to a List of DERCurve instances.
@@ -2417,10 +2416,10 @@ type ActiveTimeTariffIntervalListLink struct {
 
 // IdentifiedObject is Contains the version number of the object. See the type definition for details.
 type IdentifiedObject struct {
+	*Resource
 	MRID                *MRIDType       `xml:"mRID"`
 	Description         string          `xml:"description"`
 	Version             *VersionType    `xml:"version"`
-	*Resource
 }
 
 // Link is Links provide a reference, via URI, to another resource.
@@ -2430,15 +2429,15 @@ type Link struct {
 
 // List is Container to hold a collection of object instances or references. See Design Pattern section for additional details.
 type List struct {
+	*Resource
 	AllAttr     uint32          `xml:"all,attr"`
 	ResultsAttr uint32          `xml:"results,attr"`
-	*Resource
 }
 
 // ListLink is ListLinks provide a reference, via URI, to a List.
 type ListLink struct {
-	AllAttr     uint32          `xml:"all,attr,omitempty"`
 	*Link
+	AllAttr     uint32          `xml:"all,attr,omitempty"`
 }
 
 // Resource is A resource is an addressable unit of information, either a collection (List) or instance of an object (identifiedObject, or simply, Resource)
@@ -2448,47 +2447,47 @@ type Resource struct {
 
 // RespondableIdentifiedObject is Contains the version number of the object. See the type definition for details.
 type RespondableIdentifiedObject struct {
+	*RespondableResource
 	MRID                           *MRIDType       `xml:"mRID"`
 	Description                    string          `xml:"description"`
 	Version                        *VersionType    `xml:"version"`
-	*RespondableResource
 }
 
 // RespondableResource is A Resource to which a Response can be requested.
 type RespondableResource struct {
+	*Resource
 	ReplyToAttr            string          `xml:"replyTo,attr,omitempty"`
 	ResponseRequiredAttr   string          `xml:"responseRequired,attr,omitempty"`
-	*Resource
 }
 
 // RespondableSubscribableIdentifiedObject is Contains the version number of the object. See the type definition for details.
 type RespondableSubscribableIdentifiedObject struct {
+	*RespondableResource
 	SubscribableAttr                           *UInt8          `xml:"subscribable,attr,omitempty"`
 	MRID                                       *MRIDType       `xml:"mRID"`
 	Description                                string          `xml:"description"`
 	Version                                    *VersionType    `xml:"version"`
-	*RespondableResource
 }
 
 // SubscribableIdentifiedObject is Contains the version number of the object. See the type definition for details.
 type SubscribableIdentifiedObject struct {
+	*SubscribableResource
 	MRID                            *MRIDType       `xml:"mRID"`
 	Description                     string          `xml:"description"`
 	Version                         *VersionType    `xml:"version"`
-	*SubscribableResource
 }
 
 // SubscribableList is A List to which a Subscription can be requested.
 type SubscribableList struct {
+	*SubscribableResource
 	AllAttr             uint32          `xml:"all,attr"`
 	ResultsAttr         uint32          `xml:"results,attr"`
-	*SubscribableResource
 }
 
 // SubscribableResource is A Resource to which a Subscription can be requested.
 type SubscribableResource struct {
-	SubscribableAttr        *SubscribableType          `xml:"subscribable,attr,omitempty"`
 	*Resource
+	SubscribableAttr        *SubscribableType          `xml:"subscribable,attr,omitempty"`
 }
 
 // Error is Code indicating the reason for failure.
@@ -2506,10 +2505,10 @@ type Error struct {
 
 // Event is The period during which the Event applies.
 type Event struct {
+	*RespondableSubscribableIdentifiedObject
 	CreationTime *TimeType         `xml:"creationTime"`
 	EventStatus  *EventStatus      `xml:"EventStatus"`
 	Interval     *DateTimeInterval `xml:"interval"`
-	*RespondableSubscribableIdentifiedObject
 }
 
 // EventStatus is The Reason attribute allows a Service provider to provide a textual explanation of the status.
@@ -2523,9 +2522,9 @@ type EventStatus struct {
 
 // RandomizableEvent is Number of seconds boundary inside which a random value must be selected to be applied to the associated interval start time, to avoid sudden synchronized demand changes. If related to price level changes, sign may be ignored. Valid range is -3600 to 3600. If not specified, 0 is the default.
 type RandomizableEvent struct {
+	*Event
 	RandomizeDuration    *OneHourRangeType `xml:"randomizeDuration"`
 	RandomizeStart       *OneHourRangeType `xml:"randomizeStart"`
-	*Event
 }
 
 // AccumulationBehaviourType is 0 = Not Applicable (default, if not specified)
@@ -2747,8 +2746,8 @@ type LocaleType = String32
 // 0xFFFFFFFFFFFFFFFFFFFFFFFF[XXXXXXXX], where [XXXXXXXX] is the PEN, is reserved for a object that is being created (e.g., a ReadingSet for the current time that is still accumulating).
 // Except for this special reserved identifier, each modification of an object (resource) representation SHALL have a different "version".
 type MRIDType struct {
-	XMLName xml.Name `xml:"mRIDType"`
 	*HexBinary128
+	XMLName xml.Name `xml:"mRIDType"`
 }
 
 // OneHourRangeType is A signed time offset, typically applied to a Time value, expressed in seconds, with range -3600 to 3600.
@@ -3023,18 +3022,18 @@ type SEPVersion = string
 
 // MirrorMeterReading is The date and time of the next planned update.
 type MirrorMeterReading struct {
+	*MeterReadingBase
 	LastUpdateTime        *TimeType           `xml:"lastUpdateTime"`
 	MirrorReadingSet      []*MirrorReadingSet `xml:"MirrorReadingSet"`
 	NextUpdateTime        *TimeType           `xml:"nextUpdateTime"`
 	Reading               *Reading            `xml:"Reading"`
 	ReadingType           *ReadingType        `xml:"ReadingType"`
-	*MeterReadingBase
 }
 
 // MirrorMeterReadingList is A List of MirrorMeterReading instances.
 type MirrorMeterReadingList struct {
-	MirrorMeterReading        []*MirrorMeterReading `xml:"MirrorMeterReading"`
 	*List
+	MirrorMeterReading        []*MirrorMeterReading `xml:"MirrorMeterReading"`
 }
 
 // MeterReadingBase is A container for associating ReadingType, Readings and ReadingSets.
@@ -3044,51 +3043,51 @@ type MeterReadingBase struct {
 
 // MirrorReadingSet is A set of Readings of the ReadingType indicated by the parent MeterReading.
 type MirrorReadingSet struct {
-	Reading             []*Reading      `xml:"Reading"`
 	*ReadingSetBase
+	Reading             []*Reading      `xml:"Reading"`
 }
 
 // MirrorUsagePoint is POST rate, or how often mirrored data should be POSTed, in seconds. A client MAY indicate a preferred postRate when POSTing MirrorUsagePoint. A server MAY add or modify postRate to indicate its preferred posting rate. If not specified, a default of 900 seconds (15 minutes) is used.
 type MirrorUsagePoint struct {
+	*UsagePointBase
 	SubscribableAttr    uint8                 `xml:"subscribable,attr,omitempty"`
 	DeviceLFDI          string                `xml:"deviceLFDI"`
 	MirrorMeterReading  []*MirrorMeterReading `xml:"MirrorMeterReading"`
 	PostRate            uint32                `xml:"postRate"`
 	UsagePointLink      *UsagePointLink       `xml:"UsagePointLink"`
-	*UsagePointBase
 }
 
 // MirrorUsagePointList is A List of MirrorUsagePoint instances.
 type MirrorUsagePointList struct {
+	*SubscribableList
 	PollRateAttr            uint32              `xml:"pollRate,attr,omitempty"`
 	MirrorUsagePoint        []*MirrorUsagePoint `xml:"MirrorUsagePoint"`
-	*SubscribableList
 }
 
 // ReadingBase is Value in units specified by ReadingType
 type ReadingBase struct {
+	*Resource
 	ConsumptionBlock *ConsumptionBlockType `xml:"consumptionBlock"`
 	QualityFlags     string                `xml:"qualityFlags"`
 	TimePeriod       *DateTimeInterval     `xml:"timePeriod"`
 	TouTier          *TOUType              `xml:"touTier"`
 	Value            int64                 `xml:"value"`
-	*Resource
 }
 
 // ReadingSetBase is Specifies the time range during which the contained readings were taken.
 type ReadingSetBase struct {
-	TimePeriod        *DateTimeInterval `xml:"timePeriod"`
 	*IdentifiedObject
+	TimePeriod        *DateTimeInterval `xml:"timePeriod"`
 }
 
 // UsagePointBase is Specifies the current status of the service at this usage point.
 // 0 = off
 // 1 = on
 type UsagePointBase struct {
+	*IdentifiedObject
 	RoleFlags           *RoleFlagsType  `xml:"roleFlags"`
 	ServiceCategoryKind *ServiceKind    `xml:"serviceCategoryKind"`
 	Status              uint8           `xml:"status"`
-	*IdentifiedObject
 }
 
 // Revision23Type ...

@@ -12,9 +12,41 @@ import (
 	"github.com/Tylores/egot/internal/routes"
 	"github.com/Tylores/egot/internal/sep"
 	"github.com/Tylores/egot/internal/uri"
+	"github.com/terminalstatic/go-xsd-validate"
 )
 
-func CheckHead(client *http.Client, href string) int {
+func validate(body []byte) {
+	xsdvalidate.Init()
+	defer xsdvalidate.Cleanup()
+
+	xsd_handler, err := xsdvalidate.NewXsdHandlerUrl("internal/sep/sep.xsd", xsdvalidate.ParsErrDefault)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer xsd_handler.Free()
+
+	xml_handler, err := xsdvalidate.NewXmlHandlerMem(body, xsdvalidate.ValidErrDefault)
+	defer xml_handler.Free()
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = xsd_handler.ValidateMem(body, xsdvalidate.ValidErrDefault)
+	if err != nil {
+		log.Println(string(body))
+		switch err.(type) {
+		case xsdvalidate.ValidationError:
+			log.Println(err)
+			log.Printf("Error in line: %d\n", err.(xsdvalidate.ValidationError).Errors[0].Line)
+			log.Println(err.(xsdvalidate.ValidationError).Errors[0].Message)
+		default:
+			log.Println(err)
+		}
+	}
+}
+
+func checkHead(client *http.Client, href string) int {
 	url := "https://" + routes.Core + href
 	resp, err := client.Head(url)
 	if err != nil {
@@ -24,7 +56,7 @@ func CheckHead(client *http.Client, href string) int {
 	return resp.StatusCode
 }
 
-func CheckGet(client *http.Client, href string) int {
+func checkGet(client *http.Client, href string) int {
 	url := "https://" + routes.Core + href
 	resp, err := client.Get(url)
 	if err != nil {
@@ -36,21 +68,25 @@ func CheckGet(client *http.Client, href string) int {
 	if err != nil {
 		panic(err)
 	}
-	println(string(body))
+
+	if resp.StatusCode == 200 {
+		log.Printf("Validating %s", href)
+		validate(body)
+	}
 
 	re := regexp.MustCompile(`href="(.*?)"`)
 	matches := re.FindAllStringSubmatch(string(body), -1)
 	for _, match := range matches {
 		new_href := string(match[1])
 		if new_href != href {
-			CheckAccess(client, match[1])
+			checkAccess(client, match[1])
 		}
 	}
 
 	return resp.StatusCode
 }
 
-func CheckPut(client *http.Client, href string) int {
+func checkPut(client *http.Client, href string) int {
 	url := "https://" + routes.Core + href
 	req, err := http.NewRequest("PUT", url, nil)
 	req.Header.Set("Content-Type", sep.ContentType)
@@ -62,7 +98,7 @@ func CheckPut(client *http.Client, href string) int {
 	return resp.StatusCode
 }
 
-func CheckPost(client *http.Client, href string) int {
+func checkPost(client *http.Client, href string) int {
 	url := "https://" + routes.Core + href
 	resp, err := client.Post(url, sep.ContentType, nil)
 	if err != nil {
@@ -72,7 +108,7 @@ func CheckPost(client *http.Client, href string) int {
 	return resp.StatusCode
 }
 
-func CheckDelete(client *http.Client, href string) int {
+func checkDelete(client *http.Client, href string) int {
 	url := "https://" + routes.Core + href
 	req, err := http.NewRequest("DELETE", url, nil)
 	resp, err := client.Do(req)
@@ -83,16 +119,17 @@ func CheckDelete(client *http.Client, href string) int {
 	return resp.StatusCode
 }
 
-func CheckAccess(client *http.Client, href string) {
-	head_code := CheckHead(client, href)
-	get_code := CheckGet(client, href)
-	put_code := CheckPut(client, href)
-	post_code := CheckPost(client, href)
-	delete_code := CheckDelete(client, href)
+func checkAccess(client *http.Client, href string) {
+	head_code := checkHead(client, href)
+	get_code := checkGet(client, href)
+	put_code := checkPut(client, href)
+	post_code := checkPost(client, href)
+	delete_code := checkDelete(client, href)
 	log.Printf("%s HEAD:%d GET:%d POST:%d PUT:%d DELETE:%d", href, head_code, get_code, put_code, post_code, delete_code)
 }
 
 func main() {
+
 	caCert, _ := os.ReadFile("./ssl/ca.crt")
 	caCertPool := x509.NewCertPool()
 	caCertPool.AppendCertsFromPEM(caCert)
@@ -108,5 +145,5 @@ func main() {
 		},
 	}
 
-	CheckAccess(client, uri.DeviceCapability)
+	checkAccess(client, uri.DeviceCapability)
 }
