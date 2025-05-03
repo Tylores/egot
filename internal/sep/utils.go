@@ -1,12 +1,22 @@
 package sep
 
 import (
+	"strconv"
 	"time"
 )
 
 const (
 	PollRate = 900
 )
+
+func ToSFDI(lfdi string) (SFDIType, error) {
+	sfdi, error := strconv.ParseUint(lfdi[:9], 16, 64)
+	if error != nil {
+		return 0, nil
+	}
+
+	return sfdi, nil
+}
 
 func NewLink(href string) *Link {
 	return &Link{

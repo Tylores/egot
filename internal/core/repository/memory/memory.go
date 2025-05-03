@@ -89,17 +89,28 @@ func (r *Repository) InitRepository(dir string) {
 			return error
 		}
 
-		fp := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]
+		lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[:40]
 		e, error := r.NextFreeEntity()
 		if error != nil {
 			return error
 		}
 
-		fmt.Printf("\t%s : %d\n", fp, *e)
-		error = r.TagEntity(fp, *e)
+		fmt.Printf("\t%s : %d\n", lfdi, *e)
+		error = r.TagEntity(lfdi, *e)
 		if error != nil {
 			return error
 		}
+
+		sfdi, error := sep.ToSFDI(lfdi)
+		if error != nil {
+			return error
+		}
+
+		href := strings.ReplaceAll(uri.EndDevice, "{id}", fmt.Sprintf("%d", *e))
+		res := sep.NewResource(href)
+		adev := sep.NewAbstractDevice(res, sep.SFDIType(sfdi))
+		extd := sep.NewExternalDevice(adev)
+		r.pool.edev[*e] = *sep.NewEndDevice(extd)
 		return nil
 	})
 	if err != nil {

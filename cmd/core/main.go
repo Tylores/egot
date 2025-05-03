@@ -27,6 +27,8 @@ func main() {
 	h := handler.NewHandler(repo)
 	http.Handle("GET "+uri.DeviceCapability, http.HandlerFunc(h.GetDeviceCapability))
 	http.Handle("GET "+uri.Time, http.HandlerFunc(h.GetTime))
+	http.Handle("GET "+uri.EndDeviceList, http.HandlerFunc(h.GetEndDevices))
+	http.Handle("GET "+uri.EndDevice, http.HandlerFunc(h.GetEndDevice))
 
 	err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
 	if err != nil {
