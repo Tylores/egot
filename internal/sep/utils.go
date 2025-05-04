@@ -9,6 +9,10 @@ const (
 	PollRate = 900
 )
 
+func GetTime() TimeType {
+	return TimeType(time.Now().Second())
+}
+
 func ToSFDI(lfdi string) (SFDIType, error) {
 	sfdi, error := strconv.ParseUint(lfdi[:9], 16, 64)
 	if error != nil {
@@ -79,6 +83,15 @@ func NewEndDeviceList() *EndDeviceList {
 		PollRateAttr:     PollRate,
 		EndDevice:        make([]*EndDevice, 0),
 		SubscribableList: &SubscribableList{},
+	}
+}
+
+func NewRegistration(resource *Resource, dt *TimeType, pin *PINType) *Registration {
+	return &Registration{
+		Resource:           resource,
+		DateTimeRegistered: dt,
+		PIN:                pin,
+		PollRateAttr:       PollRate,
 	}
 }
 

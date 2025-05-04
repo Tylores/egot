@@ -111,6 +111,16 @@ func (r *Repository) InitRepository(dir string) {
 		adev := sep.NewAbstractDevice(res, sep.SFDIType(sfdi))
 		extd := sep.NewExternalDevice(adev)
 		r.pool.edev[*e] = *sep.NewEndDevice(extd)
+
+		href = strings.ReplaceAll(uri.Registration, "{id}", fmt.Sprintf("%d", *e))
+		res = sep.NewResource(href)
+		r.pool.edev[*e].RegistrationLink = &sep.RegistrationLink{
+			Link: sep.NewLink(href),
+		}
+
+		dt := sep.GetTime()
+		var pin sep.PINType = 123455
+		r.pool.reg[*e] = *sep.NewRegistration(res, &dt, &pin)
 		return nil
 	})
 	if err != nil {

@@ -126,3 +126,34 @@ func (h *Handler) GetEndDevice(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 }
+func (h *Handler) GetRegistration(w http.ResponseWriter, req *http.Request) {
+	cert := req.TLS.PeerCertificates[0]
+	lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]
+
+	e, err := h.repo.GetEntity(lfdi)
+	if err != nil {
+		log.Printf("Repository get error: %v\n", err)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	id, err := strconv.Atoi(req.PathValue("id"))
+	if err != nil {
+		log.Printf("path id value error: %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if memory.Entity(id) != e {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	err = xml.NewEncoder(w).Encode(h.repo.GetRegistration(e))
+	if err != nil {
+		log.Printf("Response encode error: %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}

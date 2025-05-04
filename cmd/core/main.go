@@ -29,6 +29,7 @@ func main() {
 	http.Handle("GET "+uri.Time, http.HandlerFunc(h.GetTime))
 	http.Handle("GET "+uri.EndDeviceList, http.HandlerFunc(h.GetEndDevices))
 	http.Handle("GET "+uri.EndDevice, http.HandlerFunc(h.GetEndDevice))
+	http.Handle("GET "+uri.Registration, http.HandlerFunc(h.GetRegistration))
 
 	err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
 	if err != nil {
