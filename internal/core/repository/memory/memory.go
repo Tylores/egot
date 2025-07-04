@@ -110,6 +110,15 @@ func (r *Repository) InitRepository(dir string) {
 		res := sep.NewResource(href)
 		adev := sep.NewAbstractDevice(res, sep.SFDIType(sfdi))
 		extd := sep.NewExternalDevice(adev)
+
+		extd.FlowReservationRequestListLink = &sep.FlowReservationRequestListLink{
+			ListLink: sep.NewListLink(
+				sep.NewLink(uri.FlowReservationRequestList), 1),
+		}
+		extd.FlowReservationResponseListLink = &sep.FlowReservationResponseListLink{
+			ListLink: sep.NewListLink(
+				sep.NewLink(uri.FlowReservationResponseList), 1),
+		}
 		r.pool.edev[*e] = *sep.NewEndDevice(extd)
 
 		href = strings.ReplaceAll(uri.Registration, "{id}", fmt.Sprintf("%d", *e))

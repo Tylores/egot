@@ -3,6 +3,8 @@ package sep
 import (
 	"strconv"
 	"time"
+
+	"github.com/Tylores/egot/internal/sep"
 )
 
 const (
@@ -38,6 +40,14 @@ func NewListLink(link *Link, all UInt32) *ListLink {
 func NewResource(href string) *Resource {
 	return &Resource{
 		HrefAttr: href,
+	}
+}
+
+func NewList(resource *Resource, all UInt32, result UInt32) *List {
+	return &List{
+		Resource:    resource,
+		AllAttr:     all,
+		ResultsAttr: result,
 	}
 }
 
@@ -118,5 +128,13 @@ func NewTime(resource *Resource) *Time {
 		LocalTime:    t.Unix(),
 		TzOffset:     tz_offset,
 		Quality:      3,
+	}
+}
+
+func NewFlowReservationRequestList(list *List) *FlowReservationRequestList {
+	return &FlowReservationRequestList{
+		List:                   list,
+		PollRateAttr:           sep.PollRate,
+		FlowReservationRequest: make([]*FlowReservationRequest, 0),
 	}
 }

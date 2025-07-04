@@ -126,6 +126,7 @@ func (h *Handler) GetEndDevice(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 }
+
 func (h *Handler) GetRegistration(w http.ResponseWriter, req *http.Request) {
 	cert := req.TLS.PeerCertificates[0]
 	lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]

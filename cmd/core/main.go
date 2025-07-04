@@ -11,6 +11,8 @@ import (
 	"github.com/Tylores/egot/internal/uri"
 )
 
+const MAX_ENTITIES memory.Entity = 10
+
 func main() {
 	cfg := &tls.Config{
 		MinVersion: tls.VersionTLS12,
@@ -21,7 +23,7 @@ func main() {
 		TLSConfig: cfg,
 	}
 
-	repo := memory.NewRepository(10)
+	repo := memory.NewRepository(MAX_ENTITIES)
 	repo.InitRepository("./ssl")
 
 	h := handler.NewHandler(repo)
