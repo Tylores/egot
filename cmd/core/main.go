@@ -8,7 +8,7 @@ import (
 	"github.com/Tylores/egot/internal/core/handler"
 	"github.com/Tylores/egot/internal/core/repository/memory"
 	"github.com/Tylores/egot/internal/routes"
-	"github.com/Tylores/egot/internal/uri"
+	"github.com/Tylores/egot/sep/uri"
 )
 
 const MAX_ENTITIES memory.Entity = 10

@@ -13,8 +13,8 @@ import (
 	"sync"
 
 	"github.com/Tylores/egot/internal/core/repository"
-	"github.com/Tylores/egot/internal/sep"
-	"github.com/Tylores/egot/internal/uri"
+	"github.com/Tylores/egot/sep"
+	"github.com/Tylores/egot/sep/uri"
 )
 
 type Entity uint32

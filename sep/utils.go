@@ -3,8 +3,6 @@ package sep
 import (
 	"strconv"
 	"time"
-
-	"github.com/Tylores/egot/internal/sep"
 )
 
 const (
@@ -134,7 +132,7 @@ func NewTime(resource *Resource) *Time {
 func NewFlowReservationRequestList(list *List) *FlowReservationRequestList {
 	return &FlowReservationRequestList{
 		List:                   list,
-		PollRateAttr:           sep.PollRate,
+		PollRateAttr:           PollRate,
 		FlowReservationRequest: make([]*FlowReservationRequest, 0),
 	}
 }

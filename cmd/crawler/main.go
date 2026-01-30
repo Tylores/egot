@@ -10,8 +10,8 @@ import (
 	"regexp"
 
 	"github.com/Tylores/egot/internal/routes"
-	"github.com/Tylores/egot/internal/sep"
-	"github.com/Tylores/egot/internal/uri"
+	"github.com/Tylores/egot/sep"
+	"github.com/Tylores/egot/sep/uri"
 	"github.com/terminalstatic/go-xsd-validate"
 )
 

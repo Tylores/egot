@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/Tylores/egot/internal/core/repository/memory"
-	"github.com/Tylores/egot/internal/sep"
+	"github.com/Tylores/egot/sep"
 )
 
 type Handler struct {

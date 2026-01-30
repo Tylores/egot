@@ -8,9 +8,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Tylores/egot/internal/flow/repository"
 	"github.com/Tylores/egot/internal/flow/repository/memory"
-	"github.com/Tylores/egot/internal/sep"
+	"github.com/Tylores/egot/sep"
 )
 
 type Handler struct {

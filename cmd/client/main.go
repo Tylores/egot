@@ -9,7 +9,7 @@ import (
 	"os"
 
 	"github.com/Tylores/egot/internal/routes"
-	"github.com/Tylores/egot/internal/uri"
+	"github.com/Tylores/egot/sep/uri"
 )
 
 func main() {
