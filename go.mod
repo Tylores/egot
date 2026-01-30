@@ -1,5 +1,5 @@
-module egot-golang
+module github.com/Tylores/egot
 
-go 1.21.3
+go 1.23.0
 
-require github.com/Tylores/sep-models v0.0.0-20240106202043-b1519824e8de
+require github.com/terminalstatic/go-xsd-validate v0.1.6

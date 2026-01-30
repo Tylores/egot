@@ -3,6 +3,13 @@ Smart Energy Profile using Go
 
 ## Setup
 
+### Host
+For testing you will need to ensure your server address is recognized on your system. Simply add it to your localhost for internal testing in the **/etc/hosts** file for linux systems.
+
+```shell
+127.0.0.1   egot.internal.com
+```
+
 ### SSL
 I found a super handy tool for setting yourself as a CA and generating tls certificates for clients and servers.
 
@@ -24,17 +31,41 @@ step ca provisioner update you@smallstep.com \
 ```
 
 ### Golang
-Go setup is very simple.
+
+#### Import packages
+Go allows you to import github directly into your code.
+
+- sep: IEEE std 2030.5 Smart Energy Profile models
+
+Example:
 
  ```shell
-go mod init sep-golang
+import "github.com/Tylores/egot/sep"
 ```
 
-## Run
+#### Install programs
 
-Run the server in the background and then test a client.
+Directly install programs into your go bin directory which can then be executed directly
+
+- client: interface for DER
+- crawler: tester to check server for known services
+- core: server microservice for main DER registration
+- flowreservation: server microservice for FlowReservationRequest/Responses
+- operator: Utility server for Grid Service Providers to participate in grid services
+
+Example:
 
 ```shell
-go run server/server.go &
-go run client/client.go
+go install github.com/Tylores/egot/cmd/crawler@latest
+crawler
+```
+
+#### Run programs
+
+during development it is easier to direct call your programs to test, check the tools folder for utilies to run scenarios
+
+
+```shell
+go mod tidy
+go run ./cmd/crawler
 ```
