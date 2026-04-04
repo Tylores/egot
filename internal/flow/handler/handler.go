@@ -32,10 +32,10 @@ func (h *Handler) GetFlowReservationRequests(w http.ResponseWriter, req *http.Re
 	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
 	err = xml.NewEncoder(w).Encode(frql)
 	if err != nil {
 		log.Printf("Response encode error: %v\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -60,10 +60,10 @@ func (h *Handler) GetFlowReservationRequest(w http.ResponseWriter, req *http.Req
 	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
 	err = xml.NewEncoder(w).Encode(frq)
 	if err != nil {
 		log.Printf("Response encode error: %v\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 

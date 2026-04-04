@@ -32,10 +32,10 @@ func (h *Handler) GetDeviceCapability(w http.ResponseWriter, req *http.Request) 
 	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
 	err = xml.NewEncoder(w).Encode(h.repo.GetDeviceCapability())
 	if err != nil {
 		log.Printf("Response encode error: %v\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -53,10 +53,10 @@ func (h *Handler) GetTime(w http.ResponseWriter, req *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
 	err = xml.NewEncoder(w).Encode(h.repo.GetTime())
 	if err != nil {
 		log.Printf("Response encode error: %v\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 }
@@ -87,10 +87,10 @@ func (h *Handler) GetEndDevices(w http.ResponseWriter, req *http.Request) {
 	// becuase there is only a single value per client anyways
 
 	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
 	err = xml.NewEncoder(w).Encode(list)
 	if err != nil {
 		log.Printf("Response encode error: %v\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 }
@@ -119,10 +119,10 @@ func (h *Handler) GetEndDevice(w http.ResponseWriter, req *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
 	err = xml.NewEncoder(w).Encode(h.repo.GetEndDevice(e))
 	if err != nil {
 		log.Printf("Response encode error: %v\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 }
@@ -151,10 +151,10 @@ func (h *Handler) GetRegistration(w http.ResponseWriter, req *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
 	err = xml.NewEncoder(w).Encode(h.repo.GetRegistration(e))
 	if err != nil {
 		log.Printf("Response encode error: %v\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 }

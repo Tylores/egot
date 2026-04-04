@@ -49,7 +49,6 @@ if err != nil {
 w.WriteHeader(http.StatusNotFound)
 return
 }
-w.Header().Set("Content-Type", sep.ContentType)
 w.WriteHeader(http.StatusOK)
 }
 
@@ -68,6 +67,7 @@ return
 w.Header().Set("Content-Type", sep.ContentType)
 w.Header().Set("location", "/rsps/1")
 w.WriteHeader(http.StatusCreated)
+xml.NewEncoder(w).Encode(&sep.ResponseSetList{})
 }
 
 func (h *Handler) DELETEResponseSetList(w http.ResponseWriter, req *http.Request) {
@@ -102,7 +102,6 @@ if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
 w.WriteHeader(http.StatusBadRequest)
 return
 }
-w.Header().Set("Content-Type", sep.ContentType)
 w.WriteHeader(http.StatusOK)
 }
 
@@ -159,7 +158,6 @@ if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
 w.WriteHeader(http.StatusBadRequest)
 return
 }
-w.Header().Set("Content-Type", sep.ContentType)
 w.WriteHeader(http.StatusOK)
 }
 
@@ -182,6 +180,7 @@ return
 w.Header().Set("Content-Type", sep.ContentType)
 w.Header().Set("location", "/rsps/1/rsp/1")
 w.WriteHeader(http.StatusCreated)
+xml.NewEncoder(w).Encode(&sep.ResponseList{})
 }
 
 func (h *Handler) DELETEResponseList(w http.ResponseWriter, req *http.Request) {
@@ -224,7 +223,6 @@ if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 w.WriteHeader(http.StatusBadRequest)
 return
 }
-w.Header().Set("Content-Type", sep.ContentType)
 w.WriteHeader(http.StatusOK)
 }
 
@@ -293,7 +291,6 @@ if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 w.WriteHeader(http.StatusBadRequest)
 return
 }
-w.Header().Set("Content-Type", sep.ContentType)
 w.WriteHeader(http.StatusOK)
 }
 
@@ -359,7 +356,6 @@ if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 w.WriteHeader(http.StatusBadRequest)
 return
 }
-w.Header().Set("Content-Type", sep.ContentType)
 w.WriteHeader(http.StatusOK)
 }
 
@@ -425,7 +421,6 @@ if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 w.WriteHeader(http.StatusBadRequest)
 return
 }
-w.Header().Set("Content-Type", sep.ContentType)
 w.WriteHeader(http.StatusOK)
 }
 
@@ -491,7 +486,6 @@ if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 w.WriteHeader(http.StatusBadRequest)
 return
 }
-w.Header().Set("Content-Type", sep.ContentType)
 w.WriteHeader(http.StatusOK)
 }
 
@@ -557,7 +551,6 @@ if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 w.WriteHeader(http.StatusBadRequest)
 return
 }
-w.Header().Set("Content-Type", sep.ContentType)
 w.WriteHeader(http.StatusOK)
 }
 
@@ -623,7 +616,6 @@ if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 w.WriteHeader(http.StatusBadRequest)
 return
 }
-w.Header().Set("Content-Type", sep.ContentType)
 w.WriteHeader(http.StatusOK)
 }
 
