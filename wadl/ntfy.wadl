@@ -1,0 +1,82 @@
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wx="urn:ieee:std:2030.5:wadlExt" xmlns:sep="urn:ieee:std:2030.5:ns" xmlns="http://wadl.dev.java.net/2009/02" xsi:schemaLocation="http://wadl.dev.java.net/2009/02 wadl.xsd">
+  <doc title="SEP 2 Application">SEP 2.2</doc>
+  <grammars>
+    <include href="sep.xsd"/>
+  </grammars>
+  <resources wx:sampleBase="http://localhost/sep/">
+    <resource id="NotificationList" wx:samplePath="/ntfy">
+      <doc title="NotificationList">A list of notifications</doc>
+      <method id="GETNotificationList" name="GET" wx:mode="D">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:NotificationList"/>
+          <representation mediaType="application/sep-exi" element="sep:NotificationList"/>
+        </response>
+      </method>
+      <method id="HEADNotificationList" name="HEAD" wx:mode="D"/>
+      <method id="PUTNotificationList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Notification"/>
+          <representation mediaType="application/sep-exi" element="sep:Notification"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTNotificationList" name="POST" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Notification"/>
+          <representation mediaType="application/sep-exi" element="sep:Notification"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="204"/>
+      </method>
+      <method id="DELETENotificationList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+    </resource>
+    <resource id="Notification" wx:samplePath="/ntfy/{id1}">
+      <doc title="Notification">A specific notification</doc>
+      <method id="GETNotification" name="GET" wx:mode="D">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:Notification"/>
+          <representation mediaType="application/sep-exi" element="sep:Notification"/>
+        </response>
+      </method>
+      <method id="HEADNotification" name="HEAD" wx:mode="D"/>
+      <method id="PUTNotification" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Notification"/>
+          <representation mediaType="application/sep-exi" element="sep:Notification"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTNotification" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Notification"/>
+          <representation mediaType="application/sep-exi" element="sep:Notification"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETENotification" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+  </resources>
+</application>

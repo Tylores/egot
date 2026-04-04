@@ -1,0 +1,357 @@
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wx="urn:ieee:std:2030.5:wadlExt" xmlns:sep="urn:ieee:std:2030.5:ns" xmlns="http://wadl.dev.java.net/2009/02" xsi:schemaLocation="http://wadl.dev.java.net/2009/02 wadl.xsd">
+  <doc title="SEP 2 Application">SEP 2.2</doc>
+  <grammars>
+    <include href="sep.xsd"/>
+  </grammars>
+  <resources wx:sampleBase="http://localhost/sep/">
+    <resource id="ResponseSetList" wx:samplePath="/rsps">
+      <doc title="ResponseSetList">List of ResponseSet instances or channels. Devices implementing the ResponseSetList resource MAY support multiple instances of ResponseSet</doc>
+      <method id="GETResponseSetList" name="GET" wx:mode="O">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:ResponseSetList"/>
+          <representation mediaType="application/sep-exi" element="sep:ResponseSetList"/>
+        </response>
+      </method>
+      <method id="HEADResponseSetList" name="HEAD" wx:mode="O"/>
+      <method id="PUTResponseSetList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:ResponseSet"/>
+          <representation mediaType="application/sep-exi" element="sep:ResponseSet"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTResponseSetList" name="POST" wx:mode="D">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:ResponseSet"/>
+          <representation mediaType="application/sep-exi" element="sep:ResponseSet"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETEResponseSetList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+    </resource>
+    <resource id="ResponseSet" wx:samplePath="/rsps/{id1}">
+      <doc title="ResponseSet">Specific ResponseSet instance. This resource can be thought of as a particular ResponseList or channel.</doc>
+      <method id="GETResponseSet" name="GET" wx:mode="O">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:ResponseSet"/>
+          <representation mediaType="application/sep-exi" element="sep:ResponseSet"/>
+        </response>
+      </method>
+      <method id="HEADResponseSet" name="HEAD" wx:mode="O"/>
+      <method id="PUTResponseSet" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:ResponseSet"/>
+          <representation mediaType="application/sep-exi" element="sep:ResponseSet"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTResponseSet" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:ResponseSet"/>
+          <representation mediaType="application/sep-exi" element="sep:ResponseSet"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEResponseSet" name="DELETE" wx:mode="D">
+        <response>
+          <representation mediaType="application/xml" element="sep:ResponseSet"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="ResponseList" wx:samplePath="/rsps/{id1}/rsp">
+      <doc title="ResponseList">List of Response instances. </doc>
+      <method id="GETResponseList" name="GET" wx:mode="O">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:ResponseList"/>
+          <representation mediaType="application/sep-exi" element="sep:ResponseList"/>
+        </response>
+      </method>
+      <method id="HEADResponseList" name="HEAD" wx:mode="O"/>
+      <method id="PUTResponseList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Response"/>
+          <representation mediaType="application/sep-exi" element="sep:Response"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTResponseList" name="POST" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Response"/>
+          <representation mediaType="application/sep-exi" element="sep:Response"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="204"/>
+      </method>
+      <method id="DELETEResponseList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="Response" wx:samplePath="/rsps/{id1}/rsp/{id2}">
+      <doc title="Response">Specific Response instance. </doc>
+      <method id="GETResponse" name="GET" wx:mode="O">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:Response"/>
+          <representation mediaType="application/sep-exi" element="sep:Response"/>
+        </response>
+      </method>
+      <method id="HEADResponse" name="HEAD" wx:mode="O"/>
+      <method id="PUTResponse" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Response"/>
+          <representation mediaType="application/sep-exi" element="sep:Response"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTResponse" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Response"/>
+          <representation mediaType="application/sep-exi" element="sep:Response"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEResponse" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:Response"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="PriceResponse" wx:samplePath="/rsps/{id1}/rsp/{id2}">
+      <doc title="PriceResponse">A specific PriceResponse instance. </doc>
+      <method id="GETPriceResponse" name="GET" wx:mode="O">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:PriceResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:PriceResponse"/>
+        </response>
+      </method>
+      <method id="HEADPriceResponse" name="HEAD" wx:mode="O"/>
+      <method id="PUTPriceResponse" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:PriceResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:PriceResponse"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTPriceResponse" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:PriceResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:PriceResponse"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEPriceResponse" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:PriceResponse"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="TextResponse" wx:samplePath="/rsps/{id1}/rsp/{id2}">
+      <doc title="TextResponse">A specific TextMessage Response instance.</doc>
+      <method id="GETTextResponse" name="GET" wx:mode="O">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:TextResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:TextResponse"/>
+        </response>
+      </method>
+      <method id="HEADTextResponse" name="HEAD" wx:mode="O"/>
+      <method id="PUTTextResponse" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:TextResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:TextResponse"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTTextResponse" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:TextResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:TextResponse"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETETextResponse" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:TextResponse"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="DefaultDERControlResponse" wx:samplePath="/rsps/{id1}/rsp/{id2}">
+      <doc title="DefaultDERControlResponse">A specific DefaultDERControlResponse instance.</doc>
+      <method id="GETDefaultDERControlResponse" name="GET" wx:mode="O">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DefaultDERControlResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:DefaultDERControlResponse"/>
+        </response>
+      </method>
+      <method id="HEADDefaultDERControlResponse" name="HEAD" wx:mode="O"/>
+      <method id="PUTDefaultDERControlResponse" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DefaultDERControlResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:DefaultDERControlResponse"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTDefaultDERControlResponse" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DefaultDERControlResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:DefaultDERControlResponse"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEDefaultDERControlResponse" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:DefaultDERControlResponse"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="DERControlResponse" wx:samplePath="/rsps/{id1}/rsp/{id2}">
+      <doc title="DERControlResponse">A specific DERControl Response instance.</doc>
+      <method id="GETDERControlResponse" name="GET" wx:mode="O">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DERControlResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:DERControlResponse"/>
+        </response>
+      </method>
+      <method id="HEADDERControlResponse" name="HEAD" wx:mode="O"/>
+      <method id="PUTDERControlResponse" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERControlResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:DERControlResponse"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTDERControlResponse" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERControlResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:DERControlResponse"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEDERControlResponse" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:DERControlResponse"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="FlowReservationResponseResponse" wx:samplePath="/rsps/{id1}/rsp/{id2}">
+      <doc title="FlowReservationResponseResponse">A specific FlowReservationResponse Response instance.</doc>
+      <method id="GETFlowReservationResponseResponse" name="GET" wx:mode="O">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:FlowReservationResponseResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:FlowReservationResponseResponse"/>
+        </response>
+      </method>
+      <method id="HEADFlowReservationResponseResponse" name="HEAD" wx:mode="O"/>
+      <method id="PUTFlowReservationResponseResponse" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:FlowReservationResponseResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:FlowReservationResponseResponse"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTFlowReservationResponseResponse" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:FlowReservationResponseResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:FlowReservationResponseResponse"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEFlowReservationResponseResponse" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:FlowReservationResponseResponse"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="DrResponse" wx:samplePath="/rsps/{id1}/rsp/{id2}">
+      <doc title="DrResponse">A specific Demand Response / Load Control EndDeviceControl Response (DrResponse) instance.</doc>
+      <method id="GETDrResponse" name="GET" wx:mode="O">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DrResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:DrResponse"/>
+        </response>
+      </method>
+      <method id="HEADDrResponse" name="HEAD" wx:mode="O"/>
+      <method id="PUTDrResponse" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DrResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:DrResponse"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTDrResponse" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DrResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:DrResponse"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEDrResponse" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:DrResponse"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+  </resources>
+</application>

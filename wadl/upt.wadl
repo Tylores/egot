@@ -1,0 +1,350 @@
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wx="urn:ieee:std:2030.5:wadlExt" xmlns:sep="urn:ieee:std:2030.5:ns" xmlns="http://wadl.dev.java.net/2009/02" xsi:schemaLocation="http://wadl.dev.java.net/2009/02 wadl.xsd">
+  <doc title="SEP 2 Application">SEP 2.2</doc>
+  <grammars>
+    <include href="sep.xsd"/>
+  </grammars>
+  <resources wx:sampleBase="http://localhost/sep/">
+    <resource id="UsagePointList" wx:samplePath="/upt">
+      <doc title="UsagePointList">Usage point resource list. Devices implementing the UsagePointList resource MAY support multiple instances of usage points. </doc>
+      <method id="GETUsagePointList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:UsagePointList"/>
+          <representation mediaType="application/sep-exi" element="sep:UsagePointList"/>
+        </response>
+      </method>
+      <method id="HEADUsagePointList" name="HEAD" wx:mode="M"/>
+      <method id="PUTUsagePointList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:UsagePoint"/>
+          <representation mediaType="application/sep-exi" element="sep:UsagePoint"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTUsagePointList" name="POST" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:UsagePoint"/>
+          <representation mediaType="application/sep-exi" element="sep:UsagePoint"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETEUsagePointList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+    </resource>
+    <resource id="UsagePoint" wx:samplePath="/upt/{id1}">
+      <doc title="UsagePoint">Usage point instance including links to associated information. </doc>
+      <method id="GETUsagePoint" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:UsagePoint"/>
+          <representation mediaType="application/sep-exi" element="sep:UsagePoint"/>
+        </response>
+      </method>
+      <method id="HEADUsagePoint" name="HEAD" wx:mode="M"/>
+      <method id="PUTUsagePoint" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:UsagePoint"/>
+          <representation mediaType="application/sep-exi" element="sep:UsagePoint"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTUsagePoint" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:UsagePoint"/>
+          <representation mediaType="application/sep-exi" element="sep:UsagePoint"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEUsagePoint" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:UsagePoint"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="MeterReadingList" wx:samplePath="/upt/{id1}/mr">
+      <doc title="MeterReadingList">Meter Reading list including explicit URIs for each valid meter reading resource. </doc>
+      <method id="GETMeterReadingList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:MeterReadingList"/>
+          <representation mediaType="application/sep-exi" element="sep:MeterReadingList"/>
+        </response>
+      </method>
+      <method id="HEADMeterReadingList" name="HEAD" wx:mode="M"/>
+      <method id="PUTMeterReadingList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:MeterReading"/>
+          <representation mediaType="application/sep-exi" element="sep:MeterReading"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTMeterReadingList" name="POST" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:MeterReading"/>
+          <representation mediaType="application/sep-exi" element="sep:MeterReading"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETEMeterReadingList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="MeterReading" wx:samplePath="/upt/{id1}/mr/{id2}">
+      <doc title="MeterReading">Meter Reading instance which contains ReadingSet and Reading resources</doc>
+      <method id="GETMeterReading" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:MeterReading"/>
+          <representation mediaType="application/sep-exi" element="sep:MeterReading"/>
+        </response>
+      </method>
+      <method id="HEADMeterReading" name="HEAD" wx:mode="M"/>
+      <method id="PUTMeterReading" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:MeterReading"/>
+          <representation mediaType="application/sep-exi" element="sep:MeterReading"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTMeterReading" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:MeterReading"/>
+          <representation mediaType="application/sep-exi" element="sep:MeterReading"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEMeterReading" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:MeterReading"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="ReadingType" wx:samplePath="/upt/{id1}/mr/{id2}/rt">
+      <doc title="ReadingType">Meter Reading type</doc>
+      <method id="GETReadingType" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:ReadingType"/>
+          <representation mediaType="application/sep-exi" element="sep:ReadingType"/>
+        </response>
+      </method>
+      <method id="HEADReadingType" name="HEAD" wx:mode="M"/>
+      <method id="PUTReadingType" name="PUT" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:ReadingType"/>
+          <representation mediaType="application/sep-exi" element="sep:ReadingType"/>
+        </request>
+      </method>
+      <method id="POSTReadingType" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:ReadingType"/>
+          <representation mediaType="application/sep-exi" element="sep:ReadingType"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEReadingType" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="ReadingSetList" wx:samplePath="/upt/{id1}/mr/{id2}/rs">
+      <doc title="ReadingSetList">Reading Set list</doc>
+      <method id="GETReadingSetList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="a" style="query" type="xsd:int">
+            <doc>after</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:ReadingSetList"/>
+          <representation mediaType="application/sep-exi" element="sep:ReadingSetList"/>
+        </response>
+      </method>
+      <method id="HEADReadingSetList" name="HEAD" wx:mode="M"/>
+      <method id="PUTReadingSetList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:ReadingSet"/>
+          <representation mediaType="application/sep-exi" element="sep:ReadingSet"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTReadingSetList" name="POST" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:ReadingSet"/>
+          <representation mediaType="application/sep-exi" element="sep:ReadingSet"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETEReadingSetList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="ReadingSet" wx:samplePath="/upt/{id1}/mr/{id2}/rs/{id3}">
+      <doc title="ReadingSet">Reading Set instance which contains a list of Reading(s)</doc>
+      <method id="GETReadingSet" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:ReadingSet"/>
+          <representation mediaType="application/sep-exi" element="sep:ReadingSet"/>
+        </response>
+      </method>
+      <method id="HEADReadingSet" name="HEAD" wx:mode="M"/>
+      <method id="PUTReadingSet" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:ReadingSet"/>
+          <representation mediaType="application/sep-exi" element="sep:ReadingSet"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTReadingSet" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:ReadingSet"/>
+          <representation mediaType="application/sep-exi" element="sep:ReadingSet"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEReadingSet" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:ReadingSet"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+      <wx:sampleParam name="id3" style="template" type="idType"/>
+    </resource>
+    <resource id="ReadingList" wx:samplePath="/upt/{id1}/mr/{id2}/rs/{id3}/r">
+      <doc title="ReadingList">Reading list of a particular meter reading set. </doc>
+      <method id="GETReadingList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="a" style="query" type="xsd:int">
+            <doc>after</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:ReadingList"/>
+          <representation mediaType="application/sep-exi" element="sep:ReadingList"/>
+        </response>
+      </method>
+      <method id="HEADReadingList" name="HEAD" wx:mode="M"/>
+      <method id="PUTReadingList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Reading"/>
+          <representation mediaType="application/sep-exi" element="sep:Reading"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTReadingList" name="POST" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Reading"/>
+          <representation mediaType="application/sep-exi" element="sep:Reading"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETEReadingList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+      <wx:sampleParam name="id3" style="template" type="idType"/>
+    </resource>
+    <resource id="Reading" wx:samplePath="/upt/{id1}/mr/{id2}/rs/{id3}/r/{id4}">
+      <doc title="Reading">Reading instance of a particular meter reading type. </doc>
+      <method id="GETReading" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:Reading"/>
+          <representation mediaType="application/sep-exi" element="sep:Reading"/>
+        </response>
+      </method>
+      <method id="HEADReading" name="HEAD" wx:mode="M"/>
+      <method id="PUTReading" name="PUT" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Reading"/>
+          <representation mediaType="application/sep-exi" element="sep:Reading"/>
+        </request>
+      </method>
+      <method id="POSTReading" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Reading"/>
+          <representation mediaType="application/sep-exi" element="sep:Reading"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEReading" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:Reading"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+      <wx:sampleParam name="id3" style="template" type="idType"/>
+      <wx:sampleParam name="id4" style="template" type="idType"/>
+    </resource>
+  </resources>
+</application>
