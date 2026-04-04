@@ -19,7 +19,7 @@ func main() {
 		ClientAuth: tls.RequireAndVerifyClientCert,
 	}
 	server := http.Server{
-		Addr:      routes.Core,
+		Addr:      routes.core,
 		TLSConfig: cfg,
 	}
 

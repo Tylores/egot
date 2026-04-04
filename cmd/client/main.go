@@ -28,7 +28,7 @@ func main() {
 		},
 	}
 
-	resp, err := client.Get("https://" + routes.Core + uri.DeviceCapability)
+	resp, err := client.Get("https://" + routes.core + uri.DeviceCapability)
 	if err != nil {
 		panic(err)
 	}
@@ -41,7 +41,7 @@ func main() {
 
 	fmt.Printf("%s\n", dump)
 
-	resp, err = client.Head("https://" + routes.Core + uri.DeviceCapability)
+	resp, err = client.Head("https://" + routes.core + uri.DeviceCapability)
 	if err != nil {
 		panic(err)
 	}
@@ -54,7 +54,7 @@ func main() {
 
 	fmt.Printf("%s\n", dump)
 
-	resp, err = client.Get("https://" + routes.Core + uri.Time)
+	resp, err = client.Get("https://" + routes.core + uri.Time)
 	if err != nil {
 		panic(err)
 	}
@@ -67,7 +67,7 @@ func main() {
 
 	fmt.Printf("%s\n", dump)
 
-	resp, err = client.Head("https://" + routes.Core + uri.Time)
+	resp, err = client.Head("https://" + routes.core + uri.Time)
 	if err != nil {
 		panic(err)
 	}
