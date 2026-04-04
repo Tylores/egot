@@ -1,4 +1,4 @@
-.PHONY: test test-unit test-integration test-verbose test-coverage coverage-report test-watch help lint
+.PHONY: test test-unit test-integration test-verbose test-coverage coverage-report test-watch help lint test-routes test-route-registration test-http-methods
 
 # Run all tests
 test:
@@ -50,6 +50,20 @@ test-service:
 	fi
 	@go test -v ./cmd/$(SERVICE)/... ./internal/...
 
+# Route Registration Tests (Phase 3)
+test-route-registration:
+	@echo "Running route registration tests..."
+	@go test -v ./cmd/... -run "RouteRegistration" -parallel 8
+
+# HTTP Method Tests (Phase 4)
+test-http-methods:
+	@echo "Running HTTP method tests..."
+	@go test -v ./cmd/... -run "HTTPMethod" -parallel 8
+
+# All Route Tests (Phases 3-4)
+test-routes: test-route-registration test-http-methods
+	@echo "✅ All route tests passed!"
+
 # Generate mocks using mockgen
 generate-mocks:
 	@echo "Generating mocks..."
@@ -80,16 +94,22 @@ lint:
 help:
 	@echo "Microservices Testing Commands:"
 	@echo ""
-	@echo "  make test                 - Run all tests"
-	@echo "  make test-unit            - Run only unit tests"
-	@echo "  make test-integration     - Run only integration tests"
-	@echo "  make test-verbose         - Run all tests with verbose output"
-	@echo "  make test-coverage        - Run tests and generate coverage report"
-	@echo "  make coverage-report      - Open coverage HTML report"
-	@echo "  make test-short           - Run short tests only"
-	@echo "  make test-race            - Run tests with race detector"
-	@echo "  make test-package PKG=... - Run tests for specific package"
-	@echo "  make test-service SERVICE=... - Run tests for specific service"
-	@echo "  make generate-mocks       - Generate test mocks (mockgen)"
-	@echo "  make lint                 - Run linters"
-	@echo "  make help                 - Show this help message"
+	@echo "  make test                    - Run all tests"
+	@echo "  make test-unit               - Run only unit tests"
+	@echo "  make test-integration        - Run only integration tests"
+	@echo "  make test-verbose            - Run all tests with verbose output"
+	@echo "  make test-coverage           - Run tests and generate coverage report"
+	@echo "  make coverage-report         - Open coverage HTML report"
+	@echo "  make test-short              - Run short tests only"
+	@echo "  make test-race               - Run tests with race detector"
+	@echo "  make test-package PKG=...    - Run tests for specific package"
+	@echo "  make test-service SERVICE=...  - Run tests for specific service"
+	@echo ""
+	@echo "Route Testing Commands (NEW):"
+	@echo "  make test-routes             - Run all route registration & HTTP method tests"
+	@echo "  make test-route-registration - Run route registration verification tests"
+	@echo "  make test-http-methods       - Run HTTP method support tests"
+	@echo ""
+	@echo "  make generate-mocks          - Generate test mocks (mockgen)"
+	@echo "  make lint                    - Run linters"
+	@echo "  make help                    - Show this help message"
