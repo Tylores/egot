@@ -17,7 +17,7 @@ import (
 func TestRspsRouteRegistration(t *testing.T) {
 	// Create test mux with Rsps routes
 	mux := http.NewServeMux()
-	repo := memory.NewRepository()
+	repo := memory.NewRepository(1000) // rsps requires Entity size parameter
 	h := handler.NewHandler(repo)
 
 	// Register routes
@@ -110,7 +110,7 @@ func TestRspsPathParameters(t *testing.T) {
 // TestRspsHTTPMethods verifies HTTP method support.
 func TestRspsHTTPMethods(t *testing.T) {
 	mux := http.NewServeMux()
-	repo := memory.NewRepository()
+	repo := memory.NewRepository(1000) // rsps requires Entity size parameter
 	h := handler.NewHandler(repo)
 
 	// Register routes
