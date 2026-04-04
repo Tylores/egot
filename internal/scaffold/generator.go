@@ -69,6 +69,26 @@ func NewGenerator(wadlPath string) (*Generator, error) {
 	return &Generator{wadl: wadl}, nil
 }
 
+// NewGeneratorFromSEP2WADL creates a new generator from a SEP 2 WADL file
+func NewGeneratorFromSEP2WADL(sep2WadlPath, serviceName string, port, maxEntities int) (*Generator, error) {
+	wadl, err := ConvertSEP2WADL(sep2WadlPath, serviceName, port, maxEntities)
+	if err != nil {
+		return nil, err
+	}
+
+	if wadl.Name == "" {
+		return nil, fmt.Errorf("WADL must specify application name")
+	}
+	if wadl.Port == 0 {
+		return nil, fmt.Errorf("WADL must specify application port")
+	}
+	if wadl.MaxEntities == 0 {
+		wadl.MaxEntities = 100
+	}
+
+	return &Generator{wadl: wadl}, nil
+}
+
 // ServiceName returns the service name from the WADL
 func (g *Generator) ServiceName() string {
 	return g.wadl.Name

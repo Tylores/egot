@@ -21,4 +21,10 @@
 go.work
 
 # Build dirs
-bin
+bin/
+
+# Go compiled binaries (Unix/Linux - no extension)
+egot
+scaffold-gen
+wadl-extractor
+*.test
