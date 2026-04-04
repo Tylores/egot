@@ -1,0 +1,28 @@
+{
+  "service_name": "Sdev",
+  "wadl_file": "sdev.wadl",
+  "total_routes": 5,
+  "unique_paths": 1,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/sdev"
+    },
+    {
+      "Method": "GET",
+      "Path": "/sdev"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/sdev"
+    },
+    {
+      "Method": "POST",
+      "Path": "/sdev"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/sdev"
+    }
+  ]
+}

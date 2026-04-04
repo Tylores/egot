@@ -1,0 +1,168 @@
+{
+  "service_name": "Derp",
+  "wadl_file": "derp.wadl",
+  "total_routes": 40,
+  "unique_paths": 8,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/derp"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/derp/{id1}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/derp/{id1}/actderc"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/derp/{id1}/dc"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/derp/{id1}/dc/{id2}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/derp/{id1}/dderc"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/derp/{id1}/derc"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/derp/{id1}/derc/{id2}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/derp"
+    },
+    {
+      "Method": "GET",
+      "Path": "/derp/{id1}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/derp/{id1}/actderc"
+    },
+    {
+      "Method": "GET",
+      "Path": "/derp/{id1}/dc"
+    },
+    {
+      "Method": "GET",
+      "Path": "/derp/{id1}/dc/{id2}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/derp/{id1}/dderc"
+    },
+    {
+      "Method": "GET",
+      "Path": "/derp/{id1}/derc"
+    },
+    {
+      "Method": "GET",
+      "Path": "/derp/{id1}/derc/{id2}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/derp"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/derp/{id1}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/derp/{id1}/actderc"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/derp/{id1}/dc"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/derp/{id1}/dc/{id2}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/derp/{id1}/dderc"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/derp/{id1}/derc"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/derp/{id1}/derc/{id2}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/derp"
+    },
+    {
+      "Method": "POST",
+      "Path": "/derp/{id1}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/derp/{id1}/actderc"
+    },
+    {
+      "Method": "POST",
+      "Path": "/derp/{id1}/dc"
+    },
+    {
+      "Method": "POST",
+      "Path": "/derp/{id1}/dc/{id2}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/derp/{id1}/dderc"
+    },
+    {
+      "Method": "POST",
+      "Path": "/derp/{id1}/derc"
+    },
+    {
+      "Method": "POST",
+      "Path": "/derp/{id1}/derc/{id2}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/derp"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/derp/{id1}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/derp/{id1}/actderc"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/derp/{id1}/dc"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/derp/{id1}/dc/{id2}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/derp/{id1}/dderc"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/derp/{id1}/derc"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/derp/{id1}/derc/{id2}"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "service_name": "Dcap",
+  "wadl_file": "dcap.wadl",
+  "total_routes": 5,
+  "unique_paths": 1,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/dcap"
+    },
+    {
+      "Method": "GET",
+      "Path": "/dcap"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/dcap"
+    },
+    {
+      "Method": "POST",
+      "Path": "/dcap"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/dcap"
+    }
+  ]
+}

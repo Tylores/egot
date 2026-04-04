@@ -1,0 +1,88 @@
+{
+  "service_name": "Brs",
+  "wadl_file": "brs.wadl",
+  "total_routes": 20,
+  "unique_paths": 4,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/brs"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/brs/{id1}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/brs/{id1}/br"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/brs/{id1}/br/{id2}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/brs"
+    },
+    {
+      "Method": "GET",
+      "Path": "/brs/{id1}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/brs/{id1}/br"
+    },
+    {
+      "Method": "GET",
+      "Path": "/brs/{id1}/br/{id2}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/brs"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/brs/{id1}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/brs/{id1}/br"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/brs/{id1}/br/{id2}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/brs"
+    },
+    {
+      "Method": "POST",
+      "Path": "/brs/{id1}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/brs/{id1}/br"
+    },
+    {
+      "Method": "POST",
+      "Path": "/brs/{id1}/br/{id2}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/brs"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/brs/{id1}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/brs/{id1}/br"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/brs/{id1}/br/{id2}"
+    }
+  ]
+}

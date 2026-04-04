@@ -1,0 +1,188 @@
+{
+  "service_name": "Tp",
+  "wadl_file": "tp.wadl",
+  "total_routes": 45,
+  "unique_paths": 9,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/tp"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/tp/{id1}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/tp/{id1}/rc"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/tp/{id1}/rc/{id2}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/tp/{id1}/rc/{id2}/acttti"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/tp/{id1}/rc/{id2}/tti"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/tp/{id1}/rc/{id2}/tti/{id3}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/tp/{id1}/rc/{id2}/tti/{id3}/cti"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/tp/{id1}/rc/{id2}/tti/{id3}/cti/{id4}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/tp"
+    },
+    {
+      "Method": "GET",
+      "Path": "/tp/{id1}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/tp/{id1}/rc"
+    },
+    {
+      "Method": "GET",
+      "Path": "/tp/{id1}/rc/{id2}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/tp/{id1}/rc/{id2}/acttti"
+    },
+    {
+      "Method": "GET",
+      "Path": "/tp/{id1}/rc/{id2}/tti"
+    },
+    {
+      "Method": "GET",
+      "Path": "/tp/{id1}/rc/{id2}/tti/{id3}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/tp/{id1}/rc/{id2}/tti/{id3}/cti"
+    },
+    {
+      "Method": "GET",
+      "Path": "/tp/{id1}/rc/{id2}/tti/{id3}/cti/{id4}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/tp"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/tp/{id1}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/tp/{id1}/rc"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/tp/{id1}/rc/{id2}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/tp/{id1}/rc/{id2}/acttti"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/tp/{id1}/rc/{id2}/tti"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/tp/{id1}/rc/{id2}/tti/{id3}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/tp/{id1}/rc/{id2}/tti/{id3}/cti"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/tp/{id1}/rc/{id2}/tti/{id3}/cti/{id4}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/tp"
+    },
+    {
+      "Method": "POST",
+      "Path": "/tp/{id1}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/tp/{id1}/rc"
+    },
+    {
+      "Method": "POST",
+      "Path": "/tp/{id1}/rc/{id2}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/tp/{id1}/rc/{id2}/acttti"
+    },
+    {
+      "Method": "POST",
+      "Path": "/tp/{id1}/rc/{id2}/tti"
+    },
+    {
+      "Method": "POST",
+      "Path": "/tp/{id1}/rc/{id2}/tti/{id3}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/tp/{id1}/rc/{id2}/tti/{id3}/cti"
+    },
+    {
+      "Method": "POST",
+      "Path": "/tp/{id1}/rc/{id2}/tti/{id3}/cti/{id4}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/tp"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/tp/{id1}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/tp/{id1}/rc"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/tp/{id1}/rc/{id2}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/tp/{id1}/rc/{id2}/acttti"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/tp/{id1}/rc/{id2}/tti"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/tp/{id1}/rc/{id2}/tti/{id3}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/tp/{id1}/rc/{id2}/tti/{id3}/cti"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/tp/{id1}/rc/{id2}/tti/{id3}/cti/{id4}"
+    }
+  ]
+}

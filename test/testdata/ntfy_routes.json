@@ -1,0 +1,48 @@
+{
+  "service_name": "Ntfy",
+  "wadl_file": "ntfy.wadl",
+  "total_routes": 10,
+  "unique_paths": 2,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/ntfy"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/ntfy/{id1}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/ntfy"
+    },
+    {
+      "Method": "GET",
+      "Path": "/ntfy/{id1}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/ntfy"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/ntfy/{id1}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/ntfy"
+    },
+    {
+      "Method": "POST",
+      "Path": "/ntfy/{id1}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/ntfy"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/ntfy/{id1}"
+    }
+  ]
+}

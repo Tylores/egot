@@ -1,0 +1,48 @@
+{
+  "service_name": "File",
+  "wadl_file": "file.wadl",
+  "total_routes": 10,
+  "unique_paths": 2,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/file"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/file/{id1}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/file"
+    },
+    {
+      "Method": "GET",
+      "Path": "/file/{id1}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/file"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/file/{id1}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/file"
+    },
+    {
+      "Method": "POST",
+      "Path": "/file/{id1}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/file"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/file/{id1}"
+    }
+  ]
+}

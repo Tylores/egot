@@ -1,0 +1,188 @@
+{
+  "service_name": "Ppy",
+  "wadl_file": "ppy.wadl",
+  "total_routes": 45,
+  "unique_paths": 9,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/ppy"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/ppy/{id1}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/ppy/{id1}/ab"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/ppy/{id1}/actsi"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/ppy/{id1}/cr"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/ppy/{id1}/cr/{id2}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/ppy/{id1}/os"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/ppy/{id1}/si"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/ppy/{id1}/si/{id2}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/ppy"
+    },
+    {
+      "Method": "GET",
+      "Path": "/ppy/{id1}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/ppy/{id1}/ab"
+    },
+    {
+      "Method": "GET",
+      "Path": "/ppy/{id1}/actsi"
+    },
+    {
+      "Method": "GET",
+      "Path": "/ppy/{id1}/cr"
+    },
+    {
+      "Method": "GET",
+      "Path": "/ppy/{id1}/cr/{id2}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/ppy/{id1}/os"
+    },
+    {
+      "Method": "GET",
+      "Path": "/ppy/{id1}/si"
+    },
+    {
+      "Method": "GET",
+      "Path": "/ppy/{id1}/si/{id2}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/ppy"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/ppy/{id1}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/ppy/{id1}/ab"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/ppy/{id1}/actsi"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/ppy/{id1}/cr"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/ppy/{id1}/cr/{id2}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/ppy/{id1}/os"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/ppy/{id1}/si"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/ppy/{id1}/si/{id2}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/ppy"
+    },
+    {
+      "Method": "POST",
+      "Path": "/ppy/{id1}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/ppy/{id1}/ab"
+    },
+    {
+      "Method": "POST",
+      "Path": "/ppy/{id1}/actsi"
+    },
+    {
+      "Method": "POST",
+      "Path": "/ppy/{id1}/cr"
+    },
+    {
+      "Method": "POST",
+      "Path": "/ppy/{id1}/cr/{id2}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/ppy/{id1}/os"
+    },
+    {
+      "Method": "POST",
+      "Path": "/ppy/{id1}/si"
+    },
+    {
+      "Method": "POST",
+      "Path": "/ppy/{id1}/si/{id2}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/ppy"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/ppy/{id1}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/ppy/{id1}/ab"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/ppy/{id1}/actsi"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/ppy/{id1}/cr"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/ppy/{id1}/cr/{id2}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/ppy/{id1}/os"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/ppy/{id1}/si"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/ppy/{id1}/si/{id2}"
+    }
+  ]
+}

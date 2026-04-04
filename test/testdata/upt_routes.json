@@ -1,0 +1,188 @@
+{
+  "service_name": "Upt",
+  "wadl_file": "upt.wadl",
+  "total_routes": 45,
+  "unique_paths": 9,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/upt"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/upt/{id1}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/upt/{id1}/mr"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/upt/{id1}/mr/{id2}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/upt/{id1}/mr/{id2}/rs"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/upt/{id1}/mr/{id2}/rs/{id3}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/upt/{id1}/mr/{id2}/rs/{id3}/r"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/upt/{id1}/mr/{id2}/rs/{id3}/r/{id4}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/upt/{id1}/mr/{id2}/rt"
+    },
+    {
+      "Method": "GET",
+      "Path": "/upt"
+    },
+    {
+      "Method": "GET",
+      "Path": "/upt/{id1}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/upt/{id1}/mr"
+    },
+    {
+      "Method": "GET",
+      "Path": "/upt/{id1}/mr/{id2}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/upt/{id1}/mr/{id2}/rs"
+    },
+    {
+      "Method": "GET",
+      "Path": "/upt/{id1}/mr/{id2}/rs/{id3}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/upt/{id1}/mr/{id2}/rs/{id3}/r"
+    },
+    {
+      "Method": "GET",
+      "Path": "/upt/{id1}/mr/{id2}/rs/{id3}/r/{id4}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/upt/{id1}/mr/{id2}/rt"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/upt"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/upt/{id1}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/upt/{id1}/mr"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/upt/{id1}/mr/{id2}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/upt/{id1}/mr/{id2}/rs"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/upt/{id1}/mr/{id2}/rs/{id3}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/upt/{id1}/mr/{id2}/rs/{id3}/r"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/upt/{id1}/mr/{id2}/rs/{id3}/r/{id4}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/upt/{id1}/mr/{id2}/rt"
+    },
+    {
+      "Method": "POST",
+      "Path": "/upt"
+    },
+    {
+      "Method": "POST",
+      "Path": "/upt/{id1}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/upt/{id1}/mr"
+    },
+    {
+      "Method": "POST",
+      "Path": "/upt/{id1}/mr/{id2}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/upt/{id1}/mr/{id2}/rs"
+    },
+    {
+      "Method": "POST",
+      "Path": "/upt/{id1}/mr/{id2}/rs/{id3}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/upt/{id1}/mr/{id2}/rs/{id3}/r"
+    },
+    {
+      "Method": "POST",
+      "Path": "/upt/{id1}/mr/{id2}/rs/{id3}/r/{id4}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/upt/{id1}/mr/{id2}/rt"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/upt"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/upt/{id1}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/upt/{id1}/mr"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/upt/{id1}/mr/{id2}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/upt/{id1}/mr/{id2}/rs"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/upt/{id1}/mr/{id2}/rs/{id3}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/upt/{id1}/mr/{id2}/rs/{id3}/r"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/upt/{id1}/mr/{id2}/rs/{id3}/r/{id4}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/upt/{id1}/mr/{id2}/rt"
+    }
+  ]
+}

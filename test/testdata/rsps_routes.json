@@ -1,0 +1,88 @@
+{
+  "service_name": "Rsps",
+  "wadl_file": "rsps.wadl",
+  "total_routes": 20,
+  "unique_paths": 4,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/rsps"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/rsps/{id1}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/rsps/{id1}/rsp"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/rsps/{id1}/rsp/{id2}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/rsps"
+    },
+    {
+      "Method": "GET",
+      "Path": "/rsps/{id1}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/rsps/{id1}/rsp"
+    },
+    {
+      "Method": "GET",
+      "Path": "/rsps/{id1}/rsp/{id2}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/rsps"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/rsps/{id1}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/rsps/{id1}/rsp"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/rsps/{id1}/rsp/{id2}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/rsps"
+    },
+    {
+      "Method": "POST",
+      "Path": "/rsps/{id1}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/rsps/{id1}/rsp"
+    },
+    {
+      "Method": "POST",
+      "Path": "/rsps/{id1}/rsp/{id2}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/rsps"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/rsps/{id1}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/rsps/{id1}/rsp"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/rsps/{id1}/rsp/{id2}"
+    }
+  ]
+}

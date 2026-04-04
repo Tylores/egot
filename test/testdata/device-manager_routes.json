@@ -1,0 +1,7 @@
+{
+  "service_name": "Device-manager",
+  "wadl_file": "device-manager.wadl",
+  "total_routes": 0,
+  "unique_paths": 0,
+  "routes": []
+}

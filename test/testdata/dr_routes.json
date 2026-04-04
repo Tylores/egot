@@ -1,0 +1,108 @@
+{
+  "service_name": "Dr",
+  "wadl_file": "dr.wadl",
+  "total_routes": 25,
+  "unique_paths": 5,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/dr"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/dr/{id1}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/dr/{id1}/actedc"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/dr/{id1}/edc"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/dr/{id1}/edc/{id2}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/dr"
+    },
+    {
+      "Method": "GET",
+      "Path": "/dr/{id1}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/dr/{id1}/actedc"
+    },
+    {
+      "Method": "GET",
+      "Path": "/dr/{id1}/edc"
+    },
+    {
+      "Method": "GET",
+      "Path": "/dr/{id1}/edc/{id2}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/dr"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/dr/{id1}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/dr/{id1}/actedc"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/dr/{id1}/edc"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/dr/{id1}/edc/{id2}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/dr"
+    },
+    {
+      "Method": "POST",
+      "Path": "/dr/{id1}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/dr/{id1}/actedc"
+    },
+    {
+      "Method": "POST",
+      "Path": "/dr/{id1}/edc"
+    },
+    {
+      "Method": "POST",
+      "Path": "/dr/{id1}/edc/{id2}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/dr"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/dr/{id1}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/dr/{id1}/actedc"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/dr/{id1}/edc"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/dr/{id1}/edc/{id2}"
+    }
+  ]
+}

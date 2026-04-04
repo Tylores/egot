@@ -1,0 +1,28 @@
+{
+  "service_name": "Tm",
+  "wadl_file": "tm.wadl",
+  "total_routes": 5,
+  "unique_paths": 1,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/tm"
+    },
+    {
+      "Method": "GET",
+      "Path": "/tm"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/tm"
+    },
+    {
+      "Method": "POST",
+      "Path": "/tm"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/tm"
+    }
+  ]
+}

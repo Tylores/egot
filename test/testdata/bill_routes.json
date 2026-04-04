@@ -1,0 +1,288 @@
+{
+  "service_name": "Bill",
+  "wadl_file": "bill.wadl",
+  "total_routes": 70,
+  "unique_paths": 14,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/bill"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/bill/{id1}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/bill/{id1}/ca"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/bill/{id1}/ca/{id2}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/bill/{id1}/ca/{id2}/actbp"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/bill/{id1}/ca/{id2}/bp"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/bill/{id1}/ca/{id2}/bp/{id3}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/bill/{id1}/ca/{id2}/pro"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/bill/{id1}/ca/{id2}/pro/{id3}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/bill/{id1}/ca/{id2}/tar"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/bill/{id1}/ca/{id2}/tar/{id3}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/bill/{id1}/ca/{id2}/ver"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/bill/{id1}/ca/{id2}/ver/{id3}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/bill/{id1}/ss"
+    },
+    {
+      "Method": "GET",
+      "Path": "/bill"
+    },
+    {
+      "Method": "GET",
+      "Path": "/bill/{id1}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/bill/{id1}/ca"
+    },
+    {
+      "Method": "GET",
+      "Path": "/bill/{id1}/ca/{id2}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/bill/{id1}/ca/{id2}/actbp"
+    },
+    {
+      "Method": "GET",
+      "Path": "/bill/{id1}/ca/{id2}/bp"
+    },
+    {
+      "Method": "GET",
+      "Path": "/bill/{id1}/ca/{id2}/bp/{id3}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/bill/{id1}/ca/{id2}/pro"
+    },
+    {
+      "Method": "GET",
+      "Path": "/bill/{id1}/ca/{id2}/pro/{id3}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/bill/{id1}/ca/{id2}/tar"
+    },
+    {
+      "Method": "GET",
+      "Path": "/bill/{id1}/ca/{id2}/tar/{id3}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/bill/{id1}/ca/{id2}/ver"
+    },
+    {
+      "Method": "GET",
+      "Path": "/bill/{id1}/ca/{id2}/ver/{id3}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/bill/{id1}/ss"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/bill"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/bill/{id1}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/bill/{id1}/ca"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/bill/{id1}/ca/{id2}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/bill/{id1}/ca/{id2}/actbp"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/bill/{id1}/ca/{id2}/bp"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/bill/{id1}/ca/{id2}/bp/{id3}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/bill/{id1}/ca/{id2}/pro"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/bill/{id1}/ca/{id2}/pro/{id3}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/bill/{id1}/ca/{id2}/tar"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/bill/{id1}/ca/{id2}/tar/{id3}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/bill/{id1}/ca/{id2}/ver"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/bill/{id1}/ca/{id2}/ver/{id3}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/bill/{id1}/ss"
+    },
+    {
+      "Method": "POST",
+      "Path": "/bill"
+    },
+    {
+      "Method": "POST",
+      "Path": "/bill/{id1}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/bill/{id1}/ca"
+    },
+    {
+      "Method": "POST",
+      "Path": "/bill/{id1}/ca/{id2}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/bill/{id1}/ca/{id2}/actbp"
+    },
+    {
+      "Method": "POST",
+      "Path": "/bill/{id1}/ca/{id2}/bp"
+    },
+    {
+      "Method": "POST",
+      "Path": "/bill/{id1}/ca/{id2}/bp/{id3}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/bill/{id1}/ca/{id2}/pro"
+    },
+    {
+      "Method": "POST",
+      "Path": "/bill/{id1}/ca/{id2}/pro/{id3}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/bill/{id1}/ca/{id2}/tar"
+    },
+    {
+      "Method": "POST",
+      "Path": "/bill/{id1}/ca/{id2}/tar/{id3}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/bill/{id1}/ca/{id2}/ver"
+    },
+    {
+      "Method": "POST",
+      "Path": "/bill/{id1}/ca/{id2}/ver/{id3}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/bill/{id1}/ss"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/bill"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/bill/{id1}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/bill/{id1}/ca"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/bill/{id1}/ca/{id2}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/bill/{id1}/ca/{id2}/actbp"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/bill/{id1}/ca/{id2}/bp"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/bill/{id1}/ca/{id2}/bp/{id3}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/bill/{id1}/ca/{id2}/pro"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/bill/{id1}/ca/{id2}/pro/{id3}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/bill/{id1}/ca/{id2}/tar"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/bill/{id1}/ca/{id2}/tar/{id3}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/bill/{id1}/ca/{id2}/ver"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/bill/{id1}/ca/{id2}/ver/{id3}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/bill/{id1}/ss"
+    }
+  ]
+}

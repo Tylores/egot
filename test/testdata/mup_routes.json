@@ -1,0 +1,48 @@
+{
+  "service_name": "Mup",
+  "wadl_file": "mup.wadl",
+  "total_routes": 10,
+  "unique_paths": 2,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/mup"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/mup/{id1}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/mup"
+    },
+    {
+      "Method": "GET",
+      "Path": "/mup/{id1}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/mup"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/mup/{id1}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/mup"
+    },
+    {
+      "Method": "POST",
+      "Path": "/mup/{id1}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/mup"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/mup/{id1}"
+    }
+  ]
+}

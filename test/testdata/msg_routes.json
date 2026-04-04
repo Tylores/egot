@@ -1,0 +1,108 @@
+{
+  "service_name": "Msg",
+  "wadl_file": "msg.wadl",
+  "total_routes": 25,
+  "unique_paths": 5,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/msg"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/msg/{id1}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/msg/{id1}/acttxt"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/msg/{id1}/txt"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/msg/{id1}/txt/{id2}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/msg"
+    },
+    {
+      "Method": "GET",
+      "Path": "/msg/{id1}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/msg/{id1}/acttxt"
+    },
+    {
+      "Method": "GET",
+      "Path": "/msg/{id1}/txt"
+    },
+    {
+      "Method": "GET",
+      "Path": "/msg/{id1}/txt/{id2}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/msg"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/msg/{id1}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/msg/{id1}/acttxt"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/msg/{id1}/txt"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/msg/{id1}/txt/{id2}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/msg"
+    },
+    {
+      "Method": "POST",
+      "Path": "/msg/{id1}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/msg/{id1}/acttxt"
+    },
+    {
+      "Method": "POST",
+      "Path": "/msg/{id1}/txt"
+    },
+    {
+      "Method": "POST",
+      "Path": "/msg/{id1}/txt/{id2}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/msg"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/msg/{id1}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/msg/{id1}/acttxt"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/msg/{id1}/txt"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/msg/{id1}/txt/{id2}"
+    }
+  ]
+}
