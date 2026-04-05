@@ -24,12 +24,11 @@ repo := memory.NewRepository()
 h := handler.NewHandler(repo)
 
 // Register handler methods
-	http.HandleFunc("/", h.DELETETime)
-	http.HandleFunc("/", h.GETTime)
-	http.HandleFunc("/", h.HEADTime)
-	http.HandleFunc("/", h.POSTTime)
-	http.HandleFunc("/", h.PUTTime)
-
+	http.Handle("DELETE /tm", http.HandlerFunc(h.DELETETime))
+	http.Handle("GET /tm", http.HandlerFunc(h.GETTime))
+	http.Handle("HEAD /tm", http.HandlerFunc(h.HEADTime))
+	http.Handle("POST /tm", http.HandlerFunc(h.POSTTime))
+	http.Handle("PUT /tm", http.HandlerFunc(h.PUTTime))
 err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
 if err != nil {
 log.Fatal(err)
