@@ -1,28 +1,28 @@
 package main
 
 import (
-"crypto/tls"
-"log"
-"net/http"
+	"log"
+	"net/http"
 
-"github.com/Tylores/egot/internal/BRS/handler"
-"github.com/Tylores/egot/internal/BRS/repository/memory"
-"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/BRS/handler"
+	"github.com/Tylores/egot/internal/BRS/repository/memory"
+	"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/tlsutil"
 )
 
 func main() {
-cfg := &tls.Config{
-MinVersion: tls.VersionTLS12,
-ClientAuth: tls.RequireAndVerifyClientCert,
-}
-server := http.Server{
-Addr:      routes.BRS,
-TLSConfig: cfg,
-}
+	cfg, err := tlsutil.NewServerConfig("./ssl")
+	if err != nil {
+		log.Fatal(err)
+	}
+	server := http.Server{
+		Addr:      routes.BRS,
+		TLSConfig: cfg,
+	}
 
-repo := memory.NewRepository()
+	repo := memory.NewRepository()
 
-h := handler.NewHandler(repo)
+	h := handler.NewHandler(repo)
 	http.Handle("GET /brs", http.HandlerFunc(h.GETBillingReadingSetList))
 	http.Handle("HEAD /brs", http.HandlerFunc(h.HEADBillingReadingSetList))
 	http.Handle("PUT /brs", http.HandlerFunc(h.PUTBillingReadingSetList))
@@ -44,8 +44,8 @@ h := handler.NewHandler(repo)
 	http.Handle("POST /brs/{id1}/br/{id2}", http.HandlerFunc(h.POSTBillingReading))
 	http.Handle("DELETE /brs/{id1}/br/{id2}", http.HandlerFunc(h.DELETEBillingReading))
 
-err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
-if err != nil {
-log.Fatal(err)
-}
+	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+	if err != nil {
+		log.Fatal(err)
+	}
 }

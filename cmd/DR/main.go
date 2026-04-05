@@ -1,28 +1,28 @@
 package main
 
 import (
-"crypto/tls"
-"log"
-"net/http"
+	"log"
+	"net/http"
 
-"github.com/Tylores/egot/internal/DR/handler"
-"github.com/Tylores/egot/internal/DR/repository/memory"
-"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/DR/handler"
+	"github.com/Tylores/egot/internal/DR/repository/memory"
+	"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/tlsutil"
 )
 
 func main() {
-cfg := &tls.Config{
-MinVersion: tls.VersionTLS12,
-ClientAuth: tls.RequireAndVerifyClientCert,
-}
-server := http.Server{
-Addr:      routes.DR,
-TLSConfig: cfg,
-}
+	cfg, err := tlsutil.NewServerConfig("./ssl")
+	if err != nil {
+		log.Fatal(err)
+	}
+	server := http.Server{
+		Addr:      routes.DR,
+		TLSConfig: cfg,
+	}
 
-repo := memory.NewRepository()
+	repo := memory.NewRepository()
 
-h := handler.NewHandler(repo)
+	h := handler.NewHandler(repo)
 	http.Handle("GET /dr", http.HandlerFunc(h.GETDemandResponseProgramList))
 	http.Handle("HEAD /dr", http.HandlerFunc(h.HEADDemandResponseProgramList))
 	http.Handle("PUT /dr", http.HandlerFunc(h.PUTDemandResponseProgramList))
@@ -49,8 +49,8 @@ h := handler.NewHandler(repo)
 	http.Handle("POST /dr/{id1}/edc/{id2}", http.HandlerFunc(h.POSTEndDeviceControl))
 	http.Handle("DELETE /dr/{id1}/edc/{id2}", http.HandlerFunc(h.DELETEEndDeviceControl))
 
-err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
-if err != nil {
-log.Fatal(err)
-}
+	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+	if err != nil {
+		log.Fatal(err)
+	}
 }

@@ -1,4 +1,202 @@
 .PHONY: test test-unit test-integration test-verbose test-coverage coverage-report test-watch help lint test-routes test-route-registration test-http-methods
+.PHONY: build-all build-services build-tools
+.PHONY: build-core build-flowreservation build-operator build-rsps
+.PHONY: build-BRS build-Bill build-DCAP build-DERP build-DR build-EDevice build-File build-MUP build-Messaging build-Notify build-PPY build-SDevice build-TariffProfile build-TimeOfUse build-UPT
+.PHONY: build-crawler build-client build-scaffold-gen build-wadl-extract
+.PHONY: start stop status restart
+.PHONY: ssl-refresh ssl-clients
+
+BIN_DIR := ./bin
+
+# ─── Build Targets ────────────────────────────────────────────────────────────
+
+build-core:
+	@echo "Building core..."
+	@go build -o $(BIN_DIR)/core ./cmd/core/
+
+build-flowreservation:
+	@echo "Building flowreservation..."
+	@go build -o $(BIN_DIR)/flowreservation ./cmd/flowreservation/
+
+build-operator:
+	@echo "Building operator..."
+	@go build -o $(BIN_DIR)/operator ./cmd/operator/
+
+build-rsps:
+	@echo "Building rsps..."
+	@go build -o $(BIN_DIR)/rsps ./cmd/rsps/
+
+build-BRS:
+	@echo "Building BRS..."
+	@go build -o $(BIN_DIR)/BRS ./cmd/BRS/
+
+build-Bill:
+	@echo "Building Bill..."
+	@go build -o $(BIN_DIR)/Bill ./cmd/Bill/
+
+build-DCAP:
+	@echo "Building DCAP..."
+	@go build -o $(BIN_DIR)/DCAP ./cmd/DCAP/
+
+build-DERP:
+	@echo "Building DERP..."
+	@go build -o $(BIN_DIR)/DERP ./cmd/DERP/
+
+build-DR:
+	@echo "Building DR..."
+	@go build -o $(BIN_DIR)/DR ./cmd/DR/
+
+build-EDevice:
+	@echo "Building EDevice..."
+	@go build -o $(BIN_DIR)/EDevice ./cmd/EDevice/
+
+build-File:
+	@echo "Building File..."
+	@go build -o $(BIN_DIR)/File ./cmd/File/
+
+build-MUP:
+	@echo "Building MUP..."
+	@go build -o $(BIN_DIR)/MUP ./cmd/MUP/
+
+build-Messaging:
+	@echo "Building Messaging..."
+	@go build -o $(BIN_DIR)/Messaging ./cmd/Messaging/
+
+build-Notify:
+	@echo "Building Notify..."
+	@go build -o $(BIN_DIR)/Notify ./cmd/Notify/
+
+build-PPY:
+	@echo "Building PPY..."
+	@go build -o $(BIN_DIR)/PPY ./cmd/PPY/
+
+build-SDevice:
+	@echo "Building SDevice..."
+	@go build -o $(BIN_DIR)/SDevice ./cmd/SDevice/
+
+build-TariffProfile:
+	@echo "Building TariffProfile..."
+	@go build -o $(BIN_DIR)/TariffProfile ./cmd/TariffProfile/
+
+build-TimeOfUse:
+	@echo "Building TimeOfUse..."
+	@go build -o $(BIN_DIR)/TimeOfUse ./cmd/TimeOfUse/
+
+build-UPT:
+	@echo "Building UPT..."
+	@go build -o $(BIN_DIR)/UPT ./cmd/UPT/
+
+build-crawler:
+	@echo "Building crawler..."
+	@go build -o $(BIN_DIR)/crawler ./cmd/crawler/
+
+build-client:
+	@echo "Building client..."
+	@go build -o $(BIN_DIR)/client ./cmd/client/
+
+build-scaffold-gen:
+	@echo "Building scaffold-gen..."
+	@go build -o $(BIN_DIR)/scaffold-gen ./cmd/scaffold-gen/
+
+build-wadl-extract:
+	@echo "Building wadl-extract..."
+	@go build -o $(BIN_DIR)/wadl-extract ./cmd/wadl-extract/
+
+# Build all microservice servers (excludes tools/clients)
+build-services: build-core build-flowreservation build-operator build-rsps \
+	build-BRS build-Bill build-DCAP build-DERP build-DR build-EDevice \
+	build-File build-MUP build-Messaging build-Notify build-PPY \
+	build-SDevice build-TariffProfile build-TimeOfUse build-UPT
+	@echo "✅ All services built in $(BIN_DIR)/"
+
+# Build tools and clients only
+build-tools: build-crawler build-client build-scaffold-gen build-wadl-extract
+	@echo "✅ All tools built in $(BIN_DIR)/"
+
+# Build everything
+build-all: build-services build-tools
+	@echo "✅ All binaries built in $(BIN_DIR)/"
+
+# ─── Service Management ───────────────────────────────────────────────────────
+
+PIDS_DIR := $(BIN_DIR)/pids
+LOGS_DIR := $(BIN_DIR)/logs
+
+SERVICES := core flowreservation operator rsps \
+	BRS Bill DCAP DERP DR EDevice File MUP Messaging Notify PPY \
+	SDevice TariffProfile TimeOfUse UPT
+
+# Start all microservices in the background
+start: build-services
+	@echo "Starting all services..."
+	@mkdir -p $(PIDS_DIR) $(LOGS_DIR)
+	@for svc in $(SERVICES); do \
+		if [ -f $(PIDS_DIR)/$$svc.pid ] && kill -0 $$(cat $(PIDS_DIR)/$$svc.pid) 2>/dev/null; then \
+			echo "  $$svc already running (PID $$(cat $(PIDS_DIR)/$$svc.pid))"; \
+		else \
+			nohup $(BIN_DIR)/$$svc > $(LOGS_DIR)/$$svc.log 2>&1 & echo $$! > $(PIDS_DIR)/$$svc.pid; \
+			echo "  ▶ $$svc started (PID $$(cat $(PIDS_DIR)/$$svc.pid))"; \
+		fi; \
+	done
+	@echo "Logs: $(LOGS_DIR)/"
+
+# Stop all microservices
+stop:
+	@echo "Stopping all services..."
+	@for svc in $(SERVICES); do \
+		if [ -f $(PIDS_DIR)/$$svc.pid ]; then \
+			PID=$$(cat $(PIDS_DIR)/$$svc.pid); \
+			if kill -0 $$PID 2>/dev/null; then \
+				kill $$PID && echo "  ■ $$svc stopped (PID $$PID)"; \
+			else \
+				echo "  $$svc was not running"; \
+			fi; \
+			rm -f $(PIDS_DIR)/$$svc.pid; \
+		else \
+			echo "  $$svc not started (no PID file)"; \
+		fi; \
+	done
+
+# Show running/stopped status for each service
+status:
+	@echo "Service status:"
+	@for svc in $(SERVICES); do \
+		if [ -f $(PIDS_DIR)/$$svc.pid ] && kill -0 $$(cat $(PIDS_DIR)/$$svc.pid) 2>/dev/null; then \
+			echo "  ✅ $$svc running (PID $$(cat $(PIDS_DIR)/$$svc.pid))"; \
+		else \
+			echo "  ⬜ $$svc stopped"; \
+		fi; \
+	done
+
+# Restart all services without rebuilding (useful after ssl-refresh)
+restart: stop
+	@echo "Restarting all services..."
+	@mkdir -p $(PIDS_DIR) $(LOGS_DIR)
+	@for svc in $(SERVICES); do \
+		if [ -f $(PIDS_DIR)/$$svc.pid ] && kill -0 $$(cat $(PIDS_DIR)/$$svc.pid) 2>/dev/null; then \
+			echo "  $$svc already running (PID $$(cat $(PIDS_DIR)/$$svc.pid))"; \
+		else \
+			nohup $(BIN_DIR)/$$svc > $(LOGS_DIR)/$$svc.log 2>&1 & echo $$! > $(PIDS_DIR)/$$svc.pid; \
+			echo "  ▶ $$svc started (PID $$(cat $(PIDS_DIR)/$$svc.pid))"; \
+		fi; \
+	done
+	@echo "Logs: $(LOGS_DIR)/"
+
+# ─── SSL Certificates ─────────────────────────────────────────────────────────
+
+# Regenerate CA, server, and default client certificates
+ssl-refresh:
+	@bash scripts/gen-ssl.sh refresh
+	@if ls $(PIDS_DIR)/*.pid 2>/dev/null | grep -q .; then \
+		$(MAKE) --no-print-directory restart; \
+	fi
+
+# Generate N numbered client certificates (default N=1)
+# Usage: make ssl-clients N=5
+ssl-clients:
+	@bash scripts/gen-ssl.sh clients $(or $(N),1)
+
+# ─── Tests ────────────────────────────────────────────────────────────────────
 
 # Run all tests
 test:
@@ -92,6 +290,25 @@ lint:
 
 # Display help
 help:
+	@echo "SSL Certificate Commands:"
+	@echo ""
+	@echo "  make ssl-refresh             - Regenerate CA, server, and default client certs (restarts running services)"
+	@echo "  make ssl-clients N=5         - Generate N numbered client certs (client-0001...)"
+	@echo ""
+	@echo "Build Commands:"
+	@echo ""
+	@echo "  make build-all               - Build all services and tools to ./bin/"
+	@echo "  make build-services          - Build all microservice servers to ./bin/"
+	@echo "  make build-tools             - Build crawler, client, scaffold-gen, wadl-extract"
+	@echo "  make build-<name>            - Build a single service (e.g. make build-core)"
+	@echo ""
+	@echo "Service Management:"
+	@echo ""
+	@echo "  make start                   - Build and start all microservices in background"
+	@echo "  make stop                    - Stop all running microservices"
+	@echo "  make restart                 - Restart all services without rebuilding"
+	@echo "  make status                  - Show running/stopped status for each service"
+	@echo ""
 	@echo "Microservices Testing Commands:"
 	@echo ""
 	@echo "  make test                    - Run all tests"
@@ -105,7 +322,7 @@ help:
 	@echo "  make test-package PKG=...    - Run tests for specific package"
 	@echo "  make test-service SERVICE=...  - Run tests for specific service"
 	@echo ""
-	@echo "Route Testing Commands (NEW):"
+	@echo "Route Testing Commands:"
 	@echo "  make test-routes             - Run all route registration & HTTP method tests"
 	@echo "  make test-route-registration - Run route registration verification tests"
 	@echo "  make test-http-methods       - Run HTTP method support tests"

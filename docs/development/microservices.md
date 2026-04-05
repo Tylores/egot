@@ -159,3 +159,41 @@ make test-coverage                     # coverage report
 ```
 
 See [docs/testing/README.md](../testing/README.md) for the full testing guide.
+
+## SSL Certificates
+
+All services use mutual TLS (mTLS). Certificates live in `ssl/` and are loaded at startup.
+
+### Certificate Files
+
+| File | Description | Used by |
+|------|-------------|---------|
+| `ssl/ca.crt` | CA certificate | All services (client verification) |
+| `ssl/ca.key` | CA private key | Certificate signing only |
+| `ssl/server.crt` + `ssl/server.key` | Server cert for `egot.internal.com` | core, BRS, Bill, DCAP, … |
+| `ssl/srv.crt` + `ssl/srv.key` | Same server cert (copies) | flowreservation, operator |
+| `ssl/client.crt` + `ssl/client.key` | Default client cert (CN=user-test) | crawler, client cmd |
+| `ssl/client-NNNN.crt` + `ssl/client-NNNN.key` | Numbered client certs | Auto-loaded by `InitRepository` |
+
+### Refreshing Certificates
+
+When certs expire or after initial clone:
+
+```shell
+make ssl-refresh
+```
+
+Generates a new self-signed ECDSA P-256 CA (10-year validity) and re-issues all base certs with a 1-year validity.
+
+### Generating Client Certificates
+
+```shell
+make ssl-clients N=5
+# Creates ssl/client-0001.crt ... ssl/client-0005.crt (and matching .key files)
+```
+
+Each cert gets CN=`user-NNNN`. The `.crt` extension is required for `InitRepository` to auto-load them on service startup.
+
+### How Services Load Client Certs
+
+`InitRepository("./ssl")` walks the `ssl/` directory and loads all `*.crt` files whose path contains `client`. This populates the in-memory repository with known client identities (identified by LFDI — the first 40 hex chars of the cert's SHA-256 fingerprint).

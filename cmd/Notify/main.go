@@ -1,28 +1,28 @@
 package main
 
 import (
-"crypto/tls"
-"log"
-"net/http"
+	"log"
+	"net/http"
 
-"github.com/Tylores/egot/internal/Notify/handler"
-"github.com/Tylores/egot/internal/Notify/repository/memory"
-"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/Notify/handler"
+	"github.com/Tylores/egot/internal/Notify/repository/memory"
+	"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/tlsutil"
 )
 
 func main() {
-cfg := &tls.Config{
-MinVersion: tls.VersionTLS12,
-ClientAuth: tls.RequireAndVerifyClientCert,
-}
-server := http.Server{
-Addr:      routes.Notify,
-TLSConfig: cfg,
-}
+	cfg, err := tlsutil.NewServerConfig("./ssl")
+	if err != nil {
+		log.Fatal(err)
+	}
+	server := http.Server{
+		Addr:      routes.Notify,
+		TLSConfig: cfg,
+	}
 
-repo := memory.NewRepository()
+	repo := memory.NewRepository()
 
-h := handler.NewHandler(repo)
+	h := handler.NewHandler(repo)
 	http.Handle("GET /ntfy", http.HandlerFunc(h.GETNotificationList))
 	http.Handle("HEAD /ntfy", http.HandlerFunc(h.HEADNotificationList))
 	http.Handle("PUT /ntfy", http.HandlerFunc(h.PUTNotificationList))
@@ -34,8 +34,8 @@ h := handler.NewHandler(repo)
 	http.Handle("POST /ntfy/{id1}", http.HandlerFunc(h.POSTNotification))
 	http.Handle("DELETE /ntfy/{id1}", http.HandlerFunc(h.DELETENotification))
 
-err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
-if err != nil {
-log.Fatal(err)
-}
+	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+	if err != nil {
+		log.Fatal(err)
+	}
 }

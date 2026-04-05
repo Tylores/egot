@@ -1,28 +1,28 @@
 package main
 
 import (
-"crypto/tls"
-"log"
-"net/http"
+	"log"
+	"net/http"
 
-"github.com/Tylores/egot/internal/Bill/handler"
-"github.com/Tylores/egot/internal/Bill/repository/memory"
-"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/Bill/handler"
+	"github.com/Tylores/egot/internal/Bill/repository/memory"
+	"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/tlsutil"
 )
 
 func main() {
-cfg := &tls.Config{
-MinVersion: tls.VersionTLS12,
-ClientAuth: tls.RequireAndVerifyClientCert,
-}
-server := http.Server{
-Addr:      routes.Bill,
-TLSConfig: cfg,
-}
+	cfg, err := tlsutil.NewServerConfig("./ssl")
+	if err != nil {
+		log.Fatal(err)
+	}
+	server := http.Server{
+		Addr:      routes.Bill,
+		TLSConfig: cfg,
+	}
 
-repo := memory.NewRepository()
+	repo := memory.NewRepository()
 
-h := handler.NewHandler(repo)
+	h := handler.NewHandler(repo)
 	http.Handle("GET /bill", http.HandlerFunc(h.GETCustomerAccountList))
 	http.Handle("HEAD /bill", http.HandlerFunc(h.HEADCustomerAccountList))
 	http.Handle("PUT /bill", http.HandlerFunc(h.PUTCustomerAccountList))
@@ -94,8 +94,8 @@ h := handler.NewHandler(repo)
 	http.Handle("POST /bill/{id1}/ss", http.HandlerFunc(h.POSTServiceSupplier))
 	http.Handle("DELETE /bill/{id1}/ss", http.HandlerFunc(h.DELETEServiceSupplier))
 
-err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
-if err != nil {
-log.Fatal(err)
-}
+	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+	if err != nil {
+		log.Fatal(err)
+	}
 }

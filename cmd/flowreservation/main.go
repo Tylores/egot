@@ -1,21 +1,22 @@
 package main
 
 import (
-	"crypto/tls"
 	"log"
 	"net/http"
+
+	"github.com/Tylores/egot/internal/tlsutil"
 )
 
 func main() {
-	cfg := &tls.Config{
-		MinVersion: tls.VersionTLS12,
-		ClientAuth: tls.RequireAndVerifyClientCert,
+	cfg, err := tlsutil.NewServerConfig("./ssl")
+	if err != nil {
+		log.Fatal(err)
 	}
 	server := http.Server{
 		Addr:      ":4443",
 		TLSConfig: cfg,
 	}
-	err := server.ListenAndServeTLS("./ssl/srv.crt", "./ssl/srv.key")
+	err = server.ListenAndServeTLS("./ssl/srv.crt", "./ssl/srv.key")
 	if err != nil {
 		log.Fatal(err)
 	}

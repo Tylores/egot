@@ -12,18 +12,22 @@ Add the server address to your hosts file for local testing:
 
 ### SSL
 
-Use [step-cli](https://smallstep.com/docs/step-cli/reference/) to set yourself as a CA and generate mutual TLS certificates:
-
-* https://smallstep.com/hello-mtls/doc/combined/go/go
-
-Extend the default certificate duration (24h is too short for development):
+Generate mTLS certificates for local development using the included script (requires `openssl`):
 
 ```shell
-step ca provisioner update you@smallstep.com \
-   --x509-min-dur=24h \
-   --x509-max-dur=8760h \
-   --x509-default-dur=8760h
+make ssl-refresh
 ```
+
+This creates a self-signed CA and issues a server certificate for `egot.internal.com` plus a default client certificate, all valid for 1 year. The CA itself is valid for 10 years.
+
+To generate additional numbered client certificates (e.g. 5 clients):
+
+```shell
+make ssl-clients N=5
+# Generates ssl/client-0001.crt ... ssl/client-0005.crt
+```
+
+> **Note:** The original setup used [step-cli](https://smallstep.com/docs/step-cli/reference/) with a Smallstep CA. The `make ssl-refresh` approach uses plain `openssl` and requires no external CA service. See [docs/development/microservices.md](docs/development/microservices.md) for details on the generated files.
 
 ### Go
 

@@ -1,28 +1,28 @@
 package main
 
 import (
-"crypto/tls"
-"log"
-"net/http"
+	"log"
+	"net/http"
 
-"github.com/Tylores/egot/internal/DERP/handler"
-"github.com/Tylores/egot/internal/DERP/repository/memory"
-"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/DERP/handler"
+	"github.com/Tylores/egot/internal/DERP/repository/memory"
+	"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/tlsutil"
 )
 
 func main() {
-cfg := &tls.Config{
-MinVersion: tls.VersionTLS12,
-ClientAuth: tls.RequireAndVerifyClientCert,
-}
-server := http.Server{
-Addr:      routes.DERP,
-TLSConfig: cfg,
-}
+	cfg, err := tlsutil.NewServerConfig("./ssl")
+	if err != nil {
+		log.Fatal(err)
+	}
+	server := http.Server{
+		Addr:      routes.DERP,
+		TLSConfig: cfg,
+	}
 
-repo := memory.NewRepository()
+	repo := memory.NewRepository()
 
-h := handler.NewHandler(repo)
+	h := handler.NewHandler(repo)
 	http.Handle("GET /derp", http.HandlerFunc(h.GETDERProgramList))
 	http.Handle("HEAD /derp", http.HandlerFunc(h.HEADDERProgramList))
 	http.Handle("PUT /derp", http.HandlerFunc(h.PUTDERProgramList))
@@ -64,8 +64,8 @@ h := handler.NewHandler(repo)
 	http.Handle("POST /derp/{id1}/dc/{id2}", http.HandlerFunc(h.POSTDERCurve))
 	http.Handle("DELETE /derp/{id1}/dc/{id2}", http.HandlerFunc(h.DELETEDERCurve))
 
-err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
-if err != nil {
-log.Fatal(err)
-}
+	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+	if err != nil {
+		log.Fatal(err)
+	}
 }

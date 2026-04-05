@@ -1,28 +1,28 @@
 package main
 
 import (
-"crypto/tls"
-"log"
-"net/http"
+	"log"
+	"net/http"
 
-"github.com/Tylores/egot/internal/Messaging/handler"
-"github.com/Tylores/egot/internal/Messaging/repository/memory"
-"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/Messaging/handler"
+	"github.com/Tylores/egot/internal/Messaging/repository/memory"
+	"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/tlsutil"
 )
 
 func main() {
-cfg := &tls.Config{
-MinVersion: tls.VersionTLS12,
-ClientAuth: tls.RequireAndVerifyClientCert,
-}
-server := http.Server{
-Addr:      routes.Messaging,
-TLSConfig: cfg,
-}
+	cfg, err := tlsutil.NewServerConfig("./ssl")
+	if err != nil {
+		log.Fatal(err)
+	}
+	server := http.Server{
+		Addr:      routes.Messaging,
+		TLSConfig: cfg,
+	}
 
-repo := memory.NewRepository()
+	repo := memory.NewRepository()
 
-h := handler.NewHandler(repo)
+	h := handler.NewHandler(repo)
 	http.Handle("GET /msg", http.HandlerFunc(h.GETMessagingProgramList))
 	http.Handle("HEAD /msg", http.HandlerFunc(h.HEADMessagingProgramList))
 	http.Handle("PUT /msg", http.HandlerFunc(h.PUTMessagingProgramList))
@@ -49,8 +49,8 @@ h := handler.NewHandler(repo)
 	http.Handle("POST /msg/{id1}/txt/{id2}", http.HandlerFunc(h.POSTTextMessage))
 	http.Handle("DELETE /msg/{id1}/txt/{id2}", http.HandlerFunc(h.DELETETextMessage))
 
-err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
-if err != nil {
-log.Fatal(err)
-}
+	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+	if err != nil {
+		log.Fatal(err)
+	}
 }

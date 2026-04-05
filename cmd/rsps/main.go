@@ -1,21 +1,21 @@
 package main
 
 import (
-	"crypto/tls"
 	"log"
 	"net/http"
 
 	"github.com/Tylores/egot/internal/rsps/handler"
 	"github.com/Tylores/egot/internal/rsps/repository/memory"
 	"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/tlsutil"
 )
 
 const MAX_ENTITIES memory.Entity = 100
 
 func main() {
-	cfg := &tls.Config{
-		MinVersion: tls.VersionTLS12,
-		ClientAuth: tls.RequireAndVerifyClientCert,
+	cfg, err := tlsutil.NewServerConfig("./ssl")
+	if err != nil {
+		log.Fatal(err)
 	}
 	server := http.Server{
 		Addr:      routes.Rsps,
@@ -77,7 +77,7 @@ func main() {
 	http.Handle("POST /rsps/{id1}/rsp/{id2}", http.HandlerFunc(h.POSTDrResponse))
 	http.Handle("DELETE /rsps/{id1}/rsp/{id2}", http.HandlerFunc(h.DELETEDrResponse))
 
-	err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,28 +1,28 @@
 package main
 
 import (
-"crypto/tls"
-"log"
-"net/http"
+	"log"
+	"net/http"
 
-"github.com/Tylores/egot/internal/PPY/handler"
-"github.com/Tylores/egot/internal/PPY/repository/memory"
-"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/PPY/handler"
+	"github.com/Tylores/egot/internal/PPY/repository/memory"
+	"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/tlsutil"
 )
 
 func main() {
-cfg := &tls.Config{
-MinVersion: tls.VersionTLS12,
-ClientAuth: tls.RequireAndVerifyClientCert,
-}
-server := http.Server{
-Addr:      routes.PPY,
-TLSConfig: cfg,
-}
+	cfg, err := tlsutil.NewServerConfig("./ssl")
+	if err != nil {
+		log.Fatal(err)
+	}
+	server := http.Server{
+		Addr:      routes.PPY,
+		TLSConfig: cfg,
+	}
 
-repo := memory.NewRepository()
+	repo := memory.NewRepository()
 
-h := handler.NewHandler(repo)
+	h := handler.NewHandler(repo)
 	http.Handle("GET /ppy", http.HandlerFunc(h.GETPrepaymentList))
 	http.Handle("HEAD /ppy", http.HandlerFunc(h.HEADPrepaymentList))
 	http.Handle("PUT /ppy", http.HandlerFunc(h.PUTPrepaymentList))
@@ -69,8 +69,8 @@ h := handler.NewHandler(repo)
 	http.Handle("POST /ppy/{id1}/cr/{id2}", http.HandlerFunc(h.POSTCreditRegister))
 	http.Handle("DELETE /ppy/{id1}/cr/{id2}", http.HandlerFunc(h.DELETECreditRegister))
 
-err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
-if err != nil {
-log.Fatal(err)
-}
+	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+	if err != nil {
+		log.Fatal(err)
+	}
 }

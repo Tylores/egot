@@ -1,29 +1,29 @@
 package main
 
 import (
-"crypto/tls"
-"log"
-"net/http"
+	"log"
+	"net/http"
 
-"github.com/Tylores/egot/internal/UPT/handler"
-"github.com/Tylores/egot/internal/UPT/repository/memory"
+	"github.com/Tylores/egot/internal/UPT/handler"
+	"github.com/Tylores/egot/internal/UPT/repository/memory"
+	"github.com/Tylores/egot/internal/tlsutil"
 )
 
 func main() {
-cfg := &tls.Config{
-MinVersion: tls.VersionTLS12,
-ClientAuth: tls.RequireAndVerifyClientCert,
-}
-server := http.Server{
-Addr:      "egot.internal.com:8024",
-TLSConfig: cfg,
-}
+	cfg, err := tlsutil.NewServerConfig("./ssl")
+	if err != nil {
+		log.Fatal(err)
+	}
+	server := http.Server{
+		Addr:      "egot.internal.com:8024",
+		TLSConfig: cfg,
+	}
 
-repo := memory.NewRepository()
+	repo := memory.NewRepository()
 
-h := handler.NewHandler(repo)
+	h := handler.NewHandler(repo)
 
-// Register handler methods
+	// Register handler methods
 	http.Handle("DELETE /upt", http.HandlerFunc(h.DELETEUsagePointList))
 	http.Handle("GET /upt", http.HandlerFunc(h.GETUsagePointList))
 	http.Handle("HEAD /upt", http.HandlerFunc(h.HEADUsagePointList))
@@ -69,8 +69,8 @@ h := handler.NewHandler(repo)
 	http.Handle("HEAD /upt/{id1}/mr/{id2}/rt", http.HandlerFunc(h.HEADReadingType))
 	http.Handle("POST /upt/{id1}/mr/{id2}/rt", http.HandlerFunc(h.POSTReadingType))
 	http.Handle("PUT /upt/{id1}/mr/{id2}/rt", http.HandlerFunc(h.PUTReadingType))
-err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
-if err != nil {
-log.Fatal(err)
-}
+	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+	if err != nil {
+		log.Fatal(err)
+	}
 }

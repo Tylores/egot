@@ -1,13 +1,13 @@
 package server
 
 import (
-	"crypto/tls"
 	"log"
 	"net/http"
 
 	"github.com/Tylores/egot/internal/core/handler"
 	"github.com/Tylores/egot/internal/core/repository/memory"
 	"github.com/Tylores/egot/internal/routes"
+	"github.com/Tylores/egot/internal/tlsutil"
 	"github.com/Tylores/egot/sep/uri"
 )
 
@@ -39,9 +39,9 @@ func ServeHTTP(entities memory.Entity) {
 }
 
 func ServeHTTPS(entities memory.Entity) {
-	cfg := &tls.Config{
-		MinVersion: tls.VersionTLS12,
-		ClientAuth: tls.RequireAndVerifyClientCert,
+	cfg, err := tlsutil.NewServerConfig("./ssl")
+	if err != nil {
+		log.Fatal(err)
 	}
 	server := http.Server{
 		Addr:      routes.Core,
@@ -54,7 +54,7 @@ func ServeHTTPS(entities memory.Entity) {
 	h := handler.NewHandler(repo)
 	AddRoutes(h)
 
-	err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
 	if err != nil {
 		log.Fatal(err)
 	}

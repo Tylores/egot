@@ -1,29 +1,29 @@
 package main
 
 import (
-"crypto/tls"
-"log"
-"net/http"
+	"log"
+	"net/http"
 
-"github.com/Tylores/egot/internal/TariffProfile/handler"
-"github.com/Tylores/egot/internal/TariffProfile/repository/memory"
+	"github.com/Tylores/egot/internal/TariffProfile/handler"
+	"github.com/Tylores/egot/internal/TariffProfile/repository/memory"
+	"github.com/Tylores/egot/internal/tlsutil"
 )
 
 func main() {
-cfg := &tls.Config{
-MinVersion: tls.VersionTLS12,
-ClientAuth: tls.RequireAndVerifyClientCert,
-}
-server := http.Server{
-Addr:      "egot.internal.com:8022",
-TLSConfig: cfg,
-}
+	cfg, err := tlsutil.NewServerConfig("./ssl")
+	if err != nil {
+		log.Fatal(err)
+	}
+	server := http.Server{
+		Addr:      "egot.internal.com:8022",
+		TLSConfig: cfg,
+	}
 
-repo := memory.NewRepository()
+	repo := memory.NewRepository()
 
-h := handler.NewHandler(repo)
+	h := handler.NewHandler(repo)
 
-// Register handler methods
+	// Register handler methods
 	http.Handle("DELETE /tp", http.HandlerFunc(h.DELETETariffProfileList))
 	http.Handle("GET /tp", http.HandlerFunc(h.GETTariffProfileList))
 	http.Handle("HEAD /tp", http.HandlerFunc(h.HEADTariffProfileList))
@@ -69,8 +69,8 @@ h := handler.NewHandler(repo)
 	http.Handle("HEAD /tp/{id1}/rc/{id2}/tti/{id3}/cti/{id4}", http.HandlerFunc(h.HEADConsumptionTariffInterval))
 	http.Handle("POST /tp/{id1}/rc/{id2}/tti/{id3}/cti/{id4}", http.HandlerFunc(h.POSTConsumptionTariffInterval))
 	http.Handle("PUT /tp/{id1}/rc/{id2}/tti/{id3}/cti/{id4}", http.HandlerFunc(h.PUTConsumptionTariffInterval))
-err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
-if err != nil {
-log.Fatal(err)
-}
+	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
