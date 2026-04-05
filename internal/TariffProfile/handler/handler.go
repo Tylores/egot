@@ -56,7 +56,7 @@ func (h *Handler) GETTariffProfileList(w http.ResponseWriter, req *http.Request)
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.TariffProfileList{})
+	xml.NewEncoder(w).Encode(&sep.TariffProfileList{SubscribableList: &sep.SubscribableList{SubscribableResource: &sep.SubscribableResource{Resource: &sep.Resource{}}}})
 }
 
 func (h *Handler) HEADTariffProfileList(w http.ResponseWriter, req *http.Request) {
@@ -104,7 +104,7 @@ func (h *Handler) DELETETariffProfile(w http.ResponseWriter, req *http.Request) 
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.TariffProfile{})
+	xml.NewEncoder(w).Encode(&sep.TariffProfile{IdentifiedObject: &sep.IdentifiedObject{Resource: &sep.Resource{}}})
 }
 
 func (h *Handler) GETTariffProfile(w http.ResponseWriter, req *http.Request) {
@@ -119,7 +119,7 @@ func (h *Handler) GETTariffProfile(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.TariffProfile{})
+	xml.NewEncoder(w).Encode(&sep.TariffProfile{IdentifiedObject: &sep.IdentifiedObject{Resource: &sep.Resource{}}})
 }
 
 func (h *Handler) HEADTariffProfile(w http.ResponseWriter, req *http.Request) {
@@ -192,7 +192,7 @@ func (h *Handler) GETRateComponentList(w http.ResponseWriter, req *http.Request)
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.RateComponentList{})
+	xml.NewEncoder(w).Encode(&sep.RateComponentList{List: &sep.List{Resource: &sep.Resource{}}})
 }
 
 func (h *Handler) HEADRateComponentList(w http.ResponseWriter, req *http.Request) {
@@ -368,7 +368,7 @@ func (h *Handler) GETActiveTimeTariffIntervalList(w http.ResponseWriter, req *ht
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.TimeTariffIntervalList{})
+	xml.NewEncoder(w).Encode(&sep.TimeTariffIntervalList{SubscribableList: &sep.SubscribableList{SubscribableResource: &sep.SubscribableResource{Resource: &sep.Resource{}}}})
 }
 
 func (h *Handler) HEADActiveTimeTariffIntervalList(w http.ResponseWriter, req *http.Request) {
@@ -462,7 +462,7 @@ func (h *Handler) GETTimeTariffIntervalList(w http.ResponseWriter, req *http.Req
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.TimeTariffIntervalList{})
+	xml.NewEncoder(w).Encode(&sep.TimeTariffIntervalList{SubscribableList: &sep.SubscribableList{SubscribableResource: &sep.SubscribableResource{Resource: &sep.Resource{}}}})
 }
 
 func (h *Handler) HEADTimeTariffIntervalList(w http.ResponseWriter, req *http.Request) {
@@ -542,7 +542,7 @@ func (h *Handler) DELETETimeTariffInterval(w http.ResponseWriter, req *http.Requ
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.TimeTariffInterval{})
+	xml.NewEncoder(w).Encode(&sep.TimeTariffInterval{RandomizableEvent: &sep.RandomizableEvent{Event: &sep.Event{RespondableSubscribableIdentifiedObject: &sep.RespondableSubscribableIdentifiedObject{RespondableResource: &sep.RespondableResource{Resource: &sep.Resource{}}}}}})
 }
 
 func (h *Handler) GETTimeTariffInterval(w http.ResponseWriter, req *http.Request) {
@@ -565,7 +565,7 @@ func (h *Handler) GETTimeTariffInterval(w http.ResponseWriter, req *http.Request
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.TimeTariffInterval{})
+	xml.NewEncoder(w).Encode(&sep.TimeTariffInterval{RandomizableEvent: &sep.RandomizableEvent{Event: &sep.Event{RespondableSubscribableIdentifiedObject: &sep.RespondableSubscribableIdentifiedObject{RespondableResource: &sep.RespondableResource{Resource: &sep.Resource{}}}}}})
 }
 
 func (h *Handler) HEADTimeTariffInterval(w http.ResponseWriter, req *http.Request) {
@@ -678,7 +678,7 @@ func (h *Handler) GETConsumptionTariffIntervalList(w http.ResponseWriter, req *h
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.ConsumptionTariffIntervalList{})
+	xml.NewEncoder(w).Encode(&sep.ConsumptionTariffIntervalList{List: &sep.List{Resource: &sep.Resource{}}})
 }
 
 func (h *Handler) HEADConsumptionTariffIntervalList(w http.ResponseWriter, req *http.Request) {
@@ -774,7 +774,7 @@ func (h *Handler) DELETEConsumptionTariffInterval(w http.ResponseWriter, req *ht
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.ConsumptionTariffInterval{})
+	xml.NewEncoder(w).Encode(&sep.ConsumptionTariffInterval{Resource: &sep.Resource{}})
 }
 
 func (h *Handler) GETConsumptionTariffInterval(w http.ResponseWriter, req *http.Request) {
@@ -801,7 +801,7 @@ func (h *Handler) GETConsumptionTariffInterval(w http.ResponseWriter, req *http.
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.ConsumptionTariffInterval{})
+	xml.NewEncoder(w).Encode(&sep.ConsumptionTariffInterval{Resource: &sep.Resource{}})
 }
 
 func (h *Handler) HEADConsumptionTariffInterval(w http.ResponseWriter, req *http.Request) {

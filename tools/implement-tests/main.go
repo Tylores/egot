@@ -298,8 +298,6 @@ func register%sRoutes(mux *http.ServeMux, h *handler.Handler) {
 		serviceKey,
 		serviceKeyUpper,
 		serviceKey,
-		routeData.TotalRoutes,
-		service,
 		registrationCode,
 	)
 	

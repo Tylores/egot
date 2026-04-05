@@ -21,6 +21,10 @@ func NewHandler(repo *memory.Repository) *Handler {
 }
 
 func (h *Handler) GetDeviceCapability(w http.ResponseWriter, req *http.Request) {
+	if req.TLS == nil || len(req.TLS.PeerCertificates) == 0 {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	cert := req.TLS.PeerCertificates[0]
 	lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]
 
@@ -42,6 +46,10 @@ func (h *Handler) GetDeviceCapability(w http.ResponseWriter, req *http.Request) 
 }
 
 func (h *Handler) GetTime(w http.ResponseWriter, req *http.Request) {
+	if req.TLS == nil || len(req.TLS.PeerCertificates) == 0 {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	cert := req.TLS.PeerCertificates[0]
 	lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]
 
@@ -62,6 +70,10 @@ func (h *Handler) GetTime(w http.ResponseWriter, req *http.Request) {
 }
 
 func (h *Handler) GetEndDevices(w http.ResponseWriter, req *http.Request) {
+	if req.TLS == nil || len(req.TLS.PeerCertificates) == 0 {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	cert := req.TLS.PeerCertificates[0]
 	lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]
 
@@ -96,6 +108,10 @@ func (h *Handler) GetEndDevices(w http.ResponseWriter, req *http.Request) {
 }
 
 func (h *Handler) GetEndDevice(w http.ResponseWriter, req *http.Request) {
+	if req.TLS == nil || len(req.TLS.PeerCertificates) == 0 {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	cert := req.TLS.PeerCertificates[0]
 	lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]
 
@@ -128,6 +144,10 @@ func (h *Handler) GetEndDevice(w http.ResponseWriter, req *http.Request) {
 }
 
 func (h *Handler) GetRegistration(w http.ResponseWriter, req *http.Request) {
+	if req.TLS == nil || len(req.TLS.PeerCertificates) == 0 {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	cert := req.TLS.PeerCertificates[0]
 	lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]
 

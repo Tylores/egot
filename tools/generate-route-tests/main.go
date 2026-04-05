@@ -8,7 +8,6 @@ import (
 "os"
 "path/filepath"
 "strings"
-"text/template"
 )
 
 type RouteTestData struct {
@@ -153,7 +152,6 @@ serviceFlag := flag.String("service", "", "Service name (e.g., Bill). Empty mean
 flag.Parse()
 
 testDataDir := "./test/testdata"
-outputDir := "./cmd"
 
 var services []string
 if *serviceFlag != "" {

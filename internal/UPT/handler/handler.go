@@ -56,7 +56,7 @@ func (h *Handler) GETUsagePointList(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.UsagePointList{})
+	xml.NewEncoder(w).Encode(&sep.UsagePointList{SubscribableList: &sep.SubscribableList{SubscribableResource: &sep.SubscribableResource{Resource: &sep.Resource{}}}})
 }
 
 func (h *Handler) HEADUsagePointList(w http.ResponseWriter, req *http.Request) {
@@ -104,7 +104,7 @@ func (h *Handler) DELETEUsagePoint(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.UsagePoint{})
+	xml.NewEncoder(w).Encode(&sep.UsagePoint{UsagePointBase: &sep.UsagePointBase{IdentifiedObject: &sep.IdentifiedObject{Resource: &sep.Resource{}}}})
 }
 
 func (h *Handler) GETUsagePoint(w http.ResponseWriter, req *http.Request) {
@@ -119,7 +119,7 @@ func (h *Handler) GETUsagePoint(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.UsagePoint{})
+	xml.NewEncoder(w).Encode(&sep.UsagePoint{UsagePointBase: &sep.UsagePointBase{IdentifiedObject: &sep.IdentifiedObject{Resource: &sep.Resource{}}}})
 }
 
 func (h *Handler) HEADUsagePoint(w http.ResponseWriter, req *http.Request) {
@@ -192,7 +192,7 @@ func (h *Handler) GETMeterReadingList(w http.ResponseWriter, req *http.Request) 
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.MeterReadingList{})
+	xml.NewEncoder(w).Encode(&sep.MeterReadingList{SubscribableList: &sep.SubscribableList{SubscribableResource: &sep.SubscribableResource{Resource: &sep.Resource{}}}})
 }
 
 func (h *Handler) HEADMeterReadingList(w http.ResponseWriter, req *http.Request) {
@@ -256,7 +256,7 @@ func (h *Handler) DELETEMeterReading(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.MeterReading{})
+	xml.NewEncoder(w).Encode(&sep.MeterReading{MeterReadingBase: &sep.MeterReadingBase{IdentifiedObject: &sep.IdentifiedObject{Resource: &sep.Resource{}}}})
 }
 
 func (h *Handler) GETMeterReading(w http.ResponseWriter, req *http.Request) {
@@ -275,7 +275,7 @@ func (h *Handler) GETMeterReading(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.MeterReading{})
+	xml.NewEncoder(w).Encode(&sep.MeterReading{MeterReadingBase: &sep.MeterReadingBase{IdentifiedObject: &sep.IdentifiedObject{Resource: &sep.Resource{}}}})
 }
 
 func (h *Handler) HEADMeterReading(w http.ResponseWriter, req *http.Request) {
@@ -368,7 +368,7 @@ func (h *Handler) GETReadingType(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.ReadingType{})
+	xml.NewEncoder(w).Encode(&sep.ReadingType{Resource: &sep.Resource{}})
 }
 
 func (h *Handler) HEADReadingType(w http.ResponseWriter, req *http.Request) {
@@ -462,7 +462,7 @@ func (h *Handler) GETReadingSetList(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.ReadingSetList{})
+	xml.NewEncoder(w).Encode(&sep.ReadingSetList{SubscribableList: &sep.SubscribableList{SubscribableResource: &sep.SubscribableResource{Resource: &sep.Resource{}}}})
 }
 
 func (h *Handler) HEADReadingSetList(w http.ResponseWriter, req *http.Request) {
@@ -542,7 +542,7 @@ func (h *Handler) DELETEReadingSet(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.ReadingSet{})
+	xml.NewEncoder(w).Encode(&sep.ReadingSet{ReadingSetBase: &sep.ReadingSetBase{IdentifiedObject: &sep.IdentifiedObject{Resource: &sep.Resource{}}}})
 }
 
 func (h *Handler) GETReadingSet(w http.ResponseWriter, req *http.Request) {
@@ -565,7 +565,7 @@ func (h *Handler) GETReadingSet(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.ReadingSet{})
+	xml.NewEncoder(w).Encode(&sep.ReadingSet{ReadingSetBase: &sep.ReadingSetBase{IdentifiedObject: &sep.IdentifiedObject{Resource: &sep.Resource{}}}})
 }
 
 func (h *Handler) HEADReadingSet(w http.ResponseWriter, req *http.Request) {
@@ -678,7 +678,7 @@ func (h *Handler) GETReadingList(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.ReadingList{})
+	xml.NewEncoder(w).Encode(&sep.ReadingList{SubscribableList: &sep.SubscribableList{SubscribableResource: &sep.SubscribableResource{Resource: &sep.Resource{}}}})
 }
 
 func (h *Handler) HEADReadingList(w http.ResponseWriter, req *http.Request) {
@@ -774,7 +774,7 @@ func (h *Handler) DELETEReading(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.Reading{})
+	xml.NewEncoder(w).Encode(&sep.Reading{ReadingBase: &sep.ReadingBase{Resource: &sep.Resource{}}})
 }
 
 func (h *Handler) GETReading(w http.ResponseWriter, req *http.Request) {
@@ -801,7 +801,7 @@ func (h *Handler) GETReading(w http.ResponseWriter, req *http.Request) {
 	}
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.Reading{})
+	xml.NewEncoder(w).Encode(&sep.Reading{ReadingBase: &sep.ReadingBase{Resource: &sep.Resource{}}})
 }
 
 func (h *Handler) HEADReading(w http.ResponseWriter, req *http.Request) {
