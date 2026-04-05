@@ -23,12 +23,33 @@ wadl-extract -wadl <input_wadl> -path <path_prefix> -output <output_wadl> [-v]
 - `-output string` - **Required**. Output path for extracted WADL file
 - `-v` - Optional. Enable verbose output showing all extracted resources
 
+## Common Resource Paths
+
+| Path | Resources | Description |
+|------|-----------|-------------|
+| `/bill` | ~10 | Customer billing information |
+| `/brs` | 4 | Billing reading sets |
+| `/dcap` | 1 | Device capability |
+| `/derp` | 6 | DER programs |
+| `/dr` | 5 | Demand response programs |
+| `/edev` | 53 | End device resources |
+| `/file` | 2 | File management |
+| `/msg` | 5 | Messaging programs |
+| `/mup` | 2 | Mirror usage points |
+| `/ntfy` | 2 | Notifications |
+| `/ppy` | 9 | Prepayment |
+| `/rsps` | 3 | Response sets |
+| `/sdev` | 1 | Self device |
+| `/tm` | 1 | Time |
+| `/tp` | 7 | Tariff profiles |
+| `/upt` | 6 | Usage points |
+
 ## Examples
 
 ### Extract demand-response resources
 
 ```bash
-wadl-extract \
+./bin/wadl-extract \
   -wadl wadl/sep_wadl.xml \
   -path /dr \
   -output wadl/demand-response.wadl \
@@ -52,19 +73,19 @@ Output:
 ### Extract end-device resources
 
 ```bash
-wadl-extract \
-  -wadl wadl/sep_wadl.xml \
-  -path /edev \
-  -output wadl/end-device.wadl
+./bin/wadl-extract -wadl wadl/sep_wadl.xml -path /edev -output wadl/end-device.wadl
 ```
 
 ### Extract messaging resources
 
 ```bash
-wadl-extract \
-  -wadl wadl/sep_wadl.xml \
-  -path /msg \
-  -output wadl/messaging.wadl
+./bin/wadl-extract -wadl wadl/sep_wadl.xml -path /msg -output wadl/messaging.wadl -v
+```
+
+### Extract usage points
+
+```bash
+./bin/wadl-extract -wadl wadl/sep_wadl.xml -path /upt -output wadl/upt.wadl
 ```
 
 ## Building
@@ -72,14 +93,19 @@ wadl-extract \
 From the project root:
 
 ```bash
-go build -o wadl-extract ./cmd/wadl-extract
+go build -o bin/wadl-extract ./cmd/wadl-extract
 ```
 
-Or use the Makefile if available:
+## Integration with scaffold-gen
+
+Extract a WADL slice, then generate a full service from it:
 
 ```bash
-make wadl-extract
+./bin/wadl-extract -wadl wadl/sep_wadl.xml -path /dr -output wadl/dr.wadl -v
+go run ./cmd/scaffold-gen -wadl wadl/dr.wadl -output .
 ```
+
+See [docs/tools/scaffold-gen.md](../../docs/tools/scaffold-gen.md) for the scaffold generator guide.
 
 ## How It Works
 
@@ -98,8 +124,16 @@ The tool uses two main components:
 
 ## Exit Codes
 
-- `0` - Success
-- `1` - Error (invalid arguments, file not found, parsing error, no resources found)
+- `0` — Success
+- `1` — Error (invalid arguments, file not found, parsing error, no resources found)
+
+## Error Reference
+
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `"failed to open WADL file"` | Input file doesn't exist | Verify `-wadl` path |
+| `"No resources found"` | No resources match the prefix | Check `-path` against the table above |
+| `"failed to write WADL file"` | Output directory missing or unwritable | Verify `-output` directory exists |
 
 ## Limitations
 

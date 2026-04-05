@@ -119,3 +119,7 @@ See `wadl/device-manager.wadl` for a complete example WADL file.
 - Method names should be descriptive (GetItem, CreateItem, UpdateItem, etc.)
 - Path parameters must match placeholders: `{id}` → `<param name="id"/>`
 - Keep max_entities reasonable for memory usage (default: 100)
+
+## Full Documentation
+
+See [docs/tools/scaffold-gen.md](../../docs/tools/scaffold-gen.md) for the complete specification, WADL schema reference, generated code patterns, and troubleshooting guide.

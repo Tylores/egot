@@ -97,8 +97,8 @@ assert.Greater(t, a, b)
 ## Key Files
 
 - **Makefile** - Test commands
-- **TESTING_GUIDE.md** - Full tutorial
-- **TESTING_WORKFLOW.md** - Development workflow
+- **testing/README.md** - Full tutorial
+- **testing/README.md** - Development workflow
 - **test/testhelpers/assertions.go** - Helper functions
 - **internal/Bill/handler/handler_test.go** - Example
 
@@ -131,4 +131,4 @@ if testing.Short() {
 
 ---
 
-**Need more detail?** Read `TESTING_GUIDE.md` or `TESTING_WORKFLOW.md`
+**Need more detail?** See [README.md](README.md) for the full testing guide.
