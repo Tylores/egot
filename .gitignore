@@ -22,9 +22,3 @@ go.work
 
 # Build dirs
 bin/
-
-# Go compiled binaries (Unix/Linux - no extension)
-egot
-scaffold-gen
-wadl-extractor
-*.test

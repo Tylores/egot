@@ -5,100 +5,214 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
-// WADL represents the parsed Web Application Description Language specification
-type WADL struct {
-	XMLName     xml.Name    `xml:"application"`
-	Name        string      `xml:"name,attr"`
-	Port        int         `xml:"port,attr"`
-	MaxEntities int         `xml:"max_entities,attr"`
-	Resources   []Resource  `xml:"resources>resource"`
+// sep2Application is the root element of a SEP 2 WADL file.
+type sep2Application struct {
+	XMLName   xml.Name    `xml:"application"`
+	Resources sep2ResRoot `xml:"resources"`
+	Attrs     []xml.Attr  `xml:",any,attr"`
 }
 
-// Resource represents a REST resource in the WADL
-type Resource struct {
-	Path    string   `xml:"path,attr"`
-	Methods []Method `xml:"methods>method"`
+type sep2ResRoot struct {
+	Resources []sep2Resource `xml:"resource"`
 }
 
-// Method represents an HTTP method on a resource
-type Method struct {
-	Name         string      `xml:"name,attr"`
-	HTTPMethod   string      `xml:"http_method,attr"`
-	RequestType  string      `xml:"request_type,attr"`
-	ResponseType string      `xml:"response_type,attr"`
-	PathParams   []PathParam `xml:"path_params>param"`
+type sep2Resource struct {
+	ID      string       `xml:"id,attr"`
+	Methods []sep2Method `xml:"method"`
+	Attrs   []xml.Attr   `xml:",any,attr"`
 }
 
-// PathParam represents a path parameter
-type PathParam struct {
-	Name string `xml:"name,attr"`
-	Type string `xml:"type,attr"`
+// UnmarshalXML extracts the namespaced wx:samplePath attribute.
+func (r *sep2Resource) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	for _, a := range start.Attr {
+		if a.Name.Local == "samplePath" {
+			r.Attrs = append(r.Attrs, a)
+		}
+	}
+	type Alias sep2Resource
+	return d.DecodeElement((*Alias)(r), &start)
 }
 
-// Generator generates microservice scaffolds from WADL specifications
+func (r *sep2Resource) samplePath() string {
+	for _, a := range r.Attrs {
+		if a.Name.Local == "samplePath" {
+			return a.Value
+		}
+	}
+	return ""
+}
+
+type sep2Method struct {
+	ID       string          `xml:"id,attr"`
+	Name     string          `xml:"name,attr"`
+	Response []sep2Response  `xml:"response"`
+	Attrs    []xml.Attr      `xml:",any,attr"`
+}
+
+func (m *sep2Method) mode() string {
+	for _, a := range m.Attrs {
+		if a.Name.Local == "mode" {
+			return a.Value
+		}
+	}
+	return "M"
+}
+
+type sep2Response struct {
+	Reps []sep2Representation `xml:"representation"`
+}
+
+type sep2Representation struct {
+	Element string `xml:"element,attr"`
+}
+
+// internal service description built from the parsed WADL
+
+type serviceSpec struct {
+	Port        int
+	MaxEntities int
+	Resources   []resourceSpec
+}
+
+type resourceSpec struct {
+	Path    string
+	Name    string // resource id (e.g. "BillingReadingSetList")
+	Methods []methodSpec
+}
+
+type methodSpec struct {
+	FuncName     string   // from method id (e.g. "GETDeviceCapability")
+	HTTPMethod   string   // GET, POST, PUT, DELETE, HEAD
+	Mode         string   // M, D, E, O
+	ResponseType string   // sep type name (e.g. "DeviceCapability"), empty if none
+	PathParams   []string // param names extracted from samplePath
+}
+
+// Generator generates microservice scaffolds from WADL specifications.
 type Generator struct {
-	wadl *WADL
+	spec        serviceSpec
+	serviceName string
 }
 
-// NewGenerator creates a new generator from a WADL file
+// NewGenerator creates a new generator from a SEP 2 WADL file.
+// The service name is derived from the WADL filename (without extension).
 func NewGenerator(wadlPath string) (*Generator, error) {
 	data, err := os.ReadFile(wadlPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read WADL file: %w", err)
 	}
 
-	wadl := &WADL{}
-	err = xml.Unmarshal(data, wadl)
-	if err != nil {
+	app := &sep2Application{}
+	if err = xml.Unmarshal(data, app); err != nil {
 		return nil, fmt.Errorf("failed to parse WADL: %w", err)
 	}
 
-	if wadl.Name == "" {
-		return nil, fmt.Errorf("WADL must specify application name")
-	}
-	if wadl.Port == 0 {
-		return nil, fmt.Errorf("WADL must specify application port")
-	}
-	if wadl.MaxEntities == 0 {
-		wadl.MaxEntities = 100
-	}
-
-	return &Generator{wadl: wadl}, nil
-}
-
-// NewGeneratorFromSEP2WADL creates a new generator from a SEP 2 WADL file
-func NewGeneratorFromSEP2WADL(sep2WadlPath, serviceName string, port, maxEntities int) (*Generator, error) {
-	wadl, err := ConvertSEP2WADL(sep2WadlPath, serviceName, port, maxEntities)
+	spec, err := buildSpec(app)
 	if err != nil {
 		return nil, err
 	}
 
-	if wadl.Name == "" {
-		return nil, fmt.Errorf("WADL must specify application name")
-	}
-	if wadl.Port == 0 {
-		return nil, fmt.Errorf("WADL must specify application port")
-	}
-	if wadl.MaxEntities == 0 {
-		wadl.MaxEntities = 100
-	}
+	base := filepath.Base(wadlPath)
+	serviceName := strings.TrimSuffix(base, filepath.Ext(base))
 
-	return &Generator{wadl: wadl}, nil
+	return &Generator{spec: spec, serviceName: serviceName}, nil
 }
 
-// ServiceName returns the service name from the WADL
+// buildSpec converts a parsed SEP 2 application into the internal service spec.
+func buildSpec(app *sep2Application) (serviceSpec, error) {
+	spec := serviceSpec{MaxEntities: 100}
+
+	for _, a := range app.Attrs {
+		switch a.Name.Local {
+		case "port":
+			v, err := strconv.Atoi(a.Value)
+			if err != nil || v == 0 {
+				return spec, fmt.Errorf("invalid port attribute %q", a.Value)
+			}
+			spec.Port = v
+		case "max_entities":
+			v, _ := strconv.Atoi(a.Value)
+			if v > 0 {
+				spec.MaxEntities = v
+			}
+		}
+	}
+
+	if spec.Port == 0 {
+		return spec, fmt.Errorf("WADL must specify application port (run wadl-extract to add it)")
+	}
+
+	for _, res := range app.Resources.Resources {
+		path := res.samplePath()
+		if path == "" {
+			continue
+		}
+
+		pathParams := extractPathParams(path)
+		rspec := resourceSpec{
+			Path: path,
+			Name: res.ID,
+		}
+
+		for _, m := range res.Methods {
+			if m.ID == "" {
+				continue
+			}
+			mspec := methodSpec{
+				FuncName:   m.ID,
+				HTTPMethod: strings.ToUpper(m.Name),
+				Mode:       m.mode(),
+				PathParams: pathParams,
+			}
+			// Extract response type from first representation with an element attr
+			for _, resp := range m.Response {
+				for _, rep := range resp.Reps {
+					if rep.Element != "" {
+						parts := strings.SplitN(rep.Element, ":", 2)
+						mspec.ResponseType = parts[len(parts)-1]
+						break
+					}
+				}
+				if mspec.ResponseType != "" {
+					break
+				}
+			}
+			rspec.Methods = append(rspec.Methods, mspec)
+		}
+
+		if len(rspec.Methods) > 0 {
+			spec.Resources = append(spec.Resources, rspec)
+		}
+	}
+
+	return spec, nil
+}
+
+// extractPathParams returns param names from a path like "/brs/{id1}/br/{id2}".
+func extractPathParams(path string) []string {
+	var params []string
+	for _, seg := range strings.Split(path, "/") {
+		if strings.HasPrefix(seg, "{") && strings.HasSuffix(seg, "}") {
+			params = append(params, seg[1:len(seg)-1])
+		}
+	}
+	return params
+}
+
+// ServiceName returns the service name derived from the WADL filename.
 func (g *Generator) ServiceName() string {
-	return g.wadl.Name
+	return g.serviceName
 }
 
-// Generate creates the complete service scaffold
-func (g *Generator) Generate(outputDir string) error {
-	serviceName := g.wadl.Name
+// Generate creates the complete service scaffold in the current directory.
+func (g *Generator) Generate() error {
+	serviceName := g.serviceName
+	outputDir := "."
 
-	// Create directory structure
 	dirs := []string{
 		filepath.Join(outputDir, fmt.Sprintf("cmd/%s", serviceName)),
 		filepath.Join(outputDir, fmt.Sprintf("internal/%s/handler", serviceName)),
@@ -107,47 +221,28 @@ func (g *Generator) Generate(outputDir string) error {
 	}
 
 	for _, dir := range dirs {
-		err := os.MkdirAll(dir, 0755)
-		if err != nil {
+		if err := os.MkdirAll(dir, 0755); err != nil {
 			return fmt.Errorf("failed to create directory %s: %w", dir, err)
 		}
 	}
 
-	// Generate files
-	err := g.generateMain(outputDir, serviceName)
-	if err != nil {
-		return err
-	}
-
-	err = g.generateHandler(outputDir, serviceName)
-	if err != nil {
-		return err
-	}
-
-	err = g.generateRepository(outputDir, serviceName)
-	if err != nil {
-		return err
-	}
-
-	err = g.generateRepositoryError(outputDir, serviceName)
-	if err != nil {
-		return err
-	}
-
-	err = g.generateServer(outputDir, serviceName)
-	if err != nil {
-		return err
-	}
-
-	err = g.updateRoutes(outputDir, serviceName)
-	if err != nil {
-		return err
+	for _, fn := range []func(string, string) error{
+		g.generateMain,
+		g.generateHandler,
+		g.generateRepository,
+		g.generateRepositoryError,
+		g.generateServer,
+		g.updateRoutes,
+	} {
+		if err := fn(outputDir, serviceName); err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
-// Helper to convert service name to constant format (e.g., "device-manager" -> "DeviceManager")
+// toCamelCase converts "device-manager" → "DeviceManager".
 func toCamelCase(s string) string {
 	parts := strings.Split(s, "-")
 	for i, part := range parts {
@@ -158,7 +253,7 @@ func toCamelCase(s string) string {
 	return strings.Join(parts, "")
 }
 
-// Helper to convert to constant format (e.g., "device-manager" -> "DEVICE_MANAGER")
+// toConstantFormat converts "device-manager" → "DEVICE_MANAGER".
 func toConstantFormat(s string) string {
 	return strings.ToUpper(strings.ReplaceAll(s, "-", "_"))
 }

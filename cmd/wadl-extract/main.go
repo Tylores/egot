@@ -32,6 +32,9 @@ func main() {
 	// Extract resources by path prefix
 	extracted := extractor.Extract(*pathPrefix)
 
+	extracted.AddAttribute("port", "8000")
+	extracted.AddAttribute("max_entities", "100")
+
 	if extracted.GetResourceCount() == 0 {
 		log.Fatalf("No resources found with path prefix: %s\n", *pathPrefix)
 	}

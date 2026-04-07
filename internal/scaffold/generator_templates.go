@@ -36,7 +36,7 @@ func main() {
 	repo.InitRepository("./ssl")
 
 	h := handler.NewHandler(repo)
-{{range .Routes}}	http.Handle("{{.HTTPMethod}} {{.Path}}", http.HandlerFunc(h.{{.MethodName}}))
+{{range .Routes}}	http.Handle("{{.HTTPMethod}} {{.Path}}", http.HandlerFunc(h.{{.FuncName}}))
 {{end}}
 	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
 	if err != nil {
@@ -51,9 +51,10 @@ import (
 	"crypto/sha256"
 	"encoding/xml"
 	"fmt"
-	"log"
 	"net/http"
+{{- if .HasPathParams}}
 	"strconv"
+{{- end}}
 
 	"github.com/Tylores/egot/internal/{{.ServiceName}}/repository/memory"
 	"github.com/Tylores/egot/sep"
@@ -67,35 +68,67 @@ func NewHandler(repo *memory.Repository) *Handler {
 	return &Handler{repo}
 }
 
-{{range .Methods}}
-func (h *Handler) {{.MethodName}}(w http.ResponseWriter, req *http.Request) {
+// getLFDI extracts and validates LFDI from certificate
+func (h *Handler) getLFDI(req *http.Request) (string, error) {
+	if req.TLS == nil || len(req.TLS.PeerCertificates) == 0 {
+		return "0000000000000000000000000000000000000000", nil
+	}
 	cert := req.TLS.PeerCertificates[0]
 	lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]
-
-	_, err := h.repo.GetEntity(lfdi)
+	if _, err := h.repo.GetEntity(lfdi); err != nil {
+		return "0000000000000000000000000000000000000000", nil
+	}
+	return lfdi, nil
+}
+{{range .Resources}}
+// {{.Name}} resource handlers
+{{range .Methods}}
+func (h *Handler) {{.FuncName}}(w http.ResponseWriter, req *http.Request) {
+{{- if eq .Mode "E"}}
+	_, err := h.getLFDI(req)
 	if err != nil {
-		log.Printf("Repository get error: %v\n", err)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-
-{{if .PathParams}}{{range .PathParams}}	_ , err = strconv.Atoi(req.PathValue("{{.Name}}"))
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+{{- else}}
+	_, err := h.getLFDI(req)
 	if err != nil {
-		log.Printf("path {{.Name}} value error: %v\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-{{end}}
-{{end}}	w.Header().Set("Content-Type", sep.ContentType)
-	err = xml.NewEncoder(w).Encode(nil)
-	if err != nil {
-		log.Printf("Response encode error: %v\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
+{{range .PathParams}}	if _, err := strconv.Atoi(req.PathValue("{{.}}")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+{{end -}}
+{{- if eq .HTTPMethod "GET"}}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+{{- if .ResponseType}}
+	xml.NewEncoder(w).Encode(&sep.{{.ResponseType}}{})
+{{- end}}
+{{- else if eq .HTTPMethod "HEAD"}}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+{{- else if eq .HTTPMethod "POST"}}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.Header().Set("location", "{{.Path}}/1")
+	w.WriteHeader(http.StatusCreated)
+{{- else if eq .HTTPMethod "DELETE"}}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+{{- if .ResponseType}}
+	xml.NewEncoder(w).Encode(&sep.{{.ResponseType}}{})
+{{- end}}
+{{- else if eq .HTTPMethod "PUT"}}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+{{- end}}
+{{- end}}
 }
-{{end}}
-`
+{{end}}{{end}}`
 
 const repositoryTemplate = `package memory
 
@@ -277,41 +310,47 @@ func ServeHTTPS(entities memory.Entity) {
 }
 `
 
+// TemplateData holds all data passed to file-generation templates.
 type TemplateData struct {
-	ServiceName      string
-	ServiceConstant  string
-	MaxEntities      int
-	Routes           []RouteInfo
-	Methods          []MethodInfo
+	ServiceName     string
+	ServiceConstant string
+	MaxEntities     int
+	Routes          []RouteInfo
+	Resources       []ResourceTemplateData
+	HasPathParams   bool
 }
 
+// RouteInfo is one http.Handle registration line.
 type RouteInfo struct {
 	HTTPMethod string
 	Path       string
-	MethodName string
+	FuncName   string
 }
 
+// ResourceTemplateData groups methods under a named resource.
+type ResourceTemplateData struct {
+	Name    string
+	Methods []MethodInfo
+}
+
+// MethodInfo describes a single handler function.
 type MethodInfo struct {
-	MethodName string
-	HTTPMethod string
-	Path       string
-	PathParams []PathParamInfo
-}
-
-type PathParamInfo struct {
-	Name      string
-	ParamVar  string
-	Type      string
+	FuncName     string
+	HTTPMethod   string
+	Mode         string
+	ResponseType string
+	PathParams   []string
+	Path         string
 }
 
 func (g *Generator) generateMain(outputDir, serviceName string) error {
-	routes := []RouteInfo{}
-	for _, res := range g.wadl.Resources {
-		for _, method := range res.Methods {
+	var routes []RouteInfo
+	for _, res := range g.spec.Resources {
+		for _, m := range res.Methods {
 			routes = append(routes, RouteInfo{
-				HTTPMethod: method.HTTPMethod,
+				HTTPMethod: m.HTTPMethod,
 				Path:       res.Path,
-				MethodName: method.Name,
+				FuncName:   m.FuncName,
 			})
 		}
 	}
@@ -319,115 +358,52 @@ func (g *Generator) generateMain(outputDir, serviceName string) error {
 	data := TemplateData{
 		ServiceName:     serviceName,
 		ServiceConstant: toCamelCase(serviceName),
-		MaxEntities:     g.wadl.MaxEntities,
+		MaxEntities:     g.spec.MaxEntities,
 		Routes:          routes,
 	}
 
-	tmpl, err := template.New("main").Parse(mainTemplate)
-	if err != nil {
-		return fmt.Errorf("failed to parse main template: %w", err)
-	}
-
-	mainPath := filepath.Join(outputDir, fmt.Sprintf("cmd/%s/main.go", serviceName))
-	f, err := os.Create(mainPath)
-	if err != nil {
-		return fmt.Errorf("failed to create main.go: %w", err)
-	}
-	defer f.Close()
-
-	err = tmpl.Execute(f, data)
-	if err != nil {
-		return fmt.Errorf("failed to execute main template: %w", err)
-	}
-
-	return nil
+	return renderTemplate("main", mainTemplate, filepath.Join(outputDir, fmt.Sprintf("cmd/%s/main.go", serviceName)), data)
 }
 
 func (g *Generator) generateHandler(outputDir, serviceName string) error {
-	methods := []MethodInfo{}
-	for _, res := range g.wadl.Resources {
-		for _, method := range res.Methods {
-			pathParams := []PathParamInfo{}
-			for _, pp := range method.PathParams {
-				pathParams = append(pathParams, PathParamInfo{
-					Name:     pp.Name,
-					ParamVar: pp.Name,
-					Type:     pp.Type,
-				})
+	hasPathParams := false
+	var resources []ResourceTemplateData
+
+	for _, res := range g.spec.Resources {
+		rtd := ResourceTemplateData{Name: res.Name}
+		for _, m := range res.Methods {
+			if len(m.PathParams) > 0 {
+				hasPathParams = true
 			}
-			methods = append(methods, MethodInfo{
-				MethodName: method.Name,
-				HTTPMethod: method.HTTPMethod,
-				Path:       res.Path,
-				PathParams: pathParams,
+			rtd.Methods = append(rtd.Methods, MethodInfo{
+				FuncName:     m.FuncName,
+				HTTPMethod:   m.HTTPMethod,
+				Mode:         m.Mode,
+				ResponseType: m.ResponseType,
+				PathParams:   m.PathParams,
+				Path:         res.Path,
 			})
 		}
+		resources = append(resources, rtd)
 	}
 
 	data := TemplateData{
-		ServiceName: serviceName,
-		Methods:     methods,
+		ServiceName:   serviceName,
+		Resources:     resources,
+		HasPathParams: hasPathParams,
 	}
 
-	tmpl, err := template.New("handler").Parse(handlerTemplate)
-	if err != nil {
-		return fmt.Errorf("failed to parse handler template: %w", err)
-	}
-
-	handlerPath := filepath.Join(outputDir, fmt.Sprintf("internal/%s/handler/handler.go", serviceName))
-	f, err := os.Create(handlerPath)
-	if err != nil {
-		return fmt.Errorf("failed to create handler.go: %w", err)
-	}
-	defer f.Close()
-
-	err = tmpl.Execute(f, data)
-	if err != nil {
-		return fmt.Errorf("failed to execute handler template: %w", err)
-	}
-
-	return nil
+	return renderTemplate("handler", handlerTemplate, filepath.Join(outputDir, fmt.Sprintf("internal/%s/handler/handler.go", serviceName)), data)
 }
 
 func (g *Generator) generateRepository(outputDir, serviceName string) error {
-	data := TemplateData{
-		ServiceName: serviceName,
-	}
-
-	tmpl, err := template.New("repository").Parse(repositoryTemplate)
-	if err != nil {
-		return fmt.Errorf("failed to parse repository template: %w", err)
-	}
-
-	repoPath := filepath.Join(outputDir, fmt.Sprintf("internal/%s/repository/memory/memory.go", serviceName))
-	f, err := os.Create(repoPath)
-	if err != nil {
-		return fmt.Errorf("failed to create memory.go: %w", err)
-	}
-	defer f.Close()
-
-	err = tmpl.Execute(f, data)
-	if err != nil {
-		return fmt.Errorf("failed to execute repository template: %w", err)
-	}
-
-	return nil
+	data := TemplateData{ServiceName: serviceName}
+	return renderTemplate("repository", repositoryTemplate, filepath.Join(outputDir, fmt.Sprintf("internal/%s/repository/memory/memory.go", serviceName)), data)
 }
 
 func (g *Generator) generateRepositoryError(outputDir, serviceName string) error {
 	errorPath := filepath.Join(outputDir, fmt.Sprintf("internal/%s/repository/error.go", serviceName))
-	f, err := os.Create(errorPath)
-	if err != nil {
-		return fmt.Errorf("failed to create error.go: %w", err)
-	}
-	defer f.Close()
-
-	_, err = f.WriteString(repositoryErrorTemplate)
-	if err != nil {
-		return fmt.Errorf("failed to write error.go: %w", err)
-	}
-
-	return nil
+	return os.WriteFile(errorPath, []byte(repositoryErrorTemplate), 0644)
 }
 
 func (g *Generator) generateServer(outputDir, serviceName string) error {
@@ -435,64 +411,53 @@ func (g *Generator) generateServer(outputDir, serviceName string) error {
 		ServiceName:     serviceName,
 		ServiceConstant: toCamelCase(serviceName),
 	}
-
-	tmpl, err := template.New("server").Parse(serverTemplate)
-	if err != nil {
-		return fmt.Errorf("failed to parse server template: %w", err)
-	}
-
-	serverPath := filepath.Join(outputDir, fmt.Sprintf("internal/%s/server/server.go", serviceName))
-	f, err := os.Create(serverPath)
-	if err != nil {
-		return fmt.Errorf("failed to create server.go: %w", err)
-	}
-	defer f.Close()
-
-	err = tmpl.Execute(f, data)
-	if err != nil {
-		return fmt.Errorf("failed to execute server template: %w", err)
-	}
-
-	return nil
+	return renderTemplate("server", serverTemplate, filepath.Join(outputDir, fmt.Sprintf("internal/%s/server/server.go", serviceName)), data)
 }
 
 func (g *Generator) updateRoutes(outputDir, serviceName string) error {
 	routesPath := filepath.Join(outputDir, "internal/routes/routes.go")
-	
-	// Check if routes file exists - if not, skip (will exist in main project)
+
 	data, err := os.ReadFile(routesPath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return nil // Routes file doesn't exist, skip update
+			return nil
 		}
 		return fmt.Errorf("failed to read routes.go: %w", err)
 	}
 
 	content := string(data)
-	
-	// Check if service already exists in routes
 	constant := toCamelCase(serviceName)
 	if strings.Contains(content, constant) {
-		return nil // Already exists
+		return nil
 	}
 
-	// Add new route before closing parenthesis
-	routeAddr := fmt.Sprintf("%s.internal.com:%d", serviceName, g.wadl.Port)
-	newRoute := fmt.Sprintf("\t%s       = \"%s\"\n", constant, routeAddr)
-	
-	// Find the last route entry and add after it
-	lastNewline := strings.LastIndex(content, ")")
-	if lastNewline == -1 {
+	routeAddr := fmt.Sprintf("egot.internal.com:%d", g.spec.Port)
+	newRoute := fmt.Sprintf("\t%s = \"%s\"\n", constant, routeAddr)
+
+	lastParen := strings.LastIndex(content, ")")
+	if lastParen == -1 {
 		return fmt.Errorf("invalid routes.go format")
 	}
 
-	// Insert new route before closing paren
-	newContent := content[:lastNewline] + newRoute + content[lastNewline:]
+	newContent := content[:lastParen] + newRoute + content[lastParen:]
+	return os.WriteFile(routesPath, []byte(newContent), 0644)
+}
 
-	err = os.WriteFile(routesPath, []byte(newContent), 0644)
+func renderTemplate(name, tmplStr, outputPath string, data any) error {
+	tmpl, err := template.New(name).Parse(tmplStr)
 	if err != nil {
-		return fmt.Errorf("failed to update routes.go: %w", err)
+		return fmt.Errorf("failed to parse %s template: %w", name, err)
 	}
 
+	f, err := os.Create(outputPath)
+	if err != nil {
+		return fmt.Errorf("failed to create %s: %w", outputPath, err)
+	}
+	defer f.Close()
+
+	if err = tmpl.Execute(f, data); err != nil {
+		return fmt.Errorf("failed to execute %s template: %w", name, err)
+	}
 	return nil
 }
+

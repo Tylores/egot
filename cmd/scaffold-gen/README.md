@@ -1,125 +1,84 @@
 # Microservice Scaffold Generator
 
-The scaffold generator (`cmd/scaffold-gen`) creates complete microservices from WADL (Web Application Description Language) XML specifications. Each generated service follows the established pattern from `core` and `flowreservation` services.
+The scaffold generator (`cmd/scaffold-gen`) creates complete microservices from SEP 2 WADL specifications extracted by `wadl-extract`. Each generated service follows the established pattern from the existing services.
 
 ## Quick Start
 
-### 1. Create a WADL specification file
+### 1. Extract a service WADL from the SEP 2 spec
+
+Use `wadl-extract` to pull a service's resources out of `wadl/sep_wadl.xml` and write a standalone WADL file with the service port:
 
 ```bash
-cat > wadl/my-service.wadl << 'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
-<application name="my-service" port="8003" max_entities="50">
-  <resources>
-    <resource path="/items">
-      <methods>
-        <method name="GetItems" http_method="GET" response_type="ItemList"/>
-        <method name="CreateItem" http_method="POST" request_type="Item" response_type="Item"/>
-      </methods>
-    </resource>
-    <resource path="/items/{id}">
-      <methods>
-        <method name="GetItem" http_method="GET" response_type="Item">
-          <path_params>
-            <param name="id" type="int"/>
-          </path_params>
-        </method>
-        <method name="UpdateItem" http_method="PUT" request_type="Item" response_type="Item">
-          <path_params>
-            <param name="id" type="int"/>
-          </path_params>
-        </method>
-      </methods>
-    </resource>
-  </resources>
-</application>
-EOF
+go run ./cmd/wadl-extract -wadl wadl/sep_wadl.xml -path /dcap -output wadl/dcap.wadl
 ```
+
+The `-path` flag is the resource path prefix for the service (e.g., `/dcap`, `/brs`, `/edev`).  
+You must set a `port` on the extracted WADL — open it and add `port="8012"` to the `<application>` tag, or pass the flag when extracting. See `wadl-extract` for details.
 
 ### 2. Generate the scaffold
 
+Run from the project root — the filename becomes the service name:
+
 ```bash
-go run ./cmd/scaffold-gen -wadl wadl/my-service.wadl -output .
+go run ./cmd/scaffold-gen -wadl wadl/dcap.wadl
 ```
 
 This creates:
-- `cmd/my-service/main.go` - Service entry point with TLS and route setup
-- `internal/my-service/handler/handler.go` - HTTP handler stubs for each method
-- `internal/my-service/repository/memory/memory.go` - In-memory storage
-- `internal/my-service/repository/error.go` - Error definitions
-- `internal/my-service/server/server.go` - Server utilities
-- Updates to `internal/routes/routes.go` with the new service port
+- `cmd/dcap/main.go` — service entry point with TLS and route registration
+- `internal/dcap/handler/handler.go` — HTTP handler stubs matching the WADL methods
+- `internal/dcap/repository/memory/memory.go` — in-memory storage
+- `internal/dcap/repository/error.go` — error definitions
+- `internal/dcap/server/server.go` — server utilities
+- Updates `internal/routes/routes.go` with the new service port constant
 
 ### 3. Implement business logic
 
-Edit the generated handler and repository files to add your service logic.
+The generated handler stubs follow the same pattern as all other services:
 
-**handler/handler.go:**
 ```go
-func (h *Handler) GetItems(w http.ResponseWriter, req *http.Request) {
-    // Replace nil with actual repository call
-    items := h.repo.GetItems()
+// getLFDI helper is already generated
+func (h *Handler) GETDeviceCapability(w http.ResponseWriter, req *http.Request) {
+    _, err := h.getLFDI(req)
+    if err != nil {
+        w.WriteHeader(http.StatusNotFound)
+        return
+    }
     w.Header().Set("Content-Type", sep.ContentType)
-    xml.NewEncoder(w).Encode(items)
+    w.WriteHeader(http.StatusOK)
+    xml.NewEncoder(w).Encode(&sep.DeviceCapability{}) // replace with repo call
 }
 ```
 
-**repository/memory/memory.go:**
-```go
-type Pool struct {
-    items []sep.Item  // Add your resource types
-}
-
-func (r *Repository) GetItems() []sep.Item {
-    r.RLock()
-    defer r.RUnlock()
-    return r.pool.items
-}
-```
+Add repository methods in `repository/memory/memory.go` and wire them in handlers.
 
 ### 4. Build and run
 
 ```bash
-go build ./cmd/my-service
-./my-service
+go build ./cmd/dcap
+./dcap
 ```
 
-## WADL Reference
+## Generated handler behaviour
 
-See [SCAFFOLD_SPEC.md](../SCAFFOLD_SPEC.md) for complete WADL specification and examples.
+The generator maps each WADL `wx:mode` to a default HTTP response:
 
-### Key Elements
-
-- **application**: Root element with `name`, `port`, and optional `max_entities`
-- **resource**: REST resource with `path` attribute
-- **method**: HTTP method with `name`, `http_method`, `response_type`, and optional `request_type`
-- **path_params**: Path parameters with `name` and `type` (int, string)
+| Mode | Meaning | Generated behaviour |
+|------|---------|---------------------|
+| `M`  | Mandatory | implement: GET→200+encode, HEAD→200, POST→201+location, DELETE→200+encode, PUT→200 |
+| `D`  | Discoverable | same as M |
+| `E`  | Error / Not Allowed | `StatusMethodNotAllowed` |
 
 ## Architecture
 
-Generated services follow this pattern:
+Generated services follow the same pattern as all existing services:
 
-1. **Handler** - Extracts client certificate (LFDI), validates entity, processes request
-2. **Repository** - In-memory storage with sync.RWMutex for thread safety
-3. **Main** - Sets up mutual TLS, initializes repository from certificates, registers routes
-
-All services use:
-- Mutual TLS with client certificate verification
-- XML encoding for requests/responses (sep.ContentType)
-- Entity-based access control (LFDI → Entity ID)
-
-## Examples
-
-See `wadl/device-manager.wadl` for a complete example WADL file.
+1. **Handler** — `getLFDI()` helper validates client cert; each method has the correct stub body
+2. **Repository** — in-memory storage with `sync.RWMutex`
+3. **Main** — mutual TLS via `tlsutil.NewServerConfig`, repository init, route registration
 
 ## Tips
 
-- Service names should be kebab-case (e.g., "device-manager")
-- Port numbers should not conflict with existing services (8000-8001 are taken)
-- Method names should be descriptive (GetItem, CreateItem, UpdateItem, etc.)
-- Path parameters must match placeholders: `{id}` → `<param name="id"/>`
-- Keep max_entities reasonable for memory usage (default: 100)
-
-## Full Documentation
-
-See [docs/tools/scaffold-gen.md](../../docs/tools/scaffold-gen.md) for the complete specification, WADL schema reference, generated code patterns, and troubleshooting guide.
+- Service name is the WADL filename without extension (`dcap.wadl` → `dcap`)
+- The WADL must have a `port` attribute — add it with `wadl-extract` or manually
+- Port numbers must not conflict with existing services (see `internal/routes/routes.go`)
+- `max_entities` defaults to 100 if not set in the WADL
