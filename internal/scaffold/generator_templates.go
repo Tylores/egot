@@ -427,20 +427,43 @@ func (g *Generator) updateRoutes(outputDir, serviceName string) error {
 
 	content := string(data)
 	constant := toCamelCase(serviceName)
-	if strings.Contains(content, constant) {
-		return nil
+
+	// Insert the host:port constant into the const block if not already present.
+	if !strings.Contains(content, constant) {
+		routeAddr := fmt.Sprintf("egot.internal.com:%d", g.spec.Port)
+		newRoute := fmt.Sprintf("\t%s = \"%s\"\n", constant, routeAddr)
+
+		lastParen := strings.LastIndex(content, ")")
+		if lastParen == -1 {
+			return fmt.Errorf("invalid routes.go format")
+		}
+		content = content[:lastParen] + newRoute + content[lastParen:]
 	}
 
-	routeAddr := fmt.Sprintf("egot.internal.com:%d", g.spec.Port)
-	newRoute := fmt.Sprintf("\t%s = \"%s\"\n", constant, routeAddr)
+	// Insert each resource path into serviceMap if not already present.
+	// The end of serviceMap is identified by the closing brace before LinkFor.
+	const mapEnd = "}\n\n// LinkFor"
+	mapEndIdx := strings.Index(content, mapEnd)
+	if mapEndIdx == -1 {
+		return fmt.Errorf("routes: could not find serviceMap closing brace in routes.go")
+	}
+	insertAt := mapEndIdx // insert new entries before the closing }
 
-	lastParen := strings.LastIndex(content, ")")
-	if lastParen == -1 {
-		return fmt.Errorf("invalid routes.go format")
+	for _, res := range g.spec.Resources {
+		path := res.Path
+		if path == "" {
+			continue
+		}
+		entry := fmt.Sprintf("\t%q: %s,\n", path, constant)
+		// Skip paths already registered (idempotent).
+		if strings.Contains(content, fmt.Sprintf("%q:", path)) {
+			continue
+		}
+		content = content[:insertAt] + entry + content[insertAt:]
+		insertAt += len(entry)
 	}
 
-	newContent := content[:lastParen] + newRoute + content[lastParen:]
-	return os.WriteFile(routesPath, []byte(newContent), 0644)
+	return os.WriteFile(routesPath, []byte(content), 0644)
 }
 
 func renderTemplate(name, tmplStr, outputPath string, data any) error {

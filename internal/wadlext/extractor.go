@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -171,35 +172,39 @@ func NewExtractorFromReader(r io.Reader) (*Extractor, error) {
 	return &Extractor{app: &app, rawXML: string(data)}, nil
 }
 
-// Extract extracts all resources starting with the given path prefix
+// Extract extracts all resources starting with the given path prefix.
+// For multiple prefixes use ExtractMany.
 func (e *Extractor) Extract(pathPrefix string) *WADLApplication {
-	// Ensure path prefix starts with /
-	if !strings.HasPrefix(pathPrefix, "/") {
-		pathPrefix = "/" + pathPrefix
+	return e.ExtractMany([]string{pathPrefix})
+}
+
+// ExtractMany extracts all resources whose SamplePath starts with any of the
+// given prefixes. Resources are returned in WADL document order.
+func (e *Extractor) ExtractMany(prefixes []string) *WADLApplication {
+	for i, p := range prefixes {
+		if !strings.HasPrefix(p, "/") {
+			prefixes[i] = "/" + p
+		}
 	}
 
-	// Create new application with header elements
 	extracted := &WADLApplication{
 		Doc:      e.app.Doc,
 		Grammars: e.app.Grammars,
 		Attrs:    e.app.Attrs,
 	}
 
-	// Extract raw XML blocks for matching resources
-	resourceMap := extractResourceBlocks(e.rawXML, pathPrefix)
+	resourceMap := extractResourceBlocks(e.rawXML, prefixes)
 
-	// Filter resources by path prefix and store raw XML
 	filtered := []Resource{}
 	if e.app.Resources != nil {
 		for _, res := range e.app.Resources.Resources {
-			if strings.HasPrefix(res.SamplePath, pathPrefix) {
+			if matchesAny(res.SamplePath, prefixes) {
 				res.RawXML = resourceMap[res.ID]
 				filtered = append(filtered, res)
 			}
 		}
 	}
 
-	// Create new resources section
 	extracted.Resources = &Resources{
 		SampleBase: "http://localhost/sep/",
 		Resources:  filtered,
@@ -208,30 +213,34 @@ func (e *Extractor) Extract(pathPrefix string) *WADLApplication {
 	return extracted
 }
 
+// matchesAny returns true if path starts with any of the given prefixes.
+func matchesAny(path string, prefixes []string) bool {
+	for _, p := range prefixes {
+		if strings.HasPrefix(path, p) {
+			return true
+		}
+	}
+	return false
+}
+
 // extractResourceBlocks extracts raw XML strings for all resources
 // and returns them indexed by resource ID
-func extractResourceBlocks(xmlStr string, pathPrefix string) map[string]string {
+func extractResourceBlocks(xmlStr string, prefixes []string) map[string]string {
 	resourceMap := make(map[string]string)
 
-	// Pattern to match resource elements - find by id attribute and capture the full resource block
-	// Match: <resource id="SomeID" ... > ... </resource>
 	resourcePattern := regexp.MustCompile(
 		`(?s)<resource\s+id="([^"]*)"[^>]*>.*?</resource>`,
 	)
 
+	samplePathPattern := regexp.MustCompile(`wx:samplePath="([^"]*)"`)
+
 	matches := resourcePattern.FindAllStringSubmatchIndex(xmlStr, -1)
 	for _, match := range matches {
-		// match[0:2] is the overall match
-		// match[2:4] is the captured group (id)
 		fullMatch := xmlStr[match[0]:match[1]]
-		idStart := match[2]
-		idEnd := match[3]
-		id := xmlStr[idStart:idEnd]
+		id := xmlStr[match[2]:match[3]]
 
-		// Extract the samplePath from this resource block to check if it matches
-		samplePathPattern := regexp.MustCompile(`wx:samplePath="([^"]*)"`)
 		pathMatch := samplePathPattern.FindStringSubmatch(fullMatch)
-		if len(pathMatch) > 1 && strings.HasPrefix(pathMatch[1], pathPrefix) {
+		if len(pathMatch) > 1 && matchesAny(pathMatch[1], prefixes) {
 			resourceMap[id] = fullMatch
 		}
 	}
@@ -335,4 +344,128 @@ func (app *WADLApplication) GetResourcePaths() []string {
 		paths = append(paths, res.SamplePath)
 	}
 	return paths
+}
+
+// Cluster groups resources that share a common sub-path key.
+type Cluster struct {
+	// Name is the distinguishing segment (or "core" for shallow paths).
+	Name      string
+	Resources []Resource
+}
+
+// Paths returns the samplePath of every resource in this cluster.
+func (c *Cluster) Paths() []string {
+	paths := make([]string, len(c.Resources))
+	for i, r := range c.Resources {
+		paths[i] = r.SamplePath
+	}
+	return paths
+}
+
+// clusterKey returns the distinguishing path segment at the given depth below
+// prefix, or "core" if the path does not reach that depth.
+//
+// depth=1 groups by the first segment after prefix (e.g. /{id1}).
+// depth=2 groups by the second segment (e.g. /{id1}/der).
+func clusterKey(path, prefix string, depth int) string {
+	rel := strings.TrimPrefix(path, prefix)
+	rel = strings.TrimPrefix(rel, "/")
+	if rel == "" {
+		return "core"
+	}
+	parts := strings.Split(rel, "/")
+	if len(parts) < depth {
+		return "core"
+	}
+	return parts[depth-1]
+}
+
+// SuggestClusters analyses all resources whose SamplePath starts with prefix
+// and groups them by the distinguishing segment at the given depth.
+// The returned slice is sorted by cluster name, with "core" first.
+func (e *Extractor) SuggestClusters(prefix string, depth int) []Cluster {
+	if !strings.HasPrefix(prefix, "/") {
+		prefix = "/" + prefix
+	}
+
+	// Build a map from cluster name → resources, preserving insertion order.
+	order := []string{}
+	groups := map[string][]Resource{}
+
+	if e.app.Resources != nil {
+		resourceMap := extractResourceBlocks(e.rawXML, []string{prefix})
+		for _, res := range e.app.Resources.Resources {
+			if !strings.HasPrefix(res.SamplePath, prefix) {
+				continue
+			}
+			res.RawXML = resourceMap[res.ID]
+			key := clusterKey(res.SamplePath, prefix, depth)
+			if _, exists := groups[key]; !exists {
+				order = append(order, key)
+			}
+			groups[key] = append(groups[key], res)
+		}
+	}
+
+	// Sort: "core" first, then alphabetical.
+	sort.Slice(order, func(i, j int) bool {
+		if order[i] == "core" {
+			return true
+		}
+		if order[j] == "core" {
+			return false
+		}
+		return order[i] < order[j]
+	})
+
+	clusters := make([]Cluster, 0, len(order))
+	for _, name := range order {
+		clusters = append(clusters, Cluster{Name: name, Resources: groups[name]})
+	}
+	return clusters
+}
+
+// ExtractCluster builds a WADLApplication from the resources in a single Cluster.
+func (e *Extractor) ExtractCluster(c Cluster) *WADLApplication {
+	app := &WADLApplication{
+		Doc:      e.app.Doc,
+		Grammars: e.app.Grammars,
+		Attrs:    e.app.Attrs,
+		Resources: &Resources{
+			SampleBase: "http://localhost/sep/",
+			Resources:  c.Resources,
+		},
+	}
+	return app
+}
+
+// ExtractClusters builds a WADLApplication combining resources from multiple
+// clusters. Resources are returned in WADL document order.
+func (e *Extractor) ExtractClusters(clusters []Cluster) *WADLApplication {
+	// Build a set of resource IDs to include.
+	include := make(map[string]bool)
+	for _, c := range clusters {
+		for _, r := range c.Resources {
+			include[r.ID] = true
+		}
+	}
+
+	var filtered []Resource
+	if e.app.Resources != nil {
+		for _, res := range e.app.Resources.Resources {
+			if include[res.ID] {
+				filtered = append(filtered, res)
+			}
+		}
+	}
+
+	return &WADLApplication{
+		Doc:      e.app.Doc,
+		Grammars: e.app.Grammars,
+		Attrs:    e.app.Attrs,
+		Resources: &Resources{
+			SampleBase: "http://localhost/sep/",
+			Resources:  filtered,
+		},
+	}
 }

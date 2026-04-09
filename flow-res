@@ -1,0 +1,194 @@
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wx="urn:ieee:std:2030.5:wadlExt" xmlns:sep="urn:ieee:std:2030.5:ns" xmlns="http://wadl.dev.java.net/2009/02" xsi:schemaLocation="http://wadl.dev.java.net/2009/02 wadl.xsd" port="8000" max_entities="100">
+  <doc title="SEP 2 Application">SEP 2.2</doc>
+  <grammars>
+    <include href="sep.xsd"/>
+  </grammars>
+  <resources wx:sampleBase="http://localhost/sep/">
+    <resource id="DeviceStatus" wx:samplePath="/edev/{id1}/dstat">
+      <doc title="DeviceStatus">Contains the current operational state of the associated EndDevice or SelfDevice.</doc>
+      <method id="GETDeviceStatus" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DeviceStatus"/>
+          <representation mediaType="application/sep-exi" element="sep:DeviceStatus"/>
+        </response>
+      </method>
+      <method id="HEADDeviceStatus" name="HEAD" wx:mode="M"/>
+      <method id="PUTDeviceStatus" name="PUT" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DeviceStatus"/>
+          <representation mediaType="application/sep-exi" element="sep:DeviceStatus"/>
+        </request>
+      </method>
+      <method id="POSTDeviceStatus" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DeviceStatus"/>
+          <representation mediaType="application/sep-exi" element="sep:DeviceStatus"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEDeviceStatus" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:DeviceStatus"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="FlowReservationRequestList" wx:samplePath="/edev/{id1}/frq">
+      <doc title="FlowReservationRequestList">List of FlowReservationRequests.  Devices implementing the FlowReservationRequestList resource MAY support multiple FlowReservationRequests.</doc>
+      <method id="GETFlowReservationRequestList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="a" style="query" type="xsd:int">
+            <doc>after</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:FlowReservationRequestList"/>
+          <representation mediaType="application/sep-exi" element="sep:FlowReservationRequestList"/>
+        </response>
+      </method>
+      <method id="HEADFlowReservationRequestList" name="HEAD" wx:mode="M"/>
+      <method id="PUTFlowReservationRequestList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:FlowReservationRequest"/>
+          <representation mediaType="application/sep-exi" element="sep:FlowReservationRequest"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTFlowReservationRequestList" name="POST" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:FlowReservationRequest"/>
+          <representation mediaType="application/sep-exi" element="sep:FlowReservationRequest"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETEFlowReservationRequestList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="FlowReservationRequest" wx:samplePath="/edev/{id1}/frq/{id2}">
+      <doc title="FlowReservationRequest">Specific FlowReservationRequest resource.  This resource can be thought of as a particular reservation event request for fast charging or discharging over a period of time.</doc>
+      <method id="GETFlowReservationRequest" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:FlowReservationRequest"/>
+          <representation mediaType="application/sep-exi" element="sep:FlowReservationRequest"/>
+        </response>
+      </method>
+      <method id="HEADFlowReservationRequest" name="HEAD" wx:mode="M"/>
+      <method id="PUTFlowReservationRequest" name="PUT" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:FlowReservationRequest"/>
+          <representation mediaType="application/sep-exi" element="sep:FlowReservationRequest"/>
+        </request>
+      </method>
+      <method id="POSTFlowReservationRequest" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:FlowReservationRequest"/>
+          <representation mediaType="application/sep-exi" element="sep:FlowReservationRequest"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEFlowReservationRequest" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:FlowReservationRequest"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="FlowReservationResponseList" wx:samplePath="/edev/{id1}/frp">
+      <doc title="FlowReservationResponseList">List of FlowReservationResponses.  Devices implementing the FlowReservationResponseList resource MAY support multiple FlowReservationResponses.</doc>
+      <method id="GETFlowReservationResponseList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="a" style="query" type="xsd:int">
+            <doc>after</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:FlowReservationResponseList"/>
+          <representation mediaType="application/sep-exi" element="sep:FlowReservationResponseList"/>
+        </response>
+      </method>
+      <method id="HEADFlowReservationResponseList" name="HEAD" wx:mode="M"/>
+      <method id="PUTFlowReservationResponseList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:FlowReservationResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:FlowReservationResponse"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTFlowReservationResponseList" name="POST" wx:mode="D">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:FlowReservationResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:FlowReservationResponse"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETEFlowReservationResponseList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="FlowReservationResponse" wx:samplePath="/edev/{id1}/frp/{id2}">
+      <doc title="FlowReservationResponse">Specific FlowReservationResponse resource.  This resource can be thought of as a particular reservation event response for fast charging or discharging over a period of time.</doc>
+      <method id="GETFlowReservationResponse" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:FlowReservationResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:FlowReservationResponse"/>
+        </response>
+      </method>
+      <method id="HEADFlowReservationResponse" name="HEAD" wx:mode="M"/>
+      <method id="PUTFlowReservationResponse" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:FlowReservationResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:FlowReservationResponse"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTFlowReservationResponse" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:FlowReservationResponse"/>
+          <representation mediaType="application/sep-exi" element="sep:FlowReservationResponse"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEFlowReservationResponse" name="DELETE" wx:mode="D">
+        <response>
+          <representation mediaType="application/xml" element="sep:FlowReservationResponse"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+  </resources>
+</application>
