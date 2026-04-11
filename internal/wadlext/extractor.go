@@ -19,17 +19,6 @@ type WADLApplication struct {
 	Attrs     []xml.Attr `xml:",any,attr"`
 }
 
-func (a *WADLApplication) AddAttribute(name string, value string) {
-	// Define the new attribute
-	newAttr := xml.Attr{
-		Name:  xml.Name{Local: name},
-		Value: value,
-	}
-
-	// Append it to the existing slice
-	a.Attrs = append(a.Attrs, newAttr)
-}
-
 // Doc represents a WADL doc element
 type Doc struct {
 	Title string `xml:"title,attr"`
@@ -238,6 +227,11 @@ func extractResourceBlocks(xmlStr string, prefixes []string) map[string]string {
 	for _, match := range matches {
 		fullMatch := xmlStr[match[0]:match[1]]
 		id := xmlStr[match[2]:match[3]]
+
+		if len(prefixes) == 0 {
+			resourceMap[id] = fullMatch
+			continue
+		}
 
 		pathMatch := samplePathPattern.FindStringSubmatch(fullMatch)
 		if len(pathMatch) > 1 && matchesAny(pathMatch[1], prefixes) {
@@ -450,10 +444,13 @@ func (e *Extractor) ExtractClusters(clusters []Cluster) *WADLApplication {
 		}
 	}
 
+	resourceMap := extractResourceBlocks(e.rawXML, nil)
+
 	var filtered []Resource
 	if e.app.Resources != nil {
 		for _, res := range e.app.Resources.Resources {
 			if include[res.ID] {
+				res.RawXML = resourceMap[res.ID]
 				filtered = append(filtered, res)
 			}
 		}
