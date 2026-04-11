@@ -6,14 +6,13 @@ The scaffold generator (`cmd/scaffold-gen`) creates complete microservices from 
 
 ### 1. Extract a service WADL from the SEP 2 spec
 
-Use `wadl-extract` to pull a service's resources out of `wadl/sep_wadl.xml` and write a standalone WADL file with the service port:
+Use `wadl-extract` to pull a service's resources out of `wadl/sep_wadl.xml` and write a standalone WADL file:
 
 ```bash
 go run ./cmd/wadl-extract -wadl wadl/sep_wadl.xml -path /dcap -output wadl/dcap.wadl
 ```
 
-The `-path` flag is the resource path prefix for the service (e.g., `/dcap`, `/brs`, `/edev`).  
-You must set a `port` on the extracted WADL — open it and add `port="8012"` to the `<application>` tag, or pass the flag when extracting. See `wadl-extract` for details.
+The `-path` flag is the resource path prefix for the service (e.g., `/dcap`, `/brs`, `/edev`).
 
 ### 2. Generate the scaffold
 
@@ -29,7 +28,7 @@ This creates:
 - `internal/dcap/repository/memory/memory.go` — in-memory storage
 - `internal/dcap/repository/error.go` — error definitions
 - `internal/dcap/server/server.go` — server utilities
-- Updates `internal/routes/routes.go` with the new service port constant
+- Updates `internal/routes/routes.go` with the new service constant and next available `egot.internal.com` port
 
 ### 3. Implement business logic
 
@@ -79,6 +78,5 @@ Generated services follow the same pattern as all existing services:
 ## Tips
 
 - Service name is the WADL filename without extension (`dcap.wadl` → `dcap`)
-- The WADL must have a `port` attribute — add it with `wadl-extract` or manually
-- Port numbers must not conflict with existing services (see `internal/routes/routes.go`)
+- `scaffold-gen` assigns the next available `egot.internal.com` port when it updates `internal/routes/routes.go`
 - `max_entities` defaults to 100 if not set in the WADL

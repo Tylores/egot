@@ -47,10 +47,10 @@ func (r *sep2Resource) samplePath() string {
 }
 
 type sep2Method struct {
-	ID       string          `xml:"id,attr"`
-	Name     string          `xml:"name,attr"`
-	Response []sep2Response  `xml:"response"`
-	Attrs    []xml.Attr      `xml:",any,attr"`
+	ID       string         `xml:"id,attr"`
+	Name     string         `xml:"name,attr"`
+	Response []sep2Response `xml:"response"`
+	Attrs    []xml.Attr     `xml:",any,attr"`
 }
 
 func (m *sep2Method) mode() string {
@@ -73,7 +73,6 @@ type sep2Representation struct {
 // internal service description built from the parsed WADL
 
 type serviceSpec struct {
-	Port        int
 	MaxEntities int
 	Resources   []resourceSpec
 }
@@ -128,22 +127,12 @@ func buildSpec(app *sep2Application) (serviceSpec, error) {
 
 	for _, a := range app.Attrs {
 		switch a.Name.Local {
-		case "port":
-			v, err := strconv.Atoi(a.Value)
-			if err != nil || v == 0 {
-				return spec, fmt.Errorf("invalid port attribute %q", a.Value)
-			}
-			spec.Port = v
 		case "max_entities":
 			v, _ := strconv.Atoi(a.Value)
 			if v > 0 {
 				spec.MaxEntities = v
 			}
 		}
-	}
-
-	if spec.Port == 0 {
-		return spec, fmt.Errorf("WADL must specify application port (run wadl-extract to add it)")
 	}
 
 	for _, res := range app.Resources.Resources {

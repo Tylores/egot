@@ -20,7 +20,6 @@ type SplitConfig struct {
 
 // GroupConfig describes one logical service group within a SplitConfig.
 type GroupConfig struct {
-	Port     int      `yaml:"port"`
 	Clusters []string `yaml:"clusters"`
 }
 
@@ -132,7 +131,6 @@ func GenerateInitConfig(clusters []Cluster, wadlPath, base, output string, depth
 	sb.WriteString("\ngroups:\n")
 	sb.WriteString("  # Example group — rename and adjust clusters as needed:\n")
 	sb.WriteString("  # my-service:\n")
-	sb.WriteString("  #   port: 8000\n")
 	sb.WriteString("  #   clusters:\n")
 	for _, c := range clusters {
 		sb.WriteString(fmt.Sprintf("  #     - %s\n", c.Name))

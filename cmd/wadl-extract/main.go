@@ -99,8 +99,6 @@ func splitPaths(arg string) []string {
 
 func runExtract(extractor *wadlext.Extractor, prefixes []string, outputPath string, verbose bool) {
 	extracted := extractor.ExtractMany(prefixes)
-	extracted.AddAttribute("port", "8000")
-	extracted.AddAttribute("max_entities", "100")
 
 	if extracted.GetResourceCount() == 0 {
 		log.Fatalf("No resources found for paths: %s\n", strings.Join(prefixes, ", "))
@@ -161,8 +159,6 @@ func runSplit(extractor *wadlext.Extractor, pathPrefix string, depth int, outDir
 	fmt.Printf("Splitting %s (depth %d) into %d clusters → %s\n", pathPrefix, depth, len(clusters), outDir)
 	for _, c := range clusters {
 		app := extractor.ExtractCluster(c)
-		app.AddAttribute("port", "8000")
-		app.AddAttribute("max_entities", "100")
 
 		filename := filepath.Join(outDir, c.Name+".wadl")
 		if err := extractor.Save(app, filename); err != nil {
@@ -228,8 +224,6 @@ func runConfig(configPath string, verbose bool) {
 		}
 
 		app := extractor.ExtractClusters(groupClusters)
-		app.AddAttribute("port", fmt.Sprintf("%d", gc.Port))
-		app.AddAttribute("max_entities", "100")
 
 		filename := filepath.Join(cfg.Output, groupName+".wadl")
 		if err := extractor.Save(app, filename); err != nil {
@@ -241,8 +235,8 @@ func runConfig(configPath string, verbose bool) {
 				fmt.Printf("    %s\n", p)
 			}
 		}
-		fmt.Printf("  ✓ [%-20s] port=%-5d  %2d paths → %s\n",
-			groupName, gc.Port, app.GetResourceCount(), filename)
+		fmt.Printf("  ✓ [%-20s] %2d paths → %s\n",
+			groupName, app.GetResourceCount(), filename)
 	}
 }
 

@@ -4,7 +4,7 @@ A command-line tool to extract and cluster portions of a WADL (Web Application D
 
 ## Overview
 
-The WADL Extractor extracts resources from a WADL file by path prefix. For large path trees like `/edev` (53 routes across 18 logical sub-trees), it supports a **config-file-driven grouping** workflow that lets you define named service groups with validation and port assignment. This is useful for:
+The WADL Extractor extracts resources from a WADL file by path prefix. For large path trees like `/edev` (53 routes across 18 logical sub-trees), it supports a **config-file-driven grouping** workflow that lets you define named service groups with validation. This is useful for:
 
 - Extracting specific API modules (e.g., demand-response, end-device)
 - Creating focused WADL specifications for service implementation
@@ -82,16 +82,12 @@ output: wadl/edev/
 
 groups:
   edev-core:
-    port: 8015
     clusters: [core, rg, dstat, aggp, fs, ps]
   edev-der:
-    port: 8020
     clusters: [der]
   edev-network:
-    port: 8021
     clusters: [ns, cfg, di, adev, prxy]
   edev-scheduling:
-    port: 8022
     clusters: [frq, frp, fsa, lel, lsl, sub]
 ```
 
@@ -103,13 +99,13 @@ wadl-extract -config edev-split.yaml
 
 ```
 Generating 4 group WADLs from wadl/sep_wadl.xml → wadl/edev/
-  ✓ [edev-core           ] port=8015    7 paths → wadl/edev/edev-core.wadl
-  ✓ [edev-der            ] port=8020   12 paths → wadl/edev/edev-der.wadl
-  ✓ [edev-network        ] port=8021   22 paths → wadl/edev/edev-network.wadl
-  ✓ [edev-scheduling     ] port=8022   12 paths → wadl/edev/edev-scheduling.wadl
+  ✓ [edev-core           ]  7 paths → wadl/edev/edev-core.wadl
+  ✓ [edev-der            ] 12 paths → wadl/edev/edev-der.wadl
+  ✓ [edev-network        ] 22 paths → wadl/edev/edev-network.wadl
+  ✓ [edev-scheduling     ] 12 paths → wadl/edev/edev-scheduling.wadl
 ```
 
-Each output WADL has the configured `port` injected and is immediately usable with `scaffold-gen`.
+Each output WADL is immediately usable with `scaffold-gen`. The scaffold step assigns the service port when it updates `internal/routes/routes.go`.
 
 ### Validation
 
@@ -198,13 +194,13 @@ See [docs/tools/scaffold-gen.md](../../docs/tools/scaffold-gen.md) for the scaff
 ### Extract mode
 1. Filters all resources whose `samplePath` starts with any provided prefix
 2. Preserves WADL header elements (doc, grammars) in the output
-3. Injects `port` and `max_entities` attributes into `<application>`
+3. Preserves any existing `<application>` attributes from the source WADL
 
 ### Config mode (`-config`)
 1. Loads and validates the YAML config (fail-fast before any files are written)
 2. Runs `-suggest` internally to discover cluster keys at the configured `depth`
 3. For each group, collects exact resources from the named clusters (no prefix bleed-through)
-4. Writes one `<group-name>.wadl` per group with the configured `port` injected
+4. Writes one `<group-name>.wadl` per group without rewriting service-port metadata
 
 ### Clustering depth
 - depth 1 → groups by first segment after base (e.g. `{id1}`) — too coarse for `/edev`
@@ -226,4 +222,3 @@ See [docs/tools/scaffold-gen.md](../../docs/tools/scaffold-gen.md) for the scaff
 
 - Original WADL file: `wadl/sep_wadl.xml`
 - SEP 2.2 specification: https://standards.ieee.org/standard/2030_5-2018.html
-

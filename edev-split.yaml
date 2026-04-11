@@ -1,0 +1,43 @@
+wadl: wadl/sep_wadl.xml
+base: /edev
+depth: 2
+output: wadl/output/
+
+# Define your groups below. Each group becomes one WADL file (<name>.wadl)
+# and one microservice. Every cluster key must be assigned to exactly one group.
+#
+# Available cluster keys:
+#   core            (2 paths)
+#   adev            (2 paths)
+#   aggp            (1 paths)
+#   cfg             (3 paths)
+#   der             (12 paths)
+#   di              (3 paths)
+#   dstat           (1 paths)
+#   frp             (2 paths)
+#   frq             (2 paths)
+#   fs              (1 paths)
+#   fsa             (2 paths)
+#   lel             (2 paths)
+#   lsl             (2 paths)
+#   ns              (12 paths)
+#   prxy            (2 paths)
+#   ps              (1 paths)
+#   rg              (1 paths)
+#   sub             (2 paths)
+
+groups:
+  edev:
+    clusters: [core]
+  flow-res: 
+    clusters: [frp, frq, ps]
+  ns: 
+    clusters: [ns]
+  agg:
+    clusters: [adev, aggp, prxy]
+  der:
+    clusters: [der]
+  bulk:
+    clusters: [cfg, di, fs, lel, lsl, rg, sub, dstat]
+  fsa: 
+    clusters: [fsa]

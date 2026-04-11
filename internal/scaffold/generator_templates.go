@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
 	"text/template"
 )
@@ -429,8 +431,8 @@ func (g *Generator) updateRoutes(outputDir, serviceName string) error {
 	constant := toCamelCase(serviceName)
 
 	// Insert the host:port constant into the const block if not already present.
-	if !strings.Contains(content, constant) {
-		routeAddr := fmt.Sprintf("egot.internal.com:%d", g.spec.Port)
+	if _, exists := findRouteAddress(content, constant); !exists {
+		routeAddr := nextRouteAddress(content)
 		newRoute := fmt.Sprintf("\t%s = \"%s\"\n", constant, routeAddr)
 
 		lastParen := strings.LastIndex(content, ")")
@@ -466,6 +468,33 @@ func (g *Generator) updateRoutes(outputDir, serviceName string) error {
 	return os.WriteFile(routesPath, []byte(content), 0644)
 }
 
+func findRouteAddress(content, constant string) (string, bool) {
+	pattern := regexp.MustCompile(`(?m)^\s*` + regexp.QuoteMeta(constant) + `\s*=\s*"([^"]+)"`)
+	matches := pattern.FindStringSubmatch(content)
+	if len(matches) != 2 {
+		return "", false
+	}
+	return matches[1], true
+}
+
+func nextRouteAddress(content string) string {
+	pattern := regexp.MustCompile(`"egot\.internal\.com:(\d+)"`)
+	matches := pattern.FindAllStringSubmatch(content, -1)
+
+	maxPort := 7999
+	for _, match := range matches {
+		port, err := strconv.Atoi(match[1])
+		if err != nil {
+			continue
+		}
+		if port > maxPort {
+			maxPort = port
+		}
+	}
+
+	return fmt.Sprintf("egot.internal.com:%d", maxPort+1)
+}
+
 func renderTemplate(name, tmplStr, outputPath string, data any) error {
 	tmpl, err := template.New(name).Parse(tmplStr)
 	if err != nil {
@@ -483,4 +512,3 @@ func renderTemplate(name, tmplStr, outputPath string, data any) error {
 	}
 	return nil
 }
-

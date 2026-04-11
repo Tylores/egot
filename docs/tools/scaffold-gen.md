@@ -28,14 +28,13 @@ internal/dcap/
   server/server.go                 # Server utilities
 ```
 
-`internal/routes/routes.go` is also updated with the new service port constant.
+`internal/routes/routes.go` is also updated with the new service constant and next available `egot.internal.com` port.
 
 ## WADL Format
 
 scaffold-gen reads the SEP 2 WADL format produced by `wadl-extract`. The relevant attributes are:
 
 **`<application>`**
-- `port` (required) — added by `wadl-extract`; must be set before running scaffold-gen
 - `max_entities` (optional) — entity pool size, default 100
 
 **`<resource>`**
@@ -119,8 +118,8 @@ type Pool struct {
 
 ## Troubleshooting
 
-**`WADL must specify application port`:**
-Re-run `wadl-extract` — the updated tool now injects `port` and `max_entities` into the output. If editing the WADL manually, add `port="8XXX"` to the `<application>` tag.
+**Routes constant missing or wrong port:**
+Re-run `scaffold-gen` from the project root. It updates `internal/routes/routes.go` and assigns the next available `egot.internal.com` port for new services.
 
 **Server fails to start:**
 - Verify SSL certificates exist in `./ssl`
@@ -145,7 +144,7 @@ internal/my-service/
   server/server.go                 # Server utilities
 ```
 
-`internal/routes/routes.go` is also updated with the new service port constant.
+`internal/routes/routes.go` is also updated with the new service constant and next available `egot.internal.com` port.
 
 ## WADL Specification
 
@@ -153,7 +152,7 @@ internal/my-service/
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<application port="8002" max_entities="50">
+<application max_entities="50">
   <resources>
     <resource path="/resource-path">
       <methods>
@@ -172,7 +171,6 @@ internal/my-service/
 ### Attributes
 
 **`<application>`**
-- `port` (required) — service port (e.g., `8002`)
 - `max_entities` (optional) — concurrent entity pool size (default: 100)
 
 **`<resource>`**
@@ -193,7 +191,7 @@ internal/my-service/
 **Minimal (single endpoint):**
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<application port="8004" max_entities="10">
+<application max_entities="10">
   <resources>
     <resource path="/status">
       <methods>
@@ -207,7 +205,7 @@ internal/my-service/
 **Full CRUD:**
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<application port="8005" max_entities="100">
+<application max_entities="100">
   <resources>
     <resource path="/devices">
       <methods>
