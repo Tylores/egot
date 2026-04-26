@@ -4,5 +4,534 @@
     <include href="sep.xsd"/>
   </grammars>
   <resources wx:sampleBase="http://localhost/sep/">
+    <resource id="Registration" wx:samplePath="/edev/{id1}/rg">
+      <doc title="Registration">Contains registrations related to the indicated device. </doc>
+      <method id="GETRegistration" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:Registration"/>
+          <representation mediaType="application/sep-exi" element="sep:Registration"/>
+        </response>
+      </method>
+      <method id="HEADRegistration" name="HEAD" wx:mode="M"/>
+      <method id="PUTRegistration" name="PUT" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Registration"/>
+          <representation mediaType="application/sep-exi" element="sep:Registration"/>
+        </request>
+      </method>
+      <method id="POSTRegistration" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Registration"/>
+          <representation mediaType="application/sep-exi" element="sep:Registration"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETERegistration" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:Registration"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="DeviceStatus" wx:samplePath="/edev/{id1}/dstat">
+      <doc title="DeviceStatus">Contains the current operational state of the associated EndDevice or SelfDevice.</doc>
+      <method id="GETDeviceStatus" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DeviceStatus"/>
+          <representation mediaType="application/sep-exi" element="sep:DeviceStatus"/>
+        </response>
+      </method>
+      <method id="HEADDeviceStatus" name="HEAD" wx:mode="M"/>
+      <method id="PUTDeviceStatus" name="PUT" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DeviceStatus"/>
+          <representation mediaType="application/sep-exi" element="sep:DeviceStatus"/>
+        </request>
+      </method>
+      <method id="POSTDeviceStatus" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DeviceStatus"/>
+          <representation mediaType="application/sep-exi" element="sep:DeviceStatus"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEDeviceStatus" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:DeviceStatus"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="SubscriptionList" wx:samplePath="/edev/{id1}/sub">
+      <doc title="SubscriptionList">Contains subscriptions related to the indicated device. Documented in Subscription / Notification Mechanism.</doc>
+      <method id="GETSubscriptionList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:SubscriptionList"/>
+          <representation mediaType="application/sep-exi" element="sep:SubscriptionList"/>
+        </response>
+      </method>
+      <method id="HEADSubscriptionList" name="HEAD" wx:mode="M"/>
+      <method id="PUTSubscriptionList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Subscription"/>
+          <representation mediaType="application/sep-exi" element="sep:Subscription"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTSubscriptionList" name="POST" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Subscription"/>
+          <representation mediaType="application/sep-exi" element="sep:Subscription"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="400">
+          <representation mediaType="application/sep+xml" element="sep:Error"/>
+          <representation mediaType="application/sep-exi" element="sep:Error"/>
+        </response>
+      </method>
+      <method id="DELETESubscriptionList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="Subscription" wx:samplePath="/edev/{id1}/sub/{id2}">
+      <doc title="Subscription">A specific subscription</doc>
+      <method id="GETSubscription" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:Subscription"/>
+          <representation mediaType="application/sep-exi" element="sep:Subscription"/>
+        </response>
+      </method>
+      <method id="HEADSubscription" name="HEAD" wx:mode="M"/>
+      <method id="PUTSubscription" name="PUT" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Subscription"/>
+          <representation mediaType="application/sep-exi" element="sep:Subscription"/>
+        </request>
+        <response status="400">
+          <representation mediaType="application/sep+xml" element="sep:Error"/>
+          <representation mediaType="application/sep-exi" element="sep:Error"/>
+        </response>
+      </method>
+      <method id="POSTSubscription" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Subscription"/>
+          <representation mediaType="application/sep-exi" element="sep:Subscription"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETESubscription" name="DELETE" wx:mode="M">
+        <response>
+          <representation mediaType="application/xml" element="sep:Subscription"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="DeviceInformation" wx:samplePath="/edev/{id1}/di">
+      <doc title="DeviceInformation">Device Information of the associated EndDevice or SelfDevice.</doc>
+      <method id="GETDeviceInformation" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DeviceInformation"/>
+          <representation mediaType="application/sep-exi" element="sep:DeviceInformation"/>
+        </response>
+      </method>
+      <method id="HEADDeviceInformation" name="HEAD" wx:mode="M"/>
+      <method id="PUTDeviceInformation" name="PUT" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DeviceInformation"/>
+          <representation mediaType="application/sep-exi" element="sep:DeviceInformation"/>
+        </request>
+      </method>
+      <method id="POSTDeviceInformation" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DeviceInformation"/>
+          <representation mediaType="application/sep-exi" element="sep:DeviceInformation"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEDeviceInformation" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:DeviceInformation"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="SupportedLocaleList" wx:samplePath="/edev/{id1}/di/loc">
+      <doc title="SupportedLocaleList">A List of supported locales for the associated EndDevice or SelfDevice.</doc>
+      <method id="GETSupportedLocaleList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:SupportedLocaleList"/>
+          <representation mediaType="application/sep-exi" element="sep:SupportedLocaleList"/>
+        </response>
+      </method>
+      <method id="HEADSupportedLocaleList" name="HEAD" wx:mode="M"/>
+      <method id="PUTSupportedLocaleList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:SupportedLocale"/>
+          <representation mediaType="application/sep-exi" element="sep:SupportedLocale"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTSupportedLocaleList" name="POST" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:SupportedLocale"/>
+          <representation mediaType="application/sep-exi" element="sep:SupportedLocale"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETESupportedLocaleList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="SupportedLocale" wx:samplePath="/edev/{id1}/di/loc/{id2}">
+      <doc title="SupportedLocale">A specific supported locale for the associated EndDevice or SelfDevice.</doc>
+      <method id="GETSupportedLocale" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:SupportedLocale"/>
+          <representation mediaType="application/sep-exi" element="sep:SupportedLocale"/>
+        </response>
+      </method>
+      <method id="HEADSupportedLocale" name="HEAD" wx:mode="M"/>
+      <method id="PUTSupportedLocale" name="PUT" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:SupportedLocale"/>
+          <representation mediaType="application/sep-exi" element="sep:SupportedLocale"/>
+        </request>
+      </method>
+      <method id="POSTSupportedLocale" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:SupportedLocale"/>
+          <representation mediaType="application/sep-exi" element="sep:SupportedLocale"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETESupportedLocale" name="DELETE" wx:mode="M">
+        <response>
+          <representation mediaType="application/xml" element="sep:SupportedLocale"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="LogEventList" wx:samplePath="/edev/{id1}/lel">
+      <doc title="LogEventList">A List of LogEvent instances.</doc>
+      <method id="GETLogEventList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="a" style="query" type="xsd:int">
+            <doc>after</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:LogEventList"/>
+          <representation mediaType="application/sep-exi" element="sep:LogEventList"/>
+        </response>
+      </method>
+      <method id="HEADLogEventList" name="HEAD" wx:mode="M"/>
+      <method id="PUTLogEventList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:LogEvent"/>
+          <representation mediaType="application/sep-exi" element="sep:LogEvent"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTLogEventList" name="POST" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:LogEvent"/>
+          <representation mediaType="application/sep-exi" element="sep:LogEvent"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETELogEventList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="LogEvent" wx:samplePath="/edev/{id1}/lel/{id2}">
+      <doc title="LogEvent">A specific LogEvent entry from the LogEventList. </doc>
+      <method id="GETLogEvent" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:LogEvent"/>
+          <representation mediaType="application/sep-exi" element="sep:LogEvent"/>
+        </response>
+      </method>
+      <method id="HEADLogEvent" name="HEAD" wx:mode="M"/>
+      <method id="PUTLogEvent" name="PUT" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:LogEvent"/>
+          <representation mediaType="application/sep-exi" element="sep:LogEvent"/>
+        </request>
+      </method>
+      <method id="POSTLogEvent" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:LogEvent"/>
+          <representation mediaType="application/sep-exi" element="sep:LogEvent"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETELogEvent" name="DELETE" wx:mode="M">
+        <response>
+          <representation mediaType="application/xml" element="sep:LogEvent"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="Configuration" wx:samplePath="/edev/{id1}/cfg">
+      <doc title="Configuration">Contains the configuration settings of the associated EndDevice or SelfDevice.</doc>
+      <method id="GETConfiguration" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:Configuration"/>
+          <representation mediaType="application/sep-exi" element="sep:Configuration"/>
+        </response>
+      </method>
+      <method id="HEADConfiguration" name="HEAD" wx:mode="M"/>
+      <method id="PUTConfiguration" name="PUT" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Configuration"/>
+          <representation mediaType="application/sep-exi" element="sep:Configuration"/>
+        </request>
+      </method>
+      <method id="POSTConfiguration" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:Configuration"/>
+          <representation mediaType="application/sep-exi" element="sep:Configuration"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEConfiguration" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="PriceResponseCfgList" wx:samplePath="/edev/{id1}/cfg/prcfg">
+      <doc title="PriceResponseCfgList">Contains a List of price response configuration settings.</doc>
+      <method id="GETPriceResponseCfgList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:PriceResponseCfgList"/>
+          <representation mediaType="application/sep-exi" element="sep:PriceResponseCfgList"/>
+        </response>
+      </method>
+      <method id="HEADPriceResponseCfgList" name="HEAD" wx:mode="M"/>
+      <method id="PUTPriceResponseCfgList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:PriceResponseCfg"/>
+          <representation mediaType="application/sep-exi" element="sep:PriceResponseCfg"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTPriceResponseCfgList" name="POST" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:PriceResponseCfg"/>
+          <representation mediaType="application/sep-exi" element="sep:PriceResponseCfg"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETEPriceResponseCfgList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="PriceResponseCfg" wx:samplePath="/edev/{id1}/cfg/prcfg/{id2}">
+      <doc title="PriceResponseCfg">Contains the price response configuration settings for this EndDevice associated with a RateComponent.</doc>
+      <method id="GETPriceResponseCfg" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:PriceResponseCfg"/>
+          <representation mediaType="application/sep-exi" element="sep:PriceResponseCfg"/>
+        </response>
+      </method>
+      <method id="HEADPriceResponseCfg" name="HEAD" wx:mode="M"/>
+      <method id="PUTPriceResponseCfg" name="PUT" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:PriceResponseCfg"/>
+          <representation mediaType="application/sep-exi" element="sep:PriceResponseCfg"/>
+        </request>
+      </method>
+      <method id="POSTPriceResponseCfg" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:PriceResponseCfg"/>
+          <representation mediaType="application/sep-exi" element="sep:PriceResponseCfg"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEPriceResponseCfg" name="DELETE" wx:mode="M">
+        <response>
+          <representation mediaType="application/xml" element="sep:PriceResponseCfg"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="FileStatus" wx:samplePath="/edev/{id1}/fs">
+      <doc title="FileStatus">The file status of a particular file download for the associated EndDevice or SelfDevice.</doc>
+      <method id="GETFileStatus" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:FileStatus"/>
+          <representation mediaType="application/sep-exi" element="sep:FileStatus"/>
+        </response>
+      </method>
+      <method id="HEADFileStatus" name="HEAD" wx:mode="M"/>
+      <method id="PUTFileStatus" name="PUT" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:FileStatus"/>
+          <representation mediaType="application/sep-exi" element="sep:FileStatus"/>
+        </request>
+      </method>
+      <method id="POSTFileStatus" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:FileStatus"/>
+          <representation mediaType="application/sep-exi" element="sep:FileStatus"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEFileStatus" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="LoadShedAvailabilityList" wx:samplePath="/edev/{id1}/lsl">
+      <doc title="LoadShedAvailabilityList">A List of LoadShedAvailability instances.</doc>
+      <method id="GETLoadShedAvailabilityList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:LoadShedAvailabilityList"/>
+          <representation mediaType="application/sep-exi" element="sep:LoadShedAvailabilityList"/>
+        </response>
+      </method>
+      <method id="HEADLoadShedAvailabilityList" name="HEAD" wx:mode="M"/>
+      <method id="PUTLoadShedAvailabilityList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:LoadShedAvailability"/>
+          <representation mediaType="application/sep-exi" element="sep:LoadShedAvailability"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTLoadShedAvailabilityList" name="POST" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:LoadShedAvailability"/>
+          <representation mediaType="application/sep-exi" element="sep:LoadShedAvailability"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETELoadShedAvailabilityList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="LoadShedAvailability" wx:samplePath="/edev/{id1}/lsl/{id2}">
+      <doc title="LoadShedAvailability">A specific LoadShedAvailability entry from the LoadShedAvailabilityList. </doc>
+      <method id="GETLoadShedAvailability" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:LoadShedAvailability"/>
+          <representation mediaType="application/sep-exi" element="sep:LoadShedAvailability"/>
+        </response>
+      </method>
+      <method id="HEADLoadShedAvailability" name="HEAD" wx:mode="M"/>
+      <method id="PUTLoadShedAvailability" name="PUT" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:LoadShedAvailability"/>
+          <representation mediaType="application/sep-exi" element="sep:LoadShedAvailability"/>
+        </request>
+      </method>
+      <method id="POSTLoadShedAvailability" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:LoadShedAvailability"/>
+          <representation mediaType="application/sep-exi" element="sep:LoadShedAvailability"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETELoadShedAvailability" name="DELETE" wx:mode="M">
+        <response>
+          <representation mediaType="application/xml" element="sep:LoadShedAvailability"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
   </resources>
 </application>

@@ -22,3 +22,5 @@ go.work
 
 # Build dirs
 bin/
+nginx/nginx.conf
+logs/

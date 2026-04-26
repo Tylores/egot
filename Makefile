@@ -3,7 +3,7 @@
 .PHONY: build-core build-flowreservation build-operator build-rsps
 .PHONY: build-BRS build-Bill build-DCAP build-DERP build-DR build-EDevice build-File build-MUP build-Messaging build-Notify build-PPY build-SDevice build-TariffProfile build-TimeOfUse build-UPT
 .PHONY: build-crawler build-client build-scaffold-gen build-wadl-extract
-.PHONY: start stop status restart
+.PHONY: start stop status restart nginx-config
 .PHONY: ssl-refresh ssl-clients
 
 BIN_DIR := ./bin
@@ -102,6 +102,10 @@ build-wadl-extract:
 	@echo "Building wadl-extract..."
 	@go build -o $(BIN_DIR)/wadl-extract ./cmd/wadl-extract/
 
+build-nginx-config-gen:
+	@echo "Building nginx-config-gen..."
+	@go build -o $(BIN_DIR)/nginx-config-gen ./cmd/nginx-config-gen/
+
 # Build all microservice servers (excludes tools/clients)
 build-services: build-core build-flowreservation build-operator build-rsps \
 	build-BRS build-Bill build-DCAP build-DERP build-DR build-EDevice \
@@ -110,7 +114,7 @@ build-services: build-core build-flowreservation build-operator build-rsps \
 	@echo "✅ All services built in $(BIN_DIR)/"
 
 # Build tools and clients only
-build-tools: build-crawler build-client build-scaffold-gen build-wadl-extract
+build-tools: build-crawler build-client build-scaffold-gen build-wadl-extract build-nginx-config-gen
 	@echo "✅ All tools built in $(BIN_DIR)/"
 
 # Build everything
@@ -127,7 +131,7 @@ SERVICES := core flowreservation operator rsps \
 	SDevice TariffProfile TimeOfUse UPT
 
 # Start all microservices in the background
-start: build-services
+start: build-services nginx-config
 	@echo "Starting all services..."
 	@mkdir -p $(PIDS_DIR) $(LOGS_DIR)
 	@for svc in $(SERVICES); do \
@@ -139,9 +143,13 @@ start: build-services
 		fi; \
 	done
 	@echo "Logs: $(LOGS_DIR)/"
+	@echo "Starting nginx API gateway..."
+	@bash ./scripts/start-nginx.sh ./nginx/nginx.yaml
 
 # Stop all microservices
 stop:
+	@echo "Stopping nginx API gateway..."
+	@bash ./scripts/stop-nginx.sh
 	@echo "Stopping all services..."
 	@for svc in $(SERVICES); do \
 		if [ -f $(PIDS_DIR)/$$svc.pid ]; then \
@@ -181,8 +189,17 @@ restart: stop
 		fi; \
 	done
 	@echo "Logs: $(LOGS_DIR)/"
+	@echo "Starting nginx API gateway..."
+	@bash ./scripts/start-nginx.sh ./nginx/nginx.yaml
 
-# ─── SSL Certificates ─────────────────────────────────────────────────────────
+# ─── Nginx Configuration ──────────────────────────────────────────────────────
+
+# Generate nginx.conf from routes.go and nginx.yaml configuration
+nginx-config: build-tools
+	@echo "Generating nginx configuration..."
+	@mkdir -p ./logs
+	@$(BIN_DIR)/nginx-config-gen -yaml ./nginx/nginx.yaml -output ./nginx/nginx.conf
+	@echo "✅ Nginx configuration generated"
 
 # Regenerate CA, server, and default client certificates
 ssl-refresh:

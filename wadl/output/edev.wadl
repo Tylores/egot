@@ -4,5 +4,83 @@
     <include href="sep.xsd"/>
   </grammars>
   <resources wx:sampleBase="http://localhost/sep/">
+    <resource id="EndDeviceList" wx:samplePath="/edev">
+      <doc title="EndDeviceList">End device resource list. </doc>
+      <method id="GETEndDeviceList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="a" style="query" type="xsd:int">
+            <doc>after</doc>
+          </param>
+          <param name="sFDI" style="query" type="xsd:unsignedLong">
+            <doc>SFDI</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:EndDeviceList"/>
+          <representation mediaType="application/sep-exi" element="sep:EndDeviceList"/>
+        </response>
+      </method>
+      <method id="HEADEndDeviceList" name="HEAD" wx:mode="M"/>
+      <method id="PUTEndDeviceList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:EndDevice"/>
+          <representation mediaType="application/sep-exi" element="sep:EndDevice"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTEndDeviceList" name="POST" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:EndDevice"/>
+          <representation mediaType="application/sep-exi" element="sep:EndDevice"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETEEndDeviceList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+    </resource>
+    <resource id="EndDevice" wx:samplePath="/edev/{id1}">
+      <doc title="EndDevice">End device instance.</doc>
+      <method id="GETEndDevice" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:EndDevice"/>
+          <representation mediaType="application/sep-exi" element="sep:EndDevice"/>
+        </response>
+      </method>
+      <method id="HEADEndDevice" name="HEAD" wx:mode="M"/>
+      <method id="PUTEndDevice" name="PUT" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:EndDevice"/>
+          <representation mediaType="application/sep-exi" element="sep:EndDevice"/>
+        </request>
+      </method>
+      <method id="POSTEndDevice" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:EndDevice"/>
+          <representation mediaType="application/sep-exi" element="sep:EndDevice"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEEndDevice" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:EndDevice"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
   </resources>
 </application>

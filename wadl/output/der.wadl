@@ -4,5 +4,415 @@
     <include href="sep.xsd"/>
   </grammars>
   <resources wx:sampleBase="http://localhost/sep/">
+    <resource id="DERList" wx:samplePath="/edev/{id1}/der">
+      <doc title="DERList">A list of Distributed Energy Resources</doc>
+      <method id="GETDERList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DERList"/>
+          <representation mediaType="application/sep-exi" element="sep:DERList"/>
+        </response>
+      </method>
+      <method id="HEADDERList" name="HEAD" wx:mode="M"/>
+      <method id="PUTDERList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DER"/>
+          <representation mediaType="application/sep-exi" element="sep:DER"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTDERList" name="POST" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DER"/>
+          <representation mediaType="application/sep-exi" element="sep:DER"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETEDERList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="DER" wx:samplePath="/edev/{id1}/der/{id2}">
+      <doc title="DER">The information about a specific Distributed Energy Resource.</doc>
+      <method id="GETDER" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DER"/>
+          <representation mediaType="application/sep-exi" element="sep:DER"/>
+        </response>
+      </method>
+      <method id="HEADDER" name="HEAD" wx:mode="M"/>
+      <method id="PUTDER" name="PUT" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DER"/>
+          <representation mediaType="application/sep-exi" element="sep:DER"/>
+        </request>
+      </method>
+      <method id="POSTDER" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DER"/>
+          <representation mediaType="application/sep-exi" element="sep:DER"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEDER" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:DER"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="AssociatedUsagePoint" wx:samplePath="/edev/{id1}/der/{id2}/upt">
+      <doc title="AssociatedUsagePoint">The usage point associated with this DER instance. </doc>
+      <method id="GETAssociatedUsagePoint" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:UsagePoint"/>
+          <representation mediaType="application/sep-exi" element="sep:UsagePoint"/>
+        </response>
+      </method>
+      <method id="HEADAssociatedUsagePoint" name="HEAD" wx:mode="M"/>
+      <method id="PUTAssociatedUsagePoint" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:UsagePoint"/>
+          <representation mediaType="application/sep-exi" element="sep:UsagePoint"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTAssociatedUsagePoint" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:UsagePoint"/>
+          <representation mediaType="application/sep-exi" element="sep:UsagePoint"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEAssociatedUsagePoint" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:UsagePoint"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="AssociatedDERProgramList" wx:samplePath="/edev/{id1}/der/{id2}/derp">
+      <doc title="AssociatedDERProgramList">The List of DERProgram instances associated with this DER.</doc>
+      <method id="GETAssociatedDERProgramList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DERProgramList"/>
+          <representation mediaType="application/sep-exi" element="sep:DERProgramList"/>
+        </response>
+      </method>
+      <method id="HEADAssociatedDERProgramList" name="HEAD" wx:mode="M"/>
+      <method id="PUTAssociatedDERProgramList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERProgram"/>
+          <representation mediaType="application/sep-exi" element="sep:DERProgram"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTAssociatedDERProgramList" name="POST" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERProgram"/>
+          <representation mediaType="application/sep-exi" element="sep:DERProgram"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETEAssociatedDERProgramList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="CurrentDERControls" wx:samplePath="/edev/{id1}/der/{id2}/cdc">
+      <doc title="CurrentDERControls">The values of the currently active DERControl modes.</doc>
+      <method id="GETCurrentDERControls" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:CurrentDERControls"/>
+          <representation mediaType="application/sep-exi" element="sep:CurrentDERControls"/>
+        </response>
+      </method>
+      <method id="HEADCurrentDERControls" name="HEAD" wx:mode="M"/>
+      <method id="PUTCurrentDERControls" name="PUT" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:CurrentDERControls"/>
+          <representation mediaType="application/sep-exi" element="sep:CurrentDERControls"/>
+        </request>
+      </method>
+      <method id="POSTCurrentDERControls" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:CurrentDERControls"/>
+          <representation mediaType="application/sep-exi" element="sep:CurrentDERControls"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETECurrentDERControls" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="CurrentDERProgram" wx:samplePath="/edev/{id1}/der/{id2}/cdp">
+      <doc title="CurrentDERProgram">DEPRECATED.</doc>
+      <method id="GETCurrentDERProgram" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DERProgram"/>
+          <representation mediaType="application/sep-exi" element="sep:DERProgram"/>
+        </response>
+      </method>
+      <method id="HEADCurrentDERProgram" name="HEAD" wx:mode="M"/>
+      <method id="PUTCurrentDERProgram" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERProgram"/>
+          <representation mediaType="application/sep-exi" element="sep:DERProgram"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTCurrentDERProgram" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERProgram"/>
+          <representation mediaType="application/sep-exi" element="sep:DERProgram"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETECurrentDERProgram" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:DERProgram"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="DERSettings" wx:samplePath="/edev/{id1}/der/{id2}/derg">
+      <doc title="DERSettings">The DER settings of the associated DER or DERComponent.</doc>
+      <method id="GETDERSettings" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DERSettings"/>
+          <representation mediaType="application/sep-exi" element="sep:DERSettings"/>
+        </response>
+      </method>
+      <method id="HEADDERSettings" name="HEAD" wx:mode="M"/>
+      <method id="PUTDERSettings" name="PUT" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERSettings"/>
+          <representation mediaType="application/sep-exi" element="sep:DERSettings"/>
+        </request>
+      </method>
+      <method id="POSTDERSettings" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERSettings"/>
+          <representation mediaType="application/sep-exi" element="sep:DERSettings"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEDERSettings" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="DERStatus" wx:samplePath="/edev/{id1}/der/{id2}/ders">
+      <doc title="DERStatus">The DER status of the associated DER or DERComponent.</doc>
+      <method id="GETDERStatus" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DERStatus"/>
+          <representation mediaType="application/sep-exi" element="sep:DERStatus"/>
+        </response>
+      </method>
+      <method id="HEADDERStatus" name="HEAD" wx:mode="M"/>
+      <method id="PUTDERStatus" name="PUT" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERStatus"/>
+          <representation mediaType="application/sep-exi" element="sep:DERStatus"/>
+        </request>
+      </method>
+      <method id="POSTDERStatus" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERStatus"/>
+          <representation mediaType="application/sep-exi" element="sep:DERStatus"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEDERStatus" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="DERAvailability" wx:samplePath="/edev/{id1}/der/{id2}/dera">
+      <doc title="DERAvailability">The DER availability of the associated DER or DERComponent.</doc>
+      <method id="GETDERAvailability" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DERAvailability"/>
+          <representation mediaType="application/sep-exi" element="sep:DERAvailability"/>
+        </response>
+      </method>
+      <method id="HEADDERAvailability" name="HEAD" wx:mode="M"/>
+      <method id="PUTDERAvailability" name="PUT" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERAvailability"/>
+          <representation mediaType="application/sep-exi" element="sep:DERAvailability"/>
+        </request>
+      </method>
+      <method id="POSTDERAvailability" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERAvailability"/>
+          <representation mediaType="application/sep-exi" element="sep:DERAvailability"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEDERAvailability" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="DERCapability" wx:samplePath="/edev/{id1}/der/{id2}/dercap">
+      <doc title="DERCapability">The DER capabilities, or ratings, of the associated DER or DERComponent.</doc>
+      <method id="GETDERCapability" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DERCapability"/>
+          <representation mediaType="application/sep-exi" element="sep:DERCapability"/>
+        </response>
+      </method>
+      <method id="HEADDERCapability" name="HEAD" wx:mode="M"/>
+      <method id="PUTDERCapability" name="PUT" wx:mode="M">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERCapability"/>
+          <representation mediaType="application/sep-exi" element="sep:DERCapability"/>
+        </request>
+      </method>
+      <method id="POSTDERCapability" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERCapability"/>
+          <representation mediaType="application/sep-exi" element="sep:DERCapability"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEDERCapability" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="DERComponentList" wx:samplePath="/edev/{id1}/der/{id2}/dercom">
+      <doc title="DERComponentList">A list of DER components</doc>
+      <method id="GETDERComponentList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DERComponentList"/>
+          <representation mediaType="application/sep-exi" element="sep:DERComponentList"/>
+        </response>
+      </method>
+      <method id="HEADDERComponentList" name="HEAD" wx:mode="M"/>
+      <method id="PUTDERComponentList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERComponent"/>
+          <representation mediaType="application/sep-exi" element="sep:DERComponent"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTDERComponentList" name="POST" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERComponent"/>
+          <representation mediaType="application/sep-exi" element="sep:DERComponent"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETEDERComponentList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+    <resource id="DERComponent" wx:samplePath="/edev/{id1}/der/{id2}/dercom/{id3}">
+      <doc title="DERComponent">The information about a specific Distributed Energy Resource component.</doc>
+      <method id="GETDERComponent" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:DERComponent"/>
+          <representation mediaType="application/sep-exi" element="sep:DERComponent"/>
+        </response>
+      </method>
+      <method id="HEADDERComponent" name="HEAD" wx:mode="M"/>
+      <method id="PUTDERComponent" name="PUT" wx:mode="O">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERComponent"/>
+          <representation mediaType="application/sep-exi" element="sep:DERComponent"/>
+        </request>
+      </method>
+      <method id="POSTDERComponent" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:DERComponent"/>
+          <representation mediaType="application/sep-exi" element="sep:DERComponent"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEDERComponent" name="DELETE" wx:mode="O">
+        <response>
+          <representation mediaType="application/xml" element="sep:DERComponent"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+      <wx:sampleParam name="id3" style="template" type="idType"/>
+    </resource>
   </resources>
 </application>
