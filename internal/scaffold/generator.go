@@ -99,6 +99,11 @@ type Generator struct {
 
 // NewGenerator creates a new generator from a SEP 2 WADL file.
 // The service name is derived from the WADL filename (without extension).
+//
+// Note: WADL href filtering is automatic:
+// - Local schema references (sep.xsd) are preserved
+// - Cross-service element references use the shared sep: namespace
+// - All representations reference the shared SEP schema through local includes
 func NewGenerator(wadlPath string) (*Generator, error) {
 	data, err := os.ReadFile(wadlPath)
 	if err != nil {

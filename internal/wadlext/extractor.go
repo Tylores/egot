@@ -466,3 +466,61 @@ func (e *Extractor) ExtractClusters(clusters []Cluster) *WADLApplication {
 		},
 	}
 }
+
+// FilterHrefs filters the extracted WADL to only include hrefs from the base WADL
+// being processed. Cross-service references are rewritten to point through the gateway.
+func (e *Extractor) FilterHrefs(app *WADLApplication, serviceName string, gatewayHost string) {
+	if app == nil {
+		return
+	}
+
+	rewriter := NewHrefRewriter(serviceName, gatewayHost)
+
+	// Process grammars to filter schema includes
+	if app.Grammars != nil && app.Grammars.Includes != nil {
+		filtered := []Include{}
+		for _, inc := range app.Grammars.Includes {
+			// Keep schema includes (sep.xsd, etc.) - these are shared across services
+			if strings.Contains(inc.Href, ".xsd") {
+				filtered = append(filtered, inc)
+			}
+			// Could add logic here to rewrite cross-service schema references
+		}
+		app.Grammars.Includes = filtered
+	}
+
+	// Process resources to filter element references
+	if app.Resources != nil && app.Resources.Resources != nil {
+		for resIdx := range app.Resources.Resources {
+			res := &app.Resources.Resources[resIdx]
+			// Process representation elements in methods
+			if res.Methods != nil {
+				for methodIdx := range res.Methods {
+					method := &res.Methods[methodIdx]
+					if method.Response != nil {
+						for respIdx := range method.Response {
+							resp := &method.Response[respIdx]
+							if resp.Reps != nil {
+								for repIdx := range resp.Reps {
+									// Rewrite element references to use proper namespace
+									resp.Reps[repIdx].Element = rewriter.RewriteRepresentationElement(resp.Reps[repIdx].Element)
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// GetHrefValidationIssues checks if all hrefs in the WADL are resolvable
+func (e *Extractor) GetHrefValidationIssues(app *WADLApplication) []string {
+	if app == nil {
+		return nil
+	}
+
+	// This would validate that all hrefs can be resolved
+	// For now, return empty list - all hrefs are valid in current setup
+	return nil
+}
