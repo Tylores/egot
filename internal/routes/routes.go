@@ -31,6 +31,7 @@ const (
 	Der                   = "der.internal.com:8025"
 	TestDcap              = "egot.internal.com:8000"
 	TestBrs               = "egot.internal.com:8000"
+	Sep_wadl = "egot.internal.com:8026"
 )
 
 // serviceMap maps each registered URL path template to the host:port of the

@@ -15,14 +15,13 @@ const mainTemplate = `package main
 import (
 	"log"
 	"net/http"
+	"path/filepath"
 
 	"github.com/Tylores/egot/internal/{{.ServiceName}}/handler"
-	"github.com/Tylores/egot/internal/{{.ServiceName}}/repository/memory"
+	"github.com/Tylores/egot/internal/store"
 	"github.com/Tylores/egot/internal/routes"
 	"github.com/Tylores/egot/internal/tlsutil"
 )
-
-const MAX_ENTITIES memory.Entity = {{.MaxEntities}}
 
 func main() {
 	cfg, err := tlsutil.NewServerConfig("./ssl")
@@ -34,8 +33,7 @@ func main() {
 		TLSConfig: cfg,
 	}
 
-	repo := memory.NewRepository(MAX_ENTITIES)
-	repo.InitRepository("./ssl")
+	repo := store.New(filepath.Join("data", "{{.ServiceName}}.db"))
 
 	h := handler.NewHandler(repo)
 {{range .Routes}}	http.Handle("{{.HTTPMethod}} {{.Path}}", http.HandlerFunc(h.{{.FuncName}}))
@@ -58,15 +56,15 @@ import (
 	"strconv"
 {{- end}}
 
-	"github.com/Tylores/egot/internal/{{.ServiceName}}/repository/memory"
+	"github.com/Tylores/egot/internal/store"
 	"github.com/Tylores/egot/sep"
 )
 
 type Handler struct {
-	repo *memory.Repository
+	repo *store.Store
 }
 
-func NewHandler(repo *memory.Repository) *Handler {
+func NewHandler(repo *store.Store) *Handler {
 	return &Handler{repo}
 }
 
@@ -77,10 +75,21 @@ func (h *Handler) getLFDI(req *http.Request) (string, error) {
 	}
 	cert := req.TLS.PeerCertificates[0]
 	lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[0:40]
-	if _, err := h.repo.GetEntity(lfdi); err != nil {
-		return "0000000000000000000000000000000000000000", nil
-	}
 	return lfdi, nil
+}
+
+// getSFDI extracts SFDI from LFDI
+func (h *Handler) getSFDI(lfdi string) (sep.SFDIType, error) {
+	return sep.ToSFDI(lfdi)
+}
+
+// buildStoreKey builds a store key from SFDI and optional MRID
+func (h *Handler) buildStoreKey(sfdi sep.SFDIType, mrid ...string) string {
+	key := fmt.Sprintf("%d", sfdi)
+	if len(mrid) > 0 && mrid[0] != "" {
+		key = fmt.Sprintf("%d:%s", sfdi, mrid[0])
+	}
+	return key
 }
 {{range .Resources}}
 // {{.Name}} resource handlers
@@ -95,11 +104,17 @@ func (h *Handler) {{.FuncName}}(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusMethodNotAllowed)
 {{- else}}
-	_, err := h.getLFDI(req)
+	lfdi, err := h.getLFDI(req)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
 {{range .PathParams}}	if _, err := strconv.Atoi(req.PathValue("{{.}}")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -116,7 +131,7 @@ func (h *Handler) {{.FuncName}}(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(http.StatusOK)
 {{- else if eq .HTTPMethod "POST"}}
 	w.Header().Set("Content-Type", sep.ContentType)
-	w.Header().Set("location", "{{.Path}}/1")
+	w.Header().Set("location", "{{.Path}}/"+fmt.Sprintf("%d", sfdi))
 	w.WriteHeader(http.StatusCreated)
 {{- else if eq .HTTPMethod "DELETE"}}
 	w.Header().Set("Content-Type", sep.ContentType)
@@ -134,131 +149,8 @@ func (h *Handler) {{.FuncName}}(w http.ResponseWriter, req *http.Request) {
 
 const repositoryTemplate = `package memory
 
-import (
-	"crypto/sha256"
-	"crypto/x509"
-	"encoding/pem"
-	"fmt"
-	"io/fs"
-	"log"
-	"os"
-	"path/filepath"
-	"strings"
-	"sync"
-
-	"github.com/Tylores/egot/internal/{{.ServiceName}}/repository"
-)
-
-type Entity uint32
-
-type Pool struct {
-	// Add resource storage slices here
-	// Example: items []sep.EndDevice
-}
-
-func NewPool(size Entity) *Pool {
-	return &Pool{
-		// Initialize slices here
-		// Example: items: make([]sep.EndDevice, size),
-	}
-}
-
-type Repository struct {
-	sync.RWMutex
-	tag_lookup      map[string]Entity
-	active_entities []bool
-	pool            Pool
-}
-
-func NewRepository(size Entity) *Repository {
-	return &Repository{
-		tag_lookup:      make(map[string]Entity),
-		pool:            *NewPool(size),
-		active_entities: make([]bool, size),
-	}
-}
-
-func (r *Repository) NextFreeEntity() (*Entity, error) {
-	r.Lock()
-	defer r.Unlock()
-
-	for i, e := range r.active_entities {
-		if e {
-			continue
-		}
-		r.active_entities[i] = true
-		entity := Entity(i)
-		return &entity, nil
-	}
-
-	return nil, repository.ErrPoolFull
-}
-
-func (r *Repository) InitRepository(dir string) {
-	println("Initializing")
-	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
-		if d.IsDir() || filepath.Ext(path) != ".crt" {
-			return nil
-		}
-
-		if !strings.Contains(path, "client") {
-			return nil
-		}
-
-		cert_file, error := os.ReadFile(path)
-		if error != nil {
-			return error
-		}
-
-		block, _ := pem.Decode(cert_file)
-		if block == nil {
-			return nil
-		}
-
-		cert, error := x509.ParseCertificate(block.Bytes)
-		if err != nil {
-			return error
-		}
-
-		lfdi := fmt.Sprintf("%X", sha256.Sum256(cert.Raw))[:40]
-		e, error := r.NextFreeEntity()
-		if error != nil {
-			return error
-		}
-
-		fmt.Printf("\t%s : %d\n", lfdi, *e)
-		error = r.TagEntity(lfdi, *e)
-		if error != nil {
-			return error
-		}
-
-		return nil
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func (r *Repository) GetEntity(tag string) (Entity, error) {
-	r.RLock()
-	defer r.RUnlock()
-	value, exists := r.tag_lookup[tag]
-	if exists {
-		return value, nil
-	}
-	return value, repository.ErrNotFound
-}
-
-func (r *Repository) TagEntity(tag string, e Entity) error {
-	r.Lock()
-	defer r.Unlock()
-	_, exists := r.tag_lookup[tag]
-	if exists {
-		return repository.ErrTagExists
-	}
-	r.tag_lookup[tag] = e
-	return nil
-}
+// This file is deprecated. Services now use internal/store.Store directly.
+// Kept for backward compatibility during migration.
 `
 
 const repositoryErrorTemplate = `package repository
@@ -277,9 +169,10 @@ const serverTemplate = `package server
 import (
 	"log"
 	"net/http"
+	"path/filepath"
 
 	"github.com/Tylores/egot/internal/{{.ServiceName}}/handler"
-	"github.com/Tylores/egot/internal/{{.ServiceName}}/repository/memory"
+	"github.com/Tylores/egot/internal/store"
 	"github.com/Tylores/egot/internal/routes"
 	"github.com/Tylores/egot/internal/tlsutil"
 )
@@ -289,7 +182,7 @@ func AddRoutes(h *handler.Handler) {
 	// Example: http.Handle("GET /resource", http.HandlerFunc(h.GetResource))
 }
 
-func ServeHTTPS(entities memory.Entity) {
+func ServeHTTPS() {
 	cfg, err := tlsutil.NewServerConfig("./ssl")
 	if err != nil {
 		log.Fatal(err)
@@ -299,8 +192,7 @@ func ServeHTTPS(entities memory.Entity) {
 		TLSConfig: cfg,
 	}
 
-	repo := memory.NewRepository(entities)
-	repo.InitRepository("./ssl")
+	repo := store.New(filepath.Join("data", "{{.ServiceName}}.db"))
 
 	h := handler.NewHandler(repo)
 	AddRoutes(h)
@@ -435,10 +327,32 @@ func (g *Generator) updateRoutes(outputDir, serviceName string) error {
 		routeAddr := nextRouteAddress(content)
 		newRoute := fmt.Sprintf("\t%s = \"%s\"\n", constant, routeAddr)
 
-		lastParen := strings.LastIndex(content, ")")
-		if lastParen == -1 {
-			return fmt.Errorf("invalid routes.go format")
+		// Find the closing paren of the const block (which ends with "\n)")
+		pattern := regexp.MustCompile(`(?m)^const \([^)]*\)`)
+		match := pattern.FindString(content)
+		if match == "" {
+			return fmt.Errorf("invalid routes.go format: const block not found")
 		}
+		// Find where this match ends and insert before the closing paren
+		constEnd := strings.Index(content, "const (")
+		if constEnd == -1 {
+			return fmt.Errorf("invalid routes.go format: const ( not found")
+		}
+		// Search forward from const ( to find the closing paren
+		parenCount := 1
+		i := constEnd + len("const (")
+		for i < len(content) && parenCount > 0 {
+			if content[i] == '(' {
+				parenCount++
+			} else if content[i] == ')' {
+				parenCount--
+			}
+			i++
+		}
+		if parenCount != 0 {
+			return fmt.Errorf("invalid routes.go format: unmatched parens")
+		}
+		lastParen := i - 1 // Position of closing paren
 		content = content[:lastParen] + newRoute + content[lastParen:]
 	}
 
