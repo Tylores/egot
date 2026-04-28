@@ -11,35 +11,35 @@ import (
 
 // PRODUCTION_SERVICES lists all official/production microservices to preserve
 var PRODUCTION_SERVICES = map[string]bool{
-	"BRS":               true,
-	"Bill":              true,
-	"DCAP":              true,
-	"DERP":              true,
-	"DR":                true,
-	"EDevice":           true,
-	"File":              true,
-	"MUP":               true,
-	"Messaging":         true,
-	"Notify":            true,
-	"PPY":               true,
-	"SDevice":           true,
-	"TariffProfile":     true,
-	"TimeOfUse":         true,
-	"UPT":               true,
-	"DER":               true,
-	"Core":              true,
-	"FlowReservation":   true,
-	"der":               true,
-	"rsps":              true,
-	"flow":              true,
+	"BRS":             false,
+	"Bill":            false,
+	"DCAP":            false,
+	"DERP":            false,
+	"DR":              false,
+	"EDevice":         false,
+	"File":            false,
+	"MUP":             false,
+	"Messaging":       false,
+	"Notify":          false,
+	"PPY":             false,
+	"SDevice":         false,
+	"TariffProfile":   false,
+	"TimeOfUse":       false,
+	"UPT":             false,
+	"DER":             false,
+	"FlowReservation": false,
+	"core":            false,
+	"der":             false,
+	"rsps":            false,
+	"flowreservation": false,
 }
 
 type ServiceInfo struct {
-	Name     string
-	CmdPath  string
-	IntPath  string
-	IsStale  bool
-	Size     int64
+	Name    string
+	CmdPath string
+	IntPath string
+	IsStale bool
+	Size    int64
 }
 
 func main() {
@@ -127,10 +127,14 @@ func scanServices(repoRoot string) []ServiceInfo {
 	cmdDir := filepath.Join(repoRoot, "cmd")
 	entries, _ := os.ReadDir(cmdDir)
 	for _, entry := range entries {
-		if !entry.IsDir() || !isCapitalized(entry.Name()) {
+		if !entry.IsDir() {
 			continue
 		}
 		name := entry.Name()
+		_, found := PRODUCTION_SERVICES[name]
+		if !found {
+			continue
+		}
 		cmdPath := filepath.Join("cmd", name)
 		intPath := filepath.Join("internal", name)
 

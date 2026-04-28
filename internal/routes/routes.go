@@ -3,11 +3,7 @@ package routes
 import "fmt"
 
 const (
-	// Core services
-	Core            = "egot.internal.com:8000"
-	FlowReservation = "egot.internal.com:8001"
-
-	// Additional services (generated from scaffold)
+	// services (generated from scaffold)
 	BRS           = "egot.internal.com:8010"
 	Bill          = "egot.internal.com:8011"
 	DCAP          = "egot.internal.com:8012"
@@ -24,14 +20,6 @@ const (
 	TimeOfUse     = "egot.internal.com:8023"
 	UPT           = "egot.internal.com:8024"
 	DER           = "egot.internal.com:8025"
-
-	// Legacy/alternate naming
-	FunctionSetAssignment = "egot.internal.com:8002"
-	Rsps                  = "rsps.internal.com:8003"
-	Der                   = "der.internal.com:8025"
-	TestDcap              = "egot.internal.com:8000"
-	TestBrs               = "egot.internal.com:8000"
-	Sep_wadl = "egot.internal.com:8026"
 )
 
 // serviceMap maps each registered URL path template to the host:port of the
@@ -39,70 +27,65 @@ const (
 // consistent with Go's HTTP pattern syntax and the WADL samplePath attributes.
 // Use LinkFor to build a complete https URL from any registered path.
 var serviceMap = map[string]string{
-	// Core
-	"/dcap":      Core,
-	"/tm":        Core,
-	"/rg/{id1}":  Core,
-
 	// EDevice
-	"/edev":                                                          EDevice,
-	"/edev/{id1}":                                                    EDevice,
-	"/edev/{id1}/adev":                                               EDevice,
-	"/edev/{id1}/adev/{id2}":                                         EDevice,
-	"/edev/{id1}/aggp":                                               EDevice,
-	"/edev/{id1}/cfg":                                                EDevice,
-	"/edev/{id1}/cfg/prcfg":                                          EDevice,
-	"/edev/{id1}/cfg/prcfg/{id2}":                                    EDevice,
-	"/edev/{id1}/der":                                                EDevice,
-	"/edev/{id1}/der/{id2}":                                          EDevice,
-	"/edev/{id1}/der/{id2}/cdc":                                      EDevice,
-	"/edev/{id1}/der/{id2}/cdp":                                      EDevice,
-	"/edev/{id1}/der/{id2}/dera":                                     EDevice,
-	"/edev/{id1}/der/{id2}/dercap":                                   EDevice,
-	"/edev/{id1}/der/{id2}/dercom":                                   EDevice,
-	"/edev/{id1}/der/{id2}/dercom/{id3}":                             EDevice,
-	"/edev/{id1}/der/{id2}/derg":                                     EDevice,
-	"/edev/{id1}/der/{id2}/derp":                                     EDevice,
-	"/edev/{id1}/der/{id2}/ders":                                     EDevice,
-	"/edev/{id1}/der/{id2}/upt":                                      EDevice,
-	"/edev/{id1}/di":                                                 EDevice,
-	"/edev/{id1}/di/loc":                                             EDevice,
-	"/edev/{id1}/di/loc/{id2}":                                       EDevice,
-	"/edev/{id1}/dstat":                                              EDevice,
-	"/edev/{id1}/frp":                                                EDevice,
-	"/edev/{id1}/frp/{id2}":                                          EDevice,
-	"/edev/{id1}/frq":                                                EDevice,
-	"/edev/{id1}/frq/{id2}":                                          EDevice,
-	"/edev/{id1}/fs":                                                 EDevice,
-	"/edev/{id1}/fsa":                                                EDevice,
-	"/edev/{id1}/fsa/{id2}":                                          EDevice,
-	"/edev/{id1}/lel":                                                EDevice,
-	"/edev/{id1}/lel/{id2}":                                          EDevice,
-	"/edev/{id1}/lsl":                                                EDevice,
-	"/edev/{id1}/lsl/{id2}":                                          EDevice,
-	"/edev/{id1}/ns":                                                 EDevice,
-	"/edev/{id1}/ns/{id2}":                                           EDevice,
-	"/edev/{id1}/ns/{id2}/addr":                                      EDevice,
-	"/edev/{id1}/ns/{id2}/addr/{id3}":                                EDevice,
-	"/edev/{id1}/ns/{id2}/addr/{id3}/rpl":                            EDevice,
-	"/edev/{id1}/ns/{id2}/addr/{id3}/rpl/{id4}":                      EDevice,
-	"/edev/{id1}/ns/{id2}/addr/{id3}/rpl/{id4}/srt":                  EDevice,
-	"/edev/{id1}/ns/{id2}/addr/{id3}/rpl/{id4}/srt/{id5}":            EDevice,
-	"/edev/{id1}/ns/{id2}/ll":                                        EDevice,
-	"/edev/{id1}/ns/{id2}/ll/{id3}":                                  EDevice,
-	"/edev/{id1}/ns/{id2}/ll/{id3}/nbh":                              EDevice,
-	"/edev/{id1}/ns/{id2}/ll/{id3}/nbh/{id4}":                        EDevice,
-	"/edev/{id1}/prxy":                                               EDevice,
-	"/edev/{id1}/prxy/{id2}":                                         EDevice,
-	"/edev/{id1}/ps":                                                 EDevice,
-	"/edev/{id1}/rg":                                                 EDevice,
-	"/edev/{id1}/sub":                                                EDevice,
-	"/edev/{id1}/sub/{id2}":                                          EDevice,
+	"/edev":                                               EDevice,
+	"/edev/{id1}":                                         EDevice,
+	"/edev/{id1}/adev":                                    EDevice,
+	"/edev/{id1}/adev/{id2}":                              EDevice,
+	"/edev/{id1}/aggp":                                    EDevice,
+	"/edev/{id1}/cfg":                                     EDevice,
+	"/edev/{id1}/cfg/prcfg":                               EDevice,
+	"/edev/{id1}/cfg/prcfg/{id2}":                         EDevice,
+	"/edev/{id1}/der":                                     EDevice,
+	"/edev/{id1}/der/{id2}":                               EDevice,
+	"/edev/{id1}/der/{id2}/cdc":                           EDevice,
+	"/edev/{id1}/der/{id2}/cdp":                           EDevice,
+	"/edev/{id1}/der/{id2}/dera":                          EDevice,
+	"/edev/{id1}/der/{id2}/dercap":                        EDevice,
+	"/edev/{id1}/der/{id2}/dercom":                        EDevice,
+	"/edev/{id1}/der/{id2}/dercom/{id3}":                  EDevice,
+	"/edev/{id1}/der/{id2}/derg":                          EDevice,
+	"/edev/{id1}/der/{id2}/derp":                          EDevice,
+	"/edev/{id1}/der/{id2}/ders":                          EDevice,
+	"/edev/{id1}/der/{id2}/upt":                           EDevice,
+	"/edev/{id1}/di":                                      EDevice,
+	"/edev/{id1}/di/loc":                                  EDevice,
+	"/edev/{id1}/di/loc/{id2}":                            EDevice,
+	"/edev/{id1}/dstat":                                   EDevice,
+	"/edev/{id1}/frp":                                     EDevice,
+	"/edev/{id1}/frp/{id2}":                               EDevice,
+	"/edev/{id1}/frq":                                     EDevice,
+	"/edev/{id1}/frq/{id2}":                               EDevice,
+	"/edev/{id1}/fs":                                      EDevice,
+	"/edev/{id1}/fsa":                                     EDevice,
+	"/edev/{id1}/fsa/{id2}":                               EDevice,
+	"/edev/{id1}/lel":                                     EDevice,
+	"/edev/{id1}/lel/{id2}":                               EDevice,
+	"/edev/{id1}/lsl":                                     EDevice,
+	"/edev/{id1}/lsl/{id2}":                               EDevice,
+	"/edev/{id1}/ns":                                      EDevice,
+	"/edev/{id1}/ns/{id2}":                                EDevice,
+	"/edev/{id1}/ns/{id2}/addr":                           EDevice,
+	"/edev/{id1}/ns/{id2}/addr/{id3}":                     EDevice,
+	"/edev/{id1}/ns/{id2}/addr/{id3}/rpl":                 EDevice,
+	"/edev/{id1}/ns/{id2}/addr/{id3}/rpl/{id4}":           EDevice,
+	"/edev/{id1}/ns/{id2}/addr/{id3}/rpl/{id4}/srt":       EDevice,
+	"/edev/{id1}/ns/{id2}/addr/{id3}/rpl/{id4}/srt/{id5}": EDevice,
+	"/edev/{id1}/ns/{id2}/ll":                             EDevice,
+	"/edev/{id1}/ns/{id2}/ll/{id3}":                       EDevice,
+	"/edev/{id1}/ns/{id2}/ll/{id3}/nbh":                   EDevice,
+	"/edev/{id1}/ns/{id2}/ll/{id3}/nbh/{id4}":             EDevice,
+	"/edev/{id1}/prxy":                                    EDevice,
+	"/edev/{id1}/prxy/{id2}":                              EDevice,
+	"/edev/{id1}/ps":                                      EDevice,
+	"/edev/{id1}/rg":                                      EDevice,
+	"/edev/{id1}/sub":                                     EDevice,
+	"/edev/{id1}/sub/{id2}":                               EDevice,
 
 	// BRS
-	"/brs":              BRS,
-	"/brs/{id1}":        BRS,
-	"/brs/{id1}/br":     BRS,
+	"/brs":                BRS,
+	"/brs/{id1}":          BRS,
+	"/brs/{id1}/br":       BRS,
 	"/brs/{id1}/br/{id2}": BRS,
 
 	// Bill
@@ -122,82 +105,76 @@ var serviceMap = map[string]string{
 	"/bill/{id1}/ss":                 Bill,
 
 	// DERP
-	"/derp":                DERP,
-	"/derp/{id1}":          DERP,
-	"/derp/{id1}/actderc":  DERP,
-	"/derp/{id1}/dc":       DERP,
-	"/derp/{id1}/dc/{id2}": DERP,
-	"/derp/{id1}/dderc":    DERP,
-	"/derp/{id1}/derc":     DERP,
+	"/derp":                  DERP,
+	"/derp/{id1}":            DERP,
+	"/derp/{id1}/actderc":    DERP,
+	"/derp/{id1}/dc":         DERP,
+	"/derp/{id1}/dc/{id2}":   DERP,
+	"/derp/{id1}/dderc":      DERP,
+	"/derp/{id1}/derc":       DERP,
 	"/derp/{id1}/derc/{id2}": DERP,
 
 	// DR
-	"/dr":                  DR,
-	"/dr/{id1}":            DR,
-	"/dr/{id1}/actedc":     DR,
-	"/dr/{id1}/edc":        DR,
-	"/dr/{id1}/edc/{id2}":  DR,
+	"/dr":                 DR,
+	"/dr/{id1}":           DR,
+	"/dr/{id1}/actedc":    DR,
+	"/dr/{id1}/edc":       DR,
+	"/dr/{id1}/edc/{id2}": DR,
 
 	// File
-	"/file":        File,
-	"/file/{id1}":  File,
+	"/file":       File,
+	"/file/{id1}": File,
 
 	// Messaging
-	"/msg":                  Messaging,
-	"/msg/{id1}":            Messaging,
-	"/msg/{id1}/acttxt":     Messaging,
-	"/msg/{id1}/txt":        Messaging,
-	"/msg/{id1}/txt/{id2}":  Messaging,
+	"/msg":                 Messaging,
+	"/msg/{id1}":           Messaging,
+	"/msg/{id1}/acttxt":    Messaging,
+	"/msg/{id1}/txt":       Messaging,
+	"/msg/{id1}/txt/{id2}": Messaging,
 
 	// MUP
-	"/mup":        MUP,
-	"/mup/{id1}":  MUP,
+	"/mup":       MUP,
+	"/mup/{id1}": MUP,
 
 	// Notify
-	"/ntfy":        Notify,
-	"/ntfy/{id1}":  Notify,
+	"/ntfy":       Notify,
+	"/ntfy/{id1}": Notify,
 
 	// PPY
-	"/ppy":               PPY,
-	"/ppy/{id1}":         PPY,
-	"/ppy/{id1}/ab":      PPY,
-	"/ppy/{id1}/actsi":   PPY,
-	"/ppy/{id1}/cr":      PPY,
+	"/ppy":                PPY,
+	"/ppy/{id1}":          PPY,
+	"/ppy/{id1}/ab":       PPY,
+	"/ppy/{id1}/actsi":    PPY,
+	"/ppy/{id1}/cr":       PPY,
 	"/ppy/{id1}/cr/{id2}": PPY,
-	"/ppy/{id1}/os":      PPY,
-	"/ppy/{id1}/si":      PPY,
+	"/ppy/{id1}/os":       PPY,
+	"/ppy/{id1}/si":       PPY,
 	"/ppy/{id1}/si/{id2}": PPY,
-
-	// Rsps
-	"/rsps":                   Rsps,
-	"/rsps/{id1}":             Rsps,
-	"/rsps/{id1}/rsp":         Rsps,
-	"/rsps/{id1}/rsp/{id2}":   Rsps,
 
 	// SDevice
 	"/sdev": SDevice,
 
 	// TariffProfile
-	"/tp":                              TariffProfile,
-	"/tp/{id1}":                        TariffProfile,
-	"/tp/{id1}/rc":                     TariffProfile,
-	"/tp/{id1}/rc/{id2}":               TariffProfile,
-	"/tp/{id1}/rc/{id2}/acttti":        TariffProfile,
-	"/tp/{id1}/rc/{id2}/tti":           TariffProfile,
-	"/tp/{id1}/rc/{id2}/tti/{id3}":     TariffProfile,
-	"/tp/{id1}/rc/{id2}/tti/{id3}/cti": TariffProfile,
+	"/tp":                                    TariffProfile,
+	"/tp/{id1}":                              TariffProfile,
+	"/tp/{id1}/rc":                           TariffProfile,
+	"/tp/{id1}/rc/{id2}":                     TariffProfile,
+	"/tp/{id1}/rc/{id2}/acttti":              TariffProfile,
+	"/tp/{id1}/rc/{id2}/tti":                 TariffProfile,
+	"/tp/{id1}/rc/{id2}/tti/{id3}":           TariffProfile,
+	"/tp/{id1}/rc/{id2}/tti/{id3}/cti":       TariffProfile,
 	"/tp/{id1}/rc/{id2}/tti/{id3}/cti/{id4}": TariffProfile,
 
 	// UPT
-	"/upt":                            UPT,
-	"/upt/{id1}":                      UPT,
-	"/upt/{id1}/mr":                   UPT,
-	"/upt/{id1}/mr/{id2}":             UPT,
-	"/upt/{id1}/mr/{id2}/rs":          UPT,
-	"/upt/{id1}/mr/{id2}/rs/{id3}":    UPT,
-	"/upt/{id1}/mr/{id2}/rs/{id3}/r":  UPT,
+	"/upt":                                 UPT,
+	"/upt/{id1}":                           UPT,
+	"/upt/{id1}/mr":                        UPT,
+	"/upt/{id1}/mr/{id2}":                  UPT,
+	"/upt/{id1}/mr/{id2}/rs":               UPT,
+	"/upt/{id1}/mr/{id2}/rs/{id3}":         UPT,
+	"/upt/{id1}/mr/{id2}/rs/{id3}/r":       UPT,
 	"/upt/{id1}/mr/{id2}/rs/{id3}/r/{id4}": UPT,
-	"/upt/{id1}/mr/{id2}/rt":          UPT,
+	"/upt/{id1}/mr/{id2}/rt":               UPT,
 }
 
 // LinkFor returns the full https URL template for a registered path.
