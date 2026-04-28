@@ -5,6 +5,7 @@
 .PHONY: build-crawler build-client build-scaffold-gen build-wadl-extract
 .PHONY: start stop status restart nginx-config
 .PHONY: ssl-refresh ssl-clients
+.PHONY: cleanup-services cleanup-services-dry-run cleanup-services-list
 
 BIN_DIR := ./bin
 
@@ -116,6 +117,17 @@ build-services: build-core build-flowreservation build-operator build-rsps \
 # Build tools and clients only
 build-tools: build-crawler build-client build-scaffold-gen build-wadl-extract build-nginx-config-gen
 	@echo "✅ All tools built in $(BIN_DIR)/"
+
+# Cleanup stale microservices
+cleanup-services-dry-run:
+	@echo "Scanning for stale microservices (dry-run)..."
+	@go run ./tools/cleanup-services --dry-run=true --interactive=false
+
+cleanup-services:
+	@go run ./tools/cleanup-services --dry-run=false --interactive=true
+
+cleanup-services-list:
+	@go run ./tools/cleanup-services --list
 
 # Build everything
 build-all: build-services build-tools
@@ -343,6 +355,11 @@ help:
 	@echo "  make test-routes             - Run all route registration & HTTP method tests"
 	@echo "  make test-route-registration - Run route registration verification tests"
 	@echo "  make test-http-methods       - Run HTTP method support tests"
+	@echo ""
+	@echo "Cleanup Commands:"
+	@echo "  make cleanup-services-list   - List all services and identify stale ones"
+	@echo "  make cleanup-services-dry-run - Preview what would be deleted (no changes)"
+	@echo "  make cleanup-services        - Remove stale services (with confirmation)"
 	@echo ""
 	@echo "  make generate-mocks          - Generate test mocks (mockgen)"
 	@echo "  make lint                    - Run linters"
