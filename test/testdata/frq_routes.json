@@ -1,0 +1,48 @@
+{
+  "service_name": "Flowreservation_extracted",
+  "wadl_file": "flowreservation_extracted.wadl",
+  "total_routes": 10,
+  "unique_paths": 2,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/edev/{id1}/frq"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/edev/{id1}/frq/{id2}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/edev/{id1}/frq"
+    },
+    {
+      "Method": "GET",
+      "Path": "/edev/{id1}/frq/{id2}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/edev/{id1}/frq"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/edev/{id1}/frq/{id2}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/edev/{id1}/frq"
+    },
+    {
+      "Method": "POST",
+      "Path": "/edev/{id1}/frq/{id2}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/edev/{id1}/frq"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/edev/{id1}/frq/{id2}"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 ## Service Directory
 
-All 15 microservices live under `cmd/` and `internal/`, with ports 8010–8024:
+All 18 microservices live under `cmd/` and `internal/`:
 
 | Service | Port | CMD | Internal |
 |---------|------|-----|----------|
@@ -21,8 +21,11 @@ All 15 microservices live under `cmd/` and `internal/`, with ports 8010–8024:
 | TariffProfile | 8022 | cmd/TariffProfile | internal/TariffProfile |
 | TimeOfUse | 8023 | cmd/TimeOfUse | internal/TimeOfUse |
 | UPT | 8024 | cmd/UPT | internal/UPT |
+| DER | 8026 | cmd/DER | internal/DER |
+| FlowReservation | 8027 | cmd/FlowReservation | internal/FlowReservation |
+| rsps | 8041 | cmd/rsps | internal/rsps |
 
-Plus 8 original services: `core`, `crawler`, `flowreservation`, `operator`, `rsps`, `client`, `scaffold-gen`, `wadl-extract`.
+Plus 5 original tools/services: `crawler`, `operator`, `client`, `scaffold-gen`, `wadl-extract`.
 
 Port constants are defined in `internal/routes/routes.go`.
 
@@ -33,10 +36,10 @@ Each service follows this layout:
 ```
 cmd/<Service>/
   main.go                          # Entry point
+  <service>_route_registration_test.go # Route registration tests
 
 internal/<Service>/
   handler/handler.go               # HTTP handlers
-  repository/memory/repository.go  # In-memory storage
   repository/error.go              # Error types
   server/server.go                 # Server utilities
 ```
@@ -47,35 +50,29 @@ internal/<Service>/
 package main
 
 import (
-    "crypto/tls"
     "log"
     "net/http"
 
     "github.com/Tylores/egot/internal/Bill/handler"
-    "github.com/Tylores/egot/internal/Bill/repository/memory"
+    "github.com/Tylores/egot/internal/Bill/server"
     "github.com/Tylores/egot/internal/routes"
+    "github.com/Tylores/egot/internal/store"
 )
 
-const MAX_ENTITIES memory.Entity = 100
-
 func main() {
-    cfg := &tls.Config{
-        MinVersion: tls.VersionTLS12,
-        ClientAuth: tls.RequireAndVerifyClientCert,
-    }
-    server := http.Server{
-        Addr:      routes.Bill,
-        TLSConfig: cfg,
-    }
-
-    repo := memory.NewRepository(MAX_ENTITIES)
-    repo.InitRepository("./ssl")
-
-    h := handler.NewHandler(repo)
-    http.HandleFunc("/", h.ServeHTTP)
-
-    err := server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
-    if err != nil {
+    // Initialize store
+    s := store.NewStore("data/Bill.db")
+    
+    // Create handler
+    h := handler.NewHandler(s)
+    
+    // Register routes
+    registerRoutes(h)
+    
+    // Start server
+    srv := server.NewServer(routes.Bill, h)
+    log.Printf("Starting Bill service on %s", routes.Bill)
+    if err := srv.ListenAndServeTLS("ssl/server.crt", "ssl/server.key"); err != nil {
         log.Fatal(err)
     }
 }

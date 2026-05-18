@@ -1,6 +1,5 @@
 .PHONY: test test-unit test-integration test-verbose test-coverage coverage-report test-watch help lint test-routes test-route-registration test-http-methods
 .PHONY: build-all build-services build-tools
-.PHONY: build-core build-flowreservation build-operator build-rsps
 .PHONY: build-BRS build-Bill build-DCAP build-DERP build-DR build-EDevice build-File build-MUP build-Messaging build-Notify build-PPY build-SDevice build-TariffProfile build-TimeOfUse build-UPT
 .PHONY: build-crawler build-client build-scaffold-gen build-wadl-extract
 .PHONY: start stop status restart nginx-config
@@ -11,13 +10,29 @@ BIN_DIR := ./bin
 
 # ─── Build Targets ────────────────────────────────────────────────────────────
 
-build-core:
-	@echo "Building core..."
-	@go build -o $(BIN_DIR)/core ./cmd/core/
+build-FlowReservation:
+	@echo "Building FlowReservation..."
+	@go build -o $(BIN_DIR)/FlowReservation ./cmd/FlowReservation/
 
-build-flowreservation:
-	@echo "Building flowreservation..."
-	@go build -o $(BIN_DIR)/flowreservation ./cmd/flowreservation/
+build-DER:
+	@echo "Building DER..."
+	@go build -o $(BIN_DIR)/DER ./cmd/DER/
+
+build-DERP:
+	@echo "Building DERP..."
+	@go build -o $(BIN_DIR)/DERP ./cmd/DERP/
+
+build-MUP:
+	@echo "Building MUP..."
+	@go build -o $(BIN_DIR)/MUP ./cmd/MUP/
+
+build-UPT:
+	@echo "Building UPT..."
+	@go build -o $(BIN_DIR)/UPT ./cmd/UPT/
+
+build-emulator-der:
+	@echo "Building emulator-der..."
+	@go build -o $(BIN_DIR)/emulator-der ./cmd/emulator-der/
 
 build-operator:
 	@echo "Building operator..."
@@ -108,14 +123,14 @@ build-nginx-config-gen:
 	@go build -o $(BIN_DIR)/nginx-config-gen ./cmd/nginx-config-gen/
 
 # Build all microservice servers (excludes tools/clients)
-build-services: build-core build-flowreservation build-operator build-rsps \
+build-services: build-FlowReservation build-operator build-rsps \
 	build-BRS build-Bill build-DCAP build-DERP build-DR build-EDevice \
 	build-File build-MUP build-Messaging build-Notify build-PPY \
-	build-SDevice build-TariffProfile build-TimeOfUse build-UPT
+	build-SDevice build-TariffProfile build-TimeOfUse build-UPT build-DER
 	@echo "✅ All services built in $(BIN_DIR)/"
 
 # Build tools and clients only
-build-tools: build-crawler build-client build-scaffold-gen build-wadl-extract build-nginx-config-gen
+build-tools: build-crawler build-client build-scaffold-gen build-wadl-extract build-nginx-config-gen build-emulator-der
 	@echo "✅ All tools built in $(BIN_DIR)/"
 
 # Cleanup stale microservices
@@ -138,9 +153,9 @@ build-all: build-services build-tools
 PIDS_DIR := $(BIN_DIR)/pids
 LOGS_DIR := $(BIN_DIR)/logs
 
-SERVICES := core flowreservation operator rsps \
+SERVICES := FlowReservation operator rsps \
 	BRS Bill DCAP DERP DR EDevice File MUP Messaging Notify PPY \
-	SDevice TariffProfile TimeOfUse UPT
+	SDevice TariffProfile TimeOfUse UPT DER
 
 # Start all microservices in the background
 start: build-services nginx-config
@@ -270,9 +285,9 @@ test-package:
 
 # Run tests for a specific service
 test-service:
-	@echo "Usage: make test-service SERVICE=core"
+	@echo "Usage: make test-service SERVICE=DCAP"
 	@if [ -z "$(SERVICE)" ]; then \
-		echo "Available services: core, crawler, flowreservation, operator, rsps, client, scaffold-gen, wadl-extract"; \
+		echo "Available services: DCAP, crawler, flowreservation, operator, rsps, client, scaffold-gen, wadl-extract"; \
 		exit 1; \
 	fi
 	@go test -v ./cmd/$(SERVICE)/... ./internal/...
@@ -329,7 +344,7 @@ help:
 	@echo "  make build-all               - Build all services and tools to ./bin/"
 	@echo "  make build-services          - Build all microservice servers to ./bin/"
 	@echo "  make build-tools             - Build crawler, client, scaffold-gen, wadl-extract"
-	@echo "  make build-<name>            - Build a single service (e.g. make build-core)"
+	@echo "  make build-<name>            - Build a single service (e.g. make build-DCAP)"
 	@echo ""
 	@echo "Service Management:"
 	@echo ""

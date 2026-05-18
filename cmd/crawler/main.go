@@ -47,7 +47,7 @@ func validate(body []byte) {
 }
 
 func checkHead(client *http.Client, href string) int {
-	url := "https://" + routes.Core + href
+	url := "https://" + routes.Gateway + href
 	resp, err := client.Head(url)
 	if err != nil {
 		panic(err)
@@ -57,7 +57,7 @@ func checkHead(client *http.Client, href string) int {
 }
 
 func checkGet(client *http.Client, href string) int {
-	url := "https://" + routes.Core + href
+	url := "https://" + routes.Gateway + href
 	resp, err := client.Get(url)
 	if err != nil {
 		panic(err)
@@ -87,7 +87,7 @@ func checkGet(client *http.Client, href string) int {
 }
 
 func checkPut(client *http.Client, href string) int {
-	url := "https://" + routes.Core + href
+	url := "https://" + routes.Gateway + href
 	req, err := http.NewRequest("PUT", url, nil)
 	req.Header.Set("Content-Type", sep.ContentType)
 	resp, err := client.Do(req)
@@ -99,7 +99,7 @@ func checkPut(client *http.Client, href string) int {
 }
 
 func checkPost(client *http.Client, href string) int {
-	url := "https://" + routes.Core + href
+	url := "https://" + routes.Gateway + href
 	resp, err := client.Post(url, sep.ContentType, nil)
 	if err != nil {
 		panic(err)
@@ -109,7 +109,7 @@ func checkPost(client *http.Client, href string) int {
 }
 
 func checkDelete(client *http.Client, href string) int {
-	url := "https://" + routes.Core + href
+	url := "https://" + routes.Gateway + href
 	req, err := http.NewRequest("DELETE", url, nil)
 	resp, err := client.Do(req)
 	if err != nil {

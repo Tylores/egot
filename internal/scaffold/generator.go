@@ -210,7 +210,6 @@ func (g *Generator) Generate() error {
 	dirs := []string{
 		filepath.Join(outputDir, fmt.Sprintf("cmd/%s", serviceName)),
 		filepath.Join(outputDir, fmt.Sprintf("internal/%s/handler", serviceName)),
-		filepath.Join(outputDir, fmt.Sprintf("internal/%s/repository/memory", serviceName)),
 		filepath.Join(outputDir, fmt.Sprintf("internal/%s/server", serviceName)),
 	}
 
@@ -223,8 +222,6 @@ func (g *Generator) Generate() error {
 	for _, fn := range []func(string, string) error{
 		g.generateMain,
 		g.generateHandler,
-		g.generateRepository,
-		g.generateRepositoryError,
 		g.generateServer,
 		g.updateRoutes,
 	} {
