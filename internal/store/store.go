@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 
 	_ "modernc.org/sqlite"
 )
@@ -40,11 +41,24 @@ func (s *Store) Load() error {
 		return fmt.Errorf("store: open: %w", err)
 	}
 
-	// Enable WAL mode for better concurrency
-	if _, err := db.Exec("PRAGMA journal_mode=WAL;"); err != nil {
-		db.Close()
-		return fmt.Errorf("store: wal mode: %w", err)
+	// Enable WAL mode and other performance pragmas
+	pragmas := []string{
+		"PRAGMA journal_mode=WAL;",
+		"PRAGMA synchronous=NORMAL;",
+		"PRAGMA cache_size=-64000;", // 64MB cache
+		"PRAGMA busy_timeout=5000;",
 	}
+	for _, p := range pragmas {
+		if _, err := db.Exec(p); err != nil {
+			db.Close()
+			return fmt.Errorf("store: pragma %s: %w", p, err)
+		}
+	}
+
+	// Configure connection pooling
+	db.SetMaxOpenConns(25)
+	db.SetMaxIdleConns(5)
+	db.SetConnMaxLifetime(time.Hour)
 
 	schema := `CREATE TABLE IF NOT EXISTS kv (
 		key TEXT PRIMARY KEY,
@@ -115,7 +129,10 @@ func (s *Store) SetWithOwner(key string, val any, ownerID string) {
 		return
 	}
 
-	_, _ = s.db.Exec("INSERT OR REPLACE INTO kv (key, val, owner_id) VALUES (?, ?, ?)", key, buf.Bytes(), ownerID)
+	_, err := s.db.Exec("INSERT OR REPLACE INTO kv (key, val, owner_id) VALUES (?, ?, ?)", key, buf.Bytes(), ownerID)
+	if err != nil {
+		fmt.Printf("store: set error: %v\n", err)
+	}
 }
 
 // GetByOwner returns all values associated with a specific ownerID.

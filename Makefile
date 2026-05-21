@@ -130,7 +130,7 @@ build-services: build-FlowReservation build-operator build-rsps \
 	@echo "✅ All services built in $(BIN_DIR)/"
 
 # Build tools and clients only
-build-tools: build-crawler build-client build-scaffold-gen build-wadl-extract build-nginx-config-gen build-emulator-der
+build-tools: build-client build-scaffold-gen build-wadl-extract build-nginx-config-gen build-emulator-der
 	@echo "✅ All tools built in $(BIN_DIR)/"
 
 # Cleanup stale microservices

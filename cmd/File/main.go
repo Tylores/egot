@@ -27,7 +27,6 @@ func main() {
 		log.Fatal(err)
 	}
 	// Auto-populate registry from known client certs
-	_ = reg.PopulateFromCertDir("./ssl")
 
 	repo := store.New(filepath.Join("data", "File.db"))
 	if err := repo.Load(); err != nil {

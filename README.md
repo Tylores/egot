@@ -54,4 +54,22 @@ import "github.com/Tylores/egot/sep"
 | CI/CD integration | [docs/testing/ci-cd.md](docs/testing/ci-cd.md) |
 | Scaffold generator | [docs/tools/scaffold-gen.md](docs/tools/scaffold-gen.md) |
 | WADL extractor | [cmd/wadl-extract/README.md](cmd/wadl-extract/README.md) |
+| WADL extractor | [cmd/wadl-extract/README.md](cmd/wadl-extract/README.md) |
 | SEP 2 resource paths | [wadl/RESOURCE_URI_PATHS.md](wadl/RESOURCE_URI_PATHS.md) |
+
+## Grid Services & Simulation
+
+### Operator Service
+The `operator` service handles high-level grid coordination:
+- **Scheduling**: Uses a Greedy Algorithm to match `FlowReservationRequests` with grid needs.
+- **Settlement**: Compares scheduled DER performance against reported telemetry.
+
+### OpenDSS Simulation
+The platform includes a closed-loop simulation environment using OpenDSS:
+- `scripts/egot_sim.py`: Advanced simulation script supporting DER-to-node mapping.
+- `model/IEEE13Nodeckt.dss`: Standard distribution feeder model for validation.
+
+To run a simulation:
+```shell
+python3 scripts/egot_sim.py
+```

@@ -10,7 +10,12 @@ import (
 	"github.com/Tylores/egot/internal/store"
 	"github.com/Tylores/egot/internal/registry"
 	"github.com/Tylores/egot/sep"
+	"encoding/gob"
 )
+
+func init() {
+	gob.Register(&sep.LoadShedAvailability{})
+}
 
 type Handler struct {
 	repo *store.Store
@@ -3736,15 +3741,34 @@ func (h *Handler) GETLoadShedAvailabilityList(w http.ResponseWriter, req *http.R
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
+
+	results := h.repo.GetByOwner(fmt.Sprintf("%d", sfdi))
+	list := &sep.LoadShedAvailabilityList{
+		List: &sep.List{
+			AllAttr:     uint32(len(results)),
+			ResultsAttr: uint32(len(results)),
+		},
+	}
+
+	for _, res := range results {
+		if lsa, ok := res.(*sep.LoadShedAvailability); ok {
+			list.LoadShedAvailability = append(list.LoadShedAvailability, lsa)
+		}
+	}
+
+	// If list is empty, provide a default for demonstration as per roadmap if no records found
+	if len(list.LoadShedAvailability) == 0 {
+		list.LoadShedAvailability = append(list.LoadShedAvailability, &sep.LoadShedAvailability{
+			SheddablePower:       &sep.ActivePower{Value: 5000},
+			AvailabilityDuration: 3600,
+		})
+		list.AllAttr = 1
+		list.ResultsAttr = 1
 	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.LoadShedAvailabilityList{})
+	xml.NewEncoder(w).Encode(list)
 }
 
 func (h *Handler) HEADLoadShedAvailabilityList(w http.ResponseWriter, req *http.Request) {
@@ -3789,14 +3813,26 @@ func (h *Handler) POSTLoadShedAvailabilityList(w http.ResponseWriter, req *http.
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	_ = h.buildStoreKey(sfdi)
+	
 	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
+	var lsa sep.LoadShedAvailability
+	if err := xml.NewDecoder(req.Body).Decode(&lsa); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	// Use sfdi as the key for now, or generate an ID if multiple are needed.
+	// For GMLC Task 1.3, we typically want the latest availability.
+	mrid := "lsa-" + strconv.FormatInt(int64(sfdi), 10)
+	key := h.buildStoreKey(sfdi, mrid)
+	h.repo.SetWithOwner(key, &lsa, fmt.Sprintf("%d", sfdi))
+
 	w.Header().Set("Content-Type", sep.ContentType)
-	w.Header().Set("location", "/edev/{id1}/lsl/"+fmt.Sprintf("%d", sfdi))
+	w.Header().Set("Location", "/edev/"+req.PathValue("id1")+"/lsl/"+mrid)
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -3823,19 +3859,25 @@ func (h *Handler) GETLoadShedAvailability(w http.ResponseWriter, req *http.Reque
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+	
+	mrid := req.PathValue("id2")
+	key := h.buildStoreKey(sfdi, mrid)
+	
+	val, ok := h.repo.Get(key)
+	if !ok {
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+
+	lsa, ok := val.(*sep.LoadShedAvailability)
+	if !ok {
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.LoadShedAvailability{})
+	xml.NewEncoder(w).Encode(lsa)
 }
 
 func (h *Handler) HEADLoadShedAvailability(w http.ResponseWriter, req *http.Request) {

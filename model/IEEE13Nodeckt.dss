@@ -1,0 +1,20 @@
+Clear
+
+New Circuit.IEEE13Node
+~ basekv=115 pu=1.0 phases=3 bus1=SourceBus
+~ Angle=30
+~ MVAsc3=20000 MVAsc1=21000
+
+// Substation Transformer
+New Transformer.Sub Bus1=SourceBus Bus2=650 Phases=3 Conn=Delta-Wye kVA=5000 kVAs=[5000, 5000] kVs=[115, 4.16] %loadloss=0.5 %res=0.1
+
+// Lines
+New Line.650632 Phases=3 Bus1=650 Bus2=632 Length=2000 units=ft
+New Line.632671 Phases=3 Bus1=632 Bus2=671 Length=2000 units=ft
+
+// Loads
+New Load.L1 Bus1=671.1.2.3 Phases=3 Conn=Wye Model=1 kV=4.16 kW=1000 kvar=500
+
+Set VoltageBases=[115, 4.16, 0.48, 0.24]
+CalcVoltageBases
+Solve

@@ -10,7 +10,13 @@ import (
 	"github.com/Tylores/egot/internal/store"
 	"github.com/Tylores/egot/internal/registry"
 	"github.com/Tylores/egot/sep"
+	"encoding/gob"
+	"time"
 )
+
+func init() {
+	gob.Register(&sep.DERCurve{})
+}
 
 type Handler struct {
 	repo *store.Store
@@ -572,15 +578,24 @@ func (h *Handler) GETDERCurveList(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
+
+	results := h.repo.GetByOwner(fmt.Sprintf("%d", sfdi))
+	list := &sep.DERCurveList{
+		List: &sep.List{
+			AllAttr:     uint32(len(results)),
+			ResultsAttr: uint32(len(results)),
+		},
+	}
+
+	for _, res := range results {
+		if curve, ok := res.(*sep.DERCurve); ok {
+			list.DERCurve = append(list.DERCurve, curve)
+		}
 	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.DERCurveList{})
+	xml.NewEncoder(w).Encode(list)
 }
 
 func (h *Handler) HEADDERCurveList(w http.ResponseWriter, req *http.Request) {
@@ -625,14 +640,46 @@ func (h *Handler) POSTDERCurveList(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+
+	var curve sep.DERCurve
+	if err := xml.NewDecoder(req.Body).Decode(&curve); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
+	if curve.CurveType == nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "CurveType is required")
+		return
+	}
+
+	cType := *curve.CurveType
+	// 0: Frequency-Watt, 11: Volt-Var
+	if cType == 0 || cType == 11 {
+		if len(curve.CurveData) < 2 {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintf(w, "CurveData must contain at least 2 points for interpolation")
+			return
+		}
+	}
+
+	if curve.IdentifiedObject == nil {
+		curve.IdentifiedObject = &sep.IdentifiedObject{}
+	}
+
+	mrid := "curve-" + strconv.FormatInt(int64(sfdi), 10) + "-" + strconv.FormatInt(time.Now().Unix(), 10)
+	if curve.MRID != nil && curve.MRID.HexBinary128 != nil {
+		mrid = string(*curve.MRID.HexBinary128)
+	} else {
+		m := mrid
+		curve.MRID = &sep.MRIDType{HexBinary128: &m}
+	}
+
+	key := h.buildStoreKey(sfdi, mrid)
+	h.repo.SetWithOwner(key, &curve, fmt.Sprintf("%d", sfdi))
+
 	w.Header().Set("Content-Type", sep.ContentType)
-	w.Header().Set("location", "/derp/{id1}/dc/"+fmt.Sprintf("%d", sfdi))
+	w.Header().Set("Location", "/derp/"+req.PathValue("id1")+"/dc/"+mrid)
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -659,19 +706,25 @@ func (h *Handler) GETDERCurve(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+
+	mrid := req.PathValue("id2")
+	key := h.buildStoreKey(sfdi, mrid)
+
+	val, ok := h.repo.Get(key)
+	if !ok {
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+
+	curve, ok := val.(*sep.DERCurve)
+	if !ok {
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.DERCurve{})
+	xml.NewEncoder(w).Encode(curve)
 }
 
 func (h *Handler) HEADDERCurve(w http.ResponseWriter, req *http.Request) {

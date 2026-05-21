@@ -6,11 +6,18 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/Tylores/egot/internal/store"
 	"github.com/Tylores/egot/internal/registry"
 	"github.com/Tylores/egot/sep"
+	"encoding/gob"
 )
+
+func init() {
+	gob.Register(&sep.EndDeviceControl{})
+	gob.Register(&sep.DemandResponseProgram{})
+}
 
 type Handler struct {
 	repo *store.Store
@@ -63,11 +70,22 @@ func (h *Handler) GETDemandResponseProgramList(w http.ResponseWriter, req *http.
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	_ = h.buildStoreKey(sfdi)
+
+	results := h.repo.GetByOwner(fmt.Sprintf("%d", sfdi))
+	list := &sep.DemandResponseProgramList{
+		SubscribableList: &sep.SubscribableList{},
+	}
+	for _, res := range results {
+		if drp, ok := res.(*sep.DemandResponseProgram); ok {
+			list.DemandResponseProgram = append(list.DemandResponseProgram, drp)
+		}
+	}
+	list.SubscribableList.AllAttr = uint32(len(list.DemandResponseProgram))
+	list.SubscribableList.ResultsAttr = uint32(len(list.DemandResponseProgram))
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.DemandResponseProgramList{})
+	xml.NewEncoder(w).Encode(list)
 }
 
 func (h *Handler) HEADDemandResponseProgramList(w http.ResponseWriter, req *http.Request) {
@@ -108,10 +126,29 @@ func (h *Handler) POSTDemandResponseProgramList(w http.ResponseWriter, req *http
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	_ = h.buildStoreKey(sfdi)
+
+	var drp sep.DemandResponseProgram
+	if err := xml.NewDecoder(req.Body).Decode(&drp); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	mrid := "drp-" + strconv.FormatInt(int64(sfdi), 10)
+	if drp.IdentifiedObject != nil && drp.MRID != nil && drp.MRID.HexBinary128 != nil {
+		mrid = string(*drp.MRID.HexBinary128)
+	} else {
+		if drp.IdentifiedObject == nil {
+			drp.IdentifiedObject = &sep.IdentifiedObject{}
+		}
+		m := mrid
+		drp.MRID = &sep.MRIDType{HexBinary128: &m}
+	}
+
+	key := h.buildStoreKey(sfdi, mrid)
+	h.repo.SetWithOwner(key, &drp, fmt.Sprintf("%d", sfdi))
 
 	w.Header().Set("Content-Type", sep.ContentType)
-	w.Header().Set("location", "/dr/"+fmt.Sprintf("%d", sfdi))
+	w.Header().Set("Location", "/dr/"+mrid)
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -138,15 +175,23 @@ func (h *Handler) GETDemandResponseProgram(w http.ResponseWriter, req *http.Requ
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+
+	mrid := req.PathValue("id1")
+	key := h.buildStoreKey(sfdi, mrid)
+	val, ok := h.repo.Get(key)
+	if !ok {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	drp, ok := val.(*sep.DemandResponseProgram)
+	if !ok {
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.DemandResponseProgram{})
+	xml.NewEncoder(w).Encode(drp)
 }
 
 func (h *Handler) HEADDemandResponseProgram(w http.ResponseWriter, req *http.Request) {
@@ -300,15 +345,22 @@ func (h *Handler) GETEndDeviceControlList(w http.ResponseWriter, req *http.Reque
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
+
+	results := h.repo.GetByOwner(fmt.Sprintf("%d", sfdi))
+	list := &sep.EndDeviceControlList{
+		SubscribableList: &sep.SubscribableList{},
 	}
+	for _, res := range results {
+		if edc, ok := res.(*sep.EndDeviceControl); ok {
+			list.EndDeviceControl = append(list.EndDeviceControl, edc)
+		}
+	}
+	list.SubscribableList.AllAttr = uint32(len(list.EndDeviceControl))
+	list.SubscribableList.ResultsAttr = uint32(len(list.EndDeviceControl))
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.EndDeviceControlList{})
+	xml.NewEncoder(w).Encode(list)
 }
 
 func (h *Handler) HEADEndDeviceControlList(w http.ResponseWriter, req *http.Request) {
@@ -353,14 +405,29 @@ func (h *Handler) POSTEndDeviceControlList(w http.ResponseWriter, req *http.Requ
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+
+	var edc sep.EndDeviceControl
+	if err := xml.NewDecoder(req.Body).Decode(&edc); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
+	mrid := "edc-" + strconv.FormatInt(int64(sfdi), 10) + "-" + strconv.FormatInt(time.Now().Unix(), 10)
+	if edc.RespondableSubscribableIdentifiedObject == nil {
+		edc.RespondableSubscribableIdentifiedObject = &sep.RespondableSubscribableIdentifiedObject{}
+	}
+	if edc.MRID != nil && edc.MRID.HexBinary128 != nil {
+		mrid = string(*edc.MRID.HexBinary128)
+	} else {
+		m := mrid
+		edc.MRID = &sep.MRIDType{HexBinary128: &m}
+	}
+
+	key := h.buildStoreKey(sfdi, mrid)
+	h.repo.SetWithOwner(key, &edc, fmt.Sprintf("%d", sfdi))
+
 	w.Header().Set("Content-Type", sep.ContentType)
-	w.Header().Set("location", "/dr/{id1}/edc/"+fmt.Sprintf("%d", sfdi))
+	w.Header().Set("Location", "/dr/"+req.PathValue("id1")+"/edc/"+mrid)
 	w.WriteHeader(http.StatusCreated)
 }
 

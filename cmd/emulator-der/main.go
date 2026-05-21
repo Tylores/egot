@@ -50,25 +50,40 @@ type State struct {
 }
 
 func main() {
-	c := Config{}
+	baseCfg := Config{}
 	var derType string
+	var count int
 	flag.StringVar(&derType, "type", "load", "DER type: load, ess, pv")
-	flag.StringVar(&c.Name, "name", "emulator-0001", "Emulator name")
-	flag.StringVar(&c.Gateway, "gateway", "localhost:8443", "Nginx gateway address")
-	flag.StringVar(&c.SSLDir, "ssl", "./ssl", "SSL directory")
-	flag.StringVar(&c.CertName, "cert", "client", "Certificate name (without .crt/.key)")
-	flag.DurationVar(&c.Interval, "interval", 15*time.Second, "Simulation interval")
+	flag.StringVar(&baseCfg.Name, "name", "emulator", "Base emulator name")
+	flag.StringVar(&baseCfg.Gateway, "gateway", "localhost:8443", "Nginx gateway address")
+	flag.StringVar(&baseCfg.SSLDir, "ssl", "./ssl", "SSL directory")
+	flag.DurationVar(&baseCfg.Interval, "interval", 15*time.Second, "Simulation interval")
+	flag.IntVar(&count, "count", 1, "Number of virtual devices to emulate")
 	flag.Parse()
 
-	c.Type = DERType(derType)
+	baseCfg.Type = DERType(derType)
 
-	e, err := NewEmulator(c)
-	if err != nil {
-		log.Fatalf("Failed to create emulator: %v", err)
+	for i := 1; i <= count; i++ {
+		go func(id int) {
+			cfg := baseCfg
+			cfg.Name = fmt.Sprintf("%s-%04d", baseCfg.Name, id)
+			cfg.CertName = fmt.Sprintf("client-%04d", id)
+
+			e, err := NewEmulator(cfg)
+			if err != nil {
+				log.Printf("[%s] Failed to create emulator: %v", cfg.Name, err)
+				return
+			}
+
+			log.Printf("[%s] Starting %s emulator", cfg.Name, cfg.Type)
+			e.Run()
+		}(i)
+		
+		// Stagger startup to avoid thundering herd on registration
+		time.Sleep(10 * time.Millisecond)
 	}
 
-	log.Printf("Starting %s emulator: %s", c.Type, c.Name)
-	e.Run()
+	select {}
 }
 
 func NewEmulator(c Config) (*Emulator, error) {
@@ -277,11 +292,34 @@ func (e *Emulator) applyControl(c *sep.DERControl) {
 	}
 
 	// Simple example: follow OpModFixedW (signed percent control)
-	if c.DERControlBase.OpModFixedW != nil {
-		targetPct := float64(c.DERControlBase.OpModFixedW.Value) / 10000.0 // Value is usually in hundredths of a percent
+	if c.DERControlBase.OpModFixedW != nil && c.DERControlBase.OpModFixedW.SignedPerCent != nil {
+		targetPct := float64(*c.DERControlBase.OpModFixedW.SignedPerCent) / 10000.0 // Value is in hundredths of a percent
 		// Max power 5kW
 		e.state.Power = targetPct * 5000
 		log.Printf("[%s] Applied control: Power target %.2f%% (%.2fW)", 
 			e.cfg.Name, targetPct*100, e.state.Power)
+	}
+
+	if c.DERControlBase.OpModFreqWatt != nil && c.DERControlBase.OpModFreqWatt.HrefAttr != "" {
+		e.fetchCurve(c.DERControlBase.OpModFreqWatt.HrefAttr, "Frequency-Watt")
+	}
+
+	if c.DERControlBase.OpModVoltVar != nil && c.DERControlBase.OpModVoltVar.HrefAttr != "" {
+		e.fetchCurve(c.DERControlBase.OpModVoltVar.HrefAttr, "Volt-Var")
+	}
+}
+
+func (e *Emulator) fetchCurve(href, curveName string) {
+	resp, err := e.client.Get("https://" + e.cfg.Gateway + href)
+	if err != nil {
+		log.Printf("[%s] Failed to fetch %s curve: %v", e.cfg.Name, curveName, err)
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusOK {
+		log.Printf("[%s] Successfully received and stored %s curve from %s", e.cfg.Name, curveName, href)
+	} else {
+		log.Printf("[%s] Failed to fetch %s curve from %s, status: %d", e.cfg.Name, curveName, href, resp.StatusCode)
 	}
 }

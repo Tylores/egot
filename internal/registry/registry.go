@@ -38,6 +38,19 @@ func (r *Registry) Load() error {
 		return fmt.Errorf("registry: open: %w", err)
 	}
 
+	// Enable performance pragmas
+	pragmas := []string{
+		"PRAGMA journal_mode=WAL;",
+		"PRAGMA synchronous=NORMAL;",
+		"PRAGMA busy_timeout=5000;",
+	}
+	for _, p := range pragmas {
+		if _, err := db.Exec(p); err != nil {
+			db.Close()
+			return fmt.Errorf("registry: pragma %s: %w", p, err)
+		}
+	}
+
 	schema := `CREATE TABLE IF NOT EXISTS authorized_devices (
 		lfdi TEXT PRIMARY KEY,
 		sfdi TEXT,

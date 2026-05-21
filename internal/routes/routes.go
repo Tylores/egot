@@ -24,6 +24,7 @@ const (
 	UPT             = "localhost:8024"
 	DER             = "localhost:8026"
 	FlowReservation = "localhost:8027"
+	Operator        = "localhost:8028"
 	Rsps            = "localhost:8041"
 )
 
@@ -194,6 +195,7 @@ var serviceMap = map[string]string{
 	"/rsps/{id1}":                  Rsps,
 	"/rsps/{id1}/rsp":              Rsps,
 	"/rsps/{id1}/rsp/{id2}":        Rsps,
+	"/operator":                    Operator,
 }
 
 // LinkFor returns the full https URL template for a registered path.
