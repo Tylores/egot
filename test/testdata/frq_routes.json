@@ -6,83 +6,83 @@
   "routes": [
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/frp"
+      "Path": "/frp"
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/frp/{id2}"
+      "Path": "/frp/{id1}"
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/frq"
+      "Path": "/frq"
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/frq/{id2}"
+      "Path": "/frq/{id1}"
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/frp"
+      "Path": "/frp"
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/frp/{id2}"
+      "Path": "/frp/{id1}"
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/frq"
+      "Path": "/frq"
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/frq/{id2}"
+      "Path": "/frq/{id1}"
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/frp"
+      "Path": "/frp"
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/frp/{id2}"
+      "Path": "/frp/{id1}"
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/frq"
+      "Path": "/frq"
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/frq/{id2}"
+      "Path": "/frq/{id1}"
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/frp"
+      "Path": "/frp"
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/frp/{id2}"
+      "Path": "/frp/{id1}"
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/frq"
+      "Path": "/frq"
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/frq/{id2}"
+      "Path": "/frq/{id1}"
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/frp"
+      "Path": "/frp"
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/frp/{id2}"
+      "Path": "/frp/{id1}"
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/frq"
+      "Path": "/frq"
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/frq/{id2}"
+      "Path": "/frq/{id1}"
     }
   ]
 }

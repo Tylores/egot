@@ -27,10 +27,10 @@ sequenceDiagram
     EDev-->>GW: 201 Created
     GW-->>Client: 201 Created
 
-    Client->>GW: POST /edev/123/der (Register DER capabilities)
-    GW->>DER: Forward POST /edev/123/der
-    DER-->>GW: 201 Created (Location: /edev/123/der/1)
-    GW-->>Client: 201 Created (Location: /edev/123/der/1)
+    Client->>GW: POST /der (Register DER capabilities)
+    GW->>DER: Forward POST /der
+    DER-->>GW: 201 Created (Location: /der/1)
+    GW-->>Client: 201 Created (Location: /der/1)
 ```
 
 ---
@@ -46,14 +46,14 @@ sequenceDiagram
     participant GW as "Nginx API Gateway"
     participant FR as "FlowReservation Service (:8027)"
 
-    Client->>GW: POST /edev/123/frq (Create FlowReservationRequest)
-    GW->>FR: Forward POST /edev/123/frq (Contains 5-minute duration request)
+    Client->>GW: POST /frq (Create FlowReservationRequest)
+    GW->>FR: Forward POST /frq (Contains 5-minute duration request)
     Note over FR: FR checks real-time EIM window limits
-    FR-->>GW: 201 Created (Location: /edev/123/frp/15)
-    GW-->>Client: 201 Created (Location: /edev/123/frp/15)
+    FR-->>GW: 201 Created (Location: /frp/15)
+    GW-->>Client: 201 Created (Location: /frp/15)
 
-    Client->>GW: GET /edev/123/frp/15 (Fetch approved FlowReservationResponse)
-    GW->>FR: Forward GET /edev/123/frp/15
+    Client->>GW: GET /frp/15 (Fetch approved FlowReservationResponse)
+    GW->>FR: Forward GET /frp/15
     FR-->>GW: 200 OK (FlowReservationResponse with status code [Accepted])
     GW-->>Client: 200 OK (FlowReservationResponse)
 ```
@@ -71,8 +71,8 @@ sequenceDiagram
     participant GW as "Nginx API Gateway"
     participant DER as "DER Service (:8026)"
 
-    Client->>GW: GET /edev/123/der/1/cdc (Fetch Current DER Controls)
-    GW->>DER: Forward GET /edev/123/der/1/cdc
+    Client->>GW: GET /der/1/cdc (Fetch Current DER Controls)
+    GW->>DER: Forward GET /der/1/cdc
     DER-->>GW: 200 OK (CurrentDERControls with active regulation signal)
     GW-->>Client: 200 OK (CurrentDERControls)
 
@@ -93,8 +93,8 @@ sequenceDiagram
     participant GW as "Nginx API Gateway"
     participant DER as "DER Service (:8026)"
 
-    Client->>GW: POST /edev/123/der/1/ders (Update DER Status)
-    GW->>DER: Forward POST /edev/123/der/1/ders (Sends current power status)
+    Client->>GW: POST /der/1/ders (Update DER Status)
+    GW->>DER: Forward POST /der/1/ders (Sends current power status)
     DER-->>GW: 201 Created (Stores status telemetry)
     GW-->>Client: 201 Created
 ```

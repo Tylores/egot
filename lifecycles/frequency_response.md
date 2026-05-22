@@ -27,8 +27,8 @@ sequenceDiagram
     EDev-->>GW: 201 Created
     GW-->>Client: 201 Created
 
-    Client->>GW: GET /edev/123/der (Discover associated DER instances)
-    GW->>DER: Forward GET /edev/123/der
+    Client->>GW: GET /der (Discover associated DER instances)
+    GW->>DER: Forward GET /der
     DER-->>GW: 200 OK (DERList containing DER MRID)
     GW-->>Client: 200 OK (DERList)
 
@@ -85,8 +85,8 @@ sequenceDiagram
     participant GW as "Nginx API Gateway"
     participant DER as "DER Service (:8026)"
 
-    Client->>GW: GET /edev/123/der/1/cdc (Fetch Current DER Controls)
-    GW->>DER: Forward GET /edev/123/der/1/cdc
+    Client->>GW: GET /der/1/cdc (Fetch Current DER Controls)
+    GW->>DER: Forward GET /der/1/cdc
     DER-->>GW: 200 OK (CurrentDERControls detailing active frequency control)
     GW-->>Client: 200 OK (CurrentDERControls)
 
@@ -108,13 +108,13 @@ sequenceDiagram
     participant GW as "Nginx API Gateway"
     participant DER as "DER Service (:8026)"
 
-    Client->>GW: POST /edev/123/der/1/ders (Update DER Status)
-    GW->>DER: Forward POST /edev/123/der/1/ders
+    Client->>GW: POST /der/1/ders (Update DER Status)
+    GW->>DER: Forward POST /der/1/ders
     DER-->>GW: 201 Created (Stores status / connection telemetry)
     GW-->>Client: 201 Created
 
-    Client->>GW: POST /edev/123/der/1/dera (Update DER Availability)
-    GW->>DER: Forward POST /edev/123/der/1/dera
+    Client->>GW: POST /der/1/dera (Update DER Availability)
+    GW->>DER: Forward POST /der/1/dera
     DER-->>GW: 201 Created (Stores available capacity telemetry)
     GW-->>Client: 201 Created
 ```

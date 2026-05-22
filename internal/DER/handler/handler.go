@@ -812,10 +812,6 @@ func (h *Handler) GETDERList(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -834,10 +830,6 @@ func (h *Handler) HEADDERList(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -865,13 +857,9 @@ func (h *Handler) POSTDERList(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
-	w.Header().Set("location", "/edev/{id1}/der/"+fmt.Sprintf("%d", sfdi))
+	w.Header().Set("Location", "/der/"+fmt.Sprintf("%d", sfdi))
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -903,10 +891,6 @@ func (h *Handler) GETDER(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -929,10 +913,6 @@ func (h *Handler) HEADDER(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -951,10 +931,6 @@ func (h *Handler) PUTDER(w http.ResponseWriter, req *http.Request) {
 	}
 	_ = h.buildStoreKey(sfdi)
 	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -989,10 +965,6 @@ func (h *Handler) DELETEDER(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1017,10 +989,6 @@ func (h *Handler) GETAssociatedUsagePoint(w http.ResponseWriter, req *http.Reque
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1040,10 +1008,6 @@ func (h *Handler) HEADAssociatedUsagePoint(w http.ResponseWriter, req *http.Requ
 	}
 	_ = h.buildStoreKey(sfdi)
 	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -1088,10 +1052,6 @@ func (h *Handler) DELETEAssociatedUsagePoint(w http.ResponseWriter, req *http.Re
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1116,10 +1076,6 @@ func (h *Handler) GETAssociatedDERProgramList(w http.ResponseWriter, req *http.R
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1139,10 +1095,6 @@ func (h *Handler) HEADAssociatedDERProgramList(w http.ResponseWriter, req *http.
 	}
 	_ = h.buildStoreKey(sfdi)
 	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -1177,13 +1129,9 @@ func (h *Handler) POSTAssociatedDERProgramList(w http.ResponseWriter, req *http.
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
-	w.Header().Set("location", "/edev/{id1}/der/{id2}/derp/"+fmt.Sprintf("%d", sfdi))
+	w.Header().Set("Location", "/der/{id1}/derp/"+fmt.Sprintf("%d", sfdi))
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -1215,10 +1163,6 @@ func (h *Handler) GETCurrentDERControls(w http.ResponseWriter, req *http.Request
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1241,10 +1185,6 @@ func (h *Handler) HEADCurrentDERControls(w http.ResponseWriter, req *http.Reques
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1263,10 +1203,6 @@ func (h *Handler) PUTCurrentDERControls(w http.ResponseWriter, req *http.Request
 	}
 	_ = h.buildStoreKey(sfdi)
 	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -1313,10 +1249,6 @@ func (h *Handler) GETCurrentDERProgram(w http.ResponseWriter, req *http.Request)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1336,10 +1268,6 @@ func (h *Handler) HEADCurrentDERProgram(w http.ResponseWriter, req *http.Request
 	}
 	_ = h.buildStoreKey(sfdi)
 	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -1384,10 +1312,6 @@ func (h *Handler) DELETECurrentDERProgram(w http.ResponseWriter, req *http.Reque
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1409,10 +1333,6 @@ func (h *Handler) GETDERSettings(w http.ResponseWriter, req *http.Request) {
 	}
 	_ = h.buildStoreKey(sfdi)
 	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -1438,10 +1358,6 @@ func (h *Handler) HEADDERSettings(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1460,10 +1376,6 @@ func (h *Handler) PUTDERSettings(w http.ResponseWriter, req *http.Request) {
 	}
 	_ = h.buildStoreKey(sfdi)
 	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -1510,10 +1422,6 @@ func (h *Handler) GETDERStatus(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1536,10 +1444,6 @@ func (h *Handler) HEADDERStatus(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1558,10 +1462,6 @@ func (h *Handler) PUTDERStatus(w http.ResponseWriter, req *http.Request) {
 	}
 	_ = h.buildStoreKey(sfdi)
 	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -1608,10 +1508,6 @@ func (h *Handler) GETDERAvailability(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1634,10 +1530,6 @@ func (h *Handler) HEADDERAvailability(w http.ResponseWriter, req *http.Request) 
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1656,10 +1548,6 @@ func (h *Handler) PUTDERAvailability(w http.ResponseWriter, req *http.Request) {
 	}
 	_ = h.buildStoreKey(sfdi)
 	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -1706,10 +1594,6 @@ func (h *Handler) GETDERCapability(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1732,10 +1616,6 @@ func (h *Handler) HEADDERCapability(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1754,10 +1634,6 @@ func (h *Handler) PUTDERCapability(w http.ResponseWriter, req *http.Request) {
 	}
 	_ = h.buildStoreKey(sfdi)
 	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -1804,10 +1680,6 @@ func (h *Handler) GETDERComponentList(w http.ResponseWriter, req *http.Request) 
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1827,10 +1699,6 @@ func (h *Handler) HEADDERComponentList(w http.ResponseWriter, req *http.Request)
 	}
 	_ = h.buildStoreKey(sfdi)
 	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -1865,13 +1733,9 @@ func (h *Handler) POSTDERComponentList(w http.ResponseWriter, req *http.Request)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
-	w.Header().Set("location", "/edev/{id1}/der/{id2}/dercom/"+fmt.Sprintf("%d", sfdi))
+	w.Header().Set("Location", "/der/{id1}/dercom/"+fmt.Sprintf("%d", sfdi))
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -1907,10 +1771,6 @@ func (h *Handler) GETDERComponent(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id3")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1937,10 +1797,6 @@ func (h *Handler) HEADDERComponent(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id3")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -1963,10 +1819,6 @@ func (h *Handler) PUTDERComponent(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id3")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -2002,10 +1854,6 @@ func (h *Handler) DELETEDERComponent(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id3")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

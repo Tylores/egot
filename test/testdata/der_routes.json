@@ -38,51 +38,51 @@
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/der"
+      "Path": "/der"
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}"
+      "Path": "/der/{id1}"
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/cdc"
+      "Path": "/der/{id1}/cdc"
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/cdp"
+      "Path": "/der/{id1}/cdp"
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/dera"
+      "Path": "/der/{id1}/dera"
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/dercap"
+      "Path": "/der/{id1}/dercap"
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/dercom"
+      "Path": "/der/{id1}/dercom"
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/dercom/{id3}"
+      "Path": "/der/{id1}/dercom/{id2}"
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/derg"
+      "Path": "/der/{id1}/derg"
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/derp"
+      "Path": "/der/{id1}/derp"
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/ders"
+      "Path": "/der/{id1}/ders"
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/upt"
+      "Path": "/der/{id1}/upt"
     },
     {
       "Method": "GET",
@@ -118,51 +118,51 @@
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/der"
+      "Path": "/der"
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}"
+      "Path": "/der/{id1}"
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/cdc"
+      "Path": "/der/{id1}/cdc"
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/cdp"
+      "Path": "/der/{id1}/cdp"
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/dera"
+      "Path": "/der/{id1}/dera"
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/dercap"
+      "Path": "/der/{id1}/dercap"
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/dercom"
+      "Path": "/der/{id1}/dercom"
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/dercom/{id3}"
+      "Path": "/der/{id1}/dercom/{id2}"
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/derg"
+      "Path": "/der/{id1}/derg"
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/derp"
+      "Path": "/der/{id1}/derp"
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/ders"
+      "Path": "/der/{id1}/ders"
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/upt"
+      "Path": "/der/{id1}/upt"
     },
     {
       "Method": "HEAD",
@@ -198,51 +198,51 @@
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/der"
+      "Path": "/der"
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}"
+      "Path": "/der/{id1}"
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/cdc"
+      "Path": "/der/{id1}/cdc"
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/cdp"
+      "Path": "/der/{id1}/cdp"
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/dera"
+      "Path": "/der/{id1}/dera"
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/dercap"
+      "Path": "/der/{id1}/dercap"
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/dercom"
+      "Path": "/der/{id1}/dercom"
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/dercom/{id3}"
+      "Path": "/der/{id1}/dercom/{id2}"
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/derg"
+      "Path": "/der/{id1}/derg"
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/derp"
+      "Path": "/der/{id1}/derp"
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/ders"
+      "Path": "/der/{id1}/ders"
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/upt"
+      "Path": "/der/{id1}/upt"
     },
     {
       "Method": "POST",
@@ -278,51 +278,51 @@
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/der"
+      "Path": "/der"
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}"
+      "Path": "/der/{id1}"
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/cdc"
+      "Path": "/der/{id1}/cdc"
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/cdp"
+      "Path": "/der/{id1}/cdp"
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/dera"
+      "Path": "/der/{id1}/dera"
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/dercap"
+      "Path": "/der/{id1}/dercap"
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/dercom"
+      "Path": "/der/{id1}/dercom"
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/dercom/{id3}"
+      "Path": "/der/{id1}/dercom/{id2}"
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/derg"
+      "Path": "/der/{id1}/derg"
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/derp"
+      "Path": "/der/{id1}/derp"
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/ders"
+      "Path": "/der/{id1}/ders"
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/upt"
+      "Path": "/der/{id1}/upt"
     },
     {
       "Method": "PUT",
@@ -358,51 +358,51 @@
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/der"
+      "Path": "/der"
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}"
+      "Path": "/der/{id1}"
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/cdc"
+      "Path": "/der/{id1}/cdc"
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/cdp"
+      "Path": "/der/{id1}/cdp"
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/dera"
+      "Path": "/der/{id1}/dera"
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/dercap"
+      "Path": "/der/{id1}/dercap"
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/dercom"
+      "Path": "/der/{id1}/dercom"
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/dercom/{id3}"
+      "Path": "/der/{id1}/dercom/{id2}"
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/derg"
+      "Path": "/der/{id1}/derg"
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/derp"
+      "Path": "/der/{id1}/derp"
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/ders"
+      "Path": "/der/{id1}/ders"
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/upt"
+      "Path": "/der/{id1}/upt"
     }
   ]
 }

@@ -27,10 +27,10 @@ sequenceDiagram
     EDev-->>GW: 201 Created
     GW-->>Client: 201 Created
 
-    Client->>GW: POST /edev/123/der (Register DER capabilities)
-    GW->>DER: Forward POST /edev/123/der
-    DER-->>GW: 201 Created (Location: /edev/123/der/1)
-    GW-->>Client: 201 Created (Location: /edev/123/der/1)
+    Client->>GW: POST /der (Register DER capabilities)
+    GW->>DER: Forward POST /der
+    DER-->>GW: 201 Created (Location: /der/1)
+    GW-->>Client: 201 Created (Location: /der/1)
 ```
 
 ---
@@ -46,14 +46,14 @@ sequenceDiagram
     participant GW as "Nginx API Gateway"
     participant FR as "FlowReservation Service (:8027)"
 
-    Client->>GW: POST /edev/123/frq (Create FlowReservationRequest)
-    GW->>FR: Forward POST /edev/123/frq (Contains hourly profile / durations)
+    Client->>GW: POST /frq (Create FlowReservationRequest)
+    GW->>FR: Forward POST /frq (Contains hourly profile / durations)
     Note over FR: FR checks day-ahead window limits & feeder capacities
-    FR-->>GW: 201 Created (Location: /edev/123/frp/10)
-    GW-->>Client: 201 Created (Location: /edev/123/frp/10)
+    FR-->>GW: 201 Created (Location: /frp/10)
+    GW-->>Client: 201 Created (Location: /frp/10)
 
-    Client->>GW: GET /edev/123/frp/10 (Fetch approved FlowReservationResponse)
-    GW->>FR: Forward GET /edev/123/frp/10
+    Client->>GW: GET /frp/10 (Fetch approved FlowReservationResponse)
+    GW->>FR: Forward GET /frp/10
     FR-->>GW: 200 OK (FlowReservationResponse with status code [Accepted])
     GW-->>Client: 200 OK (FlowReservationResponse)
 ```

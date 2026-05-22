@@ -27,10 +27,10 @@ sequenceDiagram
     EDev-->>GW: 201 Created
     GW-->>Client: 201 Created
 
-    Client->>GW: POST /edev/123/der (Register DER capabilities)
-    GW->>DER: Forward POST /edev/123/der
-    DER-->>GW: 201 Created (Location: /edev/123/der/1)
-    GW-->>Client: 201 Created (Location: /edev/123/der/1)
+    Client->>GW: POST /der (Register DER capabilities)
+    GW->>DER: Forward POST /der
+    DER-->>GW: 201 Created (Location: /der/1)
+    GW-->>Client: 201 Created (Location: /der/1)
 ```
 
 ---
@@ -46,14 +46,14 @@ sequenceDiagram
     participant GW as "Nginx API Gateway"
     participant FR as "FlowReservation Service (:8027)"
 
-    Client->>GW: POST /edev/123/frq (Create FlowReservationRequest)
-    GW->>FR: Forward POST /edev/123/frq (Contains requested reserve power & interval)
+    Client->>GW: POST /frq (Create FlowReservationRequest)
+    GW->>FR: Forward POST /frq (Contains requested reserve power & interval)
     Note over FR: FR checks transformer limits & active DR events
-    FR-->>GW: 201 Created (Location: /edev/123/frp/5)
-    GW-->>Client: 201 Created (Location: /edev/123/frp/5)
+    FR-->>GW: 201 Created (Location: /frp/5)
+    GW-->>Client: 201 Created (Location: /frp/5)
 
-    Client->>GW: GET /edev/123/frp/5 (Fetch approved FlowReservationResponse)
-    GW->>FR: Forward GET /edev/123/frp/5
+    Client->>GW: GET /frp/5 (Fetch approved FlowReservationResponse)
+    GW->>FR: Forward GET /frp/5
     FR-->>GW: 200 OK (FlowReservationResponse with status code [Accepted])
     GW-->>Client: 200 OK (FlowReservationResponse)
 ```
@@ -87,8 +87,8 @@ sequenceDiagram
     participant GW as "Nginx API Gateway"
     participant DER as "DER Service (:8026)"
 
-    Client->>GW: POST /edev/123/der/1/dera (Update DER Availability)
-    GW->>DER: Forward POST /edev/123/der/1/dera (Contains active available capacity)
+    Client->>GW: POST /der/1/dera (Update DER Availability)
+    GW->>DER: Forward POST /der/1/dera (Contains active available capacity)
     DER-->>GW: 201 Created (Stores availability telemetry)
     GW-->>Client: 201 Created
 ```

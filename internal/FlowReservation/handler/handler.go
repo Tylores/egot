@@ -100,10 +100,6 @@ func (h *Handler) HEADFlowReservationRequestList(w http.ResponseWriter, req *htt
 		return
 	}
 	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -216,7 +212,7 @@ func (h *Handler) POSTFlowReservationRequestList(w http.ResponseWriter, req *htt
 	h.repo.SetWithOwner(key, &frq, fmt.Sprintf("%d", sfdi))
 
 	w.Header().Set("Content-Type", sep.ContentType)
-	w.Header().Set("Location", "/edev/"+req.PathValue("id1")+"/frq/"+mrid)
+	w.Header().Set("Location", "/frq/"+mrid)
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -244,7 +240,7 @@ func (h *Handler) GETFlowReservationRequest(w http.ResponseWriter, req *http.Req
 		return
 	}
 	
-	mrid := req.PathValue("id2")
+	mrid := req.PathValue("id1")
 	key := h.buildStoreKey(sfdi, mrid)
 	
 	val, ok := h.repo.Get(key)
@@ -276,7 +272,7 @@ func (h *Handler) HEADFlowReservationRequest(w http.ResponseWriter, req *http.Re
 		return
 	}
 	
-	mrid := req.PathValue("id2")
+	mrid := req.PathValue("id1")
 	key := h.buildStoreKey(sfdi, mrid)
 	
 	_, ok := h.repo.Get(key)
@@ -301,14 +297,6 @@ func (h *Handler) PUTFlowReservationRequest(w http.ResponseWriter, req *http.Req
 		return
 	}
 	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -336,7 +324,7 @@ func (h *Handler) DELETEFlowReservationRequest(w http.ResponseWriter, req *http.
 		return
 	}
 	
-	mrid := req.PathValue("id2")
+	mrid := req.PathValue("id1")
 	key := h.buildStoreKey(sfdi, mrid)
 	h.repo.Delete(key)
 
@@ -357,10 +345,6 @@ func (h *Handler) GETFlowReservationResponseList(w http.ResponseWriter, req *htt
 		return
 	}
 	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -379,10 +363,6 @@ func (h *Handler) HEADFlowReservationResponseList(w http.ResponseWriter, req *ht
 		return
 	}
 	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -410,13 +390,9 @@ func (h *Handler) POSTFlowReservationResponseList(w http.ResponseWriter, req *ht
 		return
 	}
 	_ = h.buildStoreKey(sfdi)
-	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
-	w.Header().Set("location", "/edev/{id1}/frp/"+fmt.Sprintf("%d", sfdi))
+	w.Header().Set("Location", "/frp/"+fmt.Sprintf("%d", sfdi))
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -448,10 +424,6 @@ func (h *Handler) GETFlowReservationResponse(w http.ResponseWriter, req *http.Re
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
@@ -471,10 +443,6 @@ func (h *Handler) HEADFlowReservationResponse(w http.ResponseWriter, req *http.R
 	}
 	_ = h.buildStoreKey(sfdi)
 	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -516,10 +484,6 @@ func (h *Handler) DELETEFlowReservationResponse(w http.ResponseWriter, req *http
 	}
 	_ = h.buildStoreKey(sfdi)
 	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

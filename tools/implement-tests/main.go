@@ -267,6 +267,9 @@ func getResourceNameFromPath(path string) string {
 	if strings.HasSuffix(path, "/upt") && strings.Contains(path, "/der/") {
 		return "AssociatedUsagePoint"
 	}
+	if strings.HasSuffix(path, "/derp") && strings.Contains(path, "/der/") {
+		return "AssociatedDERProgramList"
+	}
 
 	// Specialized mapping for top-level paths that don't follow the pattern
 	switch path {
