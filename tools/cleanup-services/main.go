@@ -14,7 +14,6 @@ var PRODUCTION_SERVICES = map[string]bool{
 	"BRS":             true,
 	"Bill":            true,
 	"DCAP":            true,
-	"DERP":            true,
 	"DR":              true,
 	"EDevice":         true,
 	"File":            true,

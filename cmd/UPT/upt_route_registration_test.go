@@ -48,6 +48,7 @@ func TestUptRouteRegistration(t *testing.T) {
 	}
 
 	helper := routing.NewTestHelper(mux)
+	helper.RegisterExpectedRoutes(expectations)
 	all, missing := helper.AssertAllRoutesExist(expectations)
 	if !all {
 		t.Errorf("Missing %d routes:", len(missing))

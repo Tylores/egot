@@ -19,7 +19,6 @@ declare -A SERVICE_PORTS=(
   [BRS]=8010
   [Bill]=8011
   [DCAP]=8012
-  [DERP]=8013
   [DR]=8014
   [EDevice]=8015
   [File]=8016

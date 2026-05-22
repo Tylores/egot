@@ -342,3 +342,190 @@ func (h *Handler) DELETEFlowReservationRequest(w http.ResponseWriter, req *http.
 
 	w.WriteHeader(http.StatusNoContent)
 }
+
+// FlowReservationResponseList resource handlers
+
+func (h *Handler) GETFlowReservationResponseList(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.FlowReservationResponseList{})
+}
+
+func (h *Handler) HEADFlowReservationResponseList(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) PUTFlowReservationResponseList(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) POSTFlowReservationResponseList(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.Header().Set("location", "/edev/{id1}/frp/"+fmt.Sprintf("%d", sfdi))
+	w.WriteHeader(http.StatusCreated)
+}
+
+func (h *Handler) DELETEFlowReservationResponseList(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+// FlowReservationResponse resource handlers
+
+func (h *Handler) GETFlowReservationResponse(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.FlowReservationResponse{})
+}
+
+func (h *Handler) HEADFlowReservationResponse(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) PUTFlowReservationResponse(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) POSTFlowReservationResponse(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) DELETEFlowReservationResponse(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.FlowReservationResponse{})
+}
+

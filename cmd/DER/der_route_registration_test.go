@@ -48,6 +48,7 @@ func TestDerRouteRegistration(t *testing.T) {
 	}
 
 	helper := routing.NewTestHelper(mux)
+	helper.RegisterExpectedRoutes(expectations)
 	all, missing := helper.AssertAllRoutesExist(expectations)
 	if !all {
 		t.Errorf("Missing %d routes:", len(missing))
@@ -61,6 +62,14 @@ func TestDerPathParameters(t *testing.T) {
 	validator := routing.NewPathParameterValidator()
 
 	patterns := map[string][]string{
+		"/derp": nil,
+		"/derp/{id1}": {"id1"},
+		"/derp/{id1}/actderc": {"id1"},
+		"/derp/{id1}/dc": {"id1"},
+		"/derp/{id1}/dc/{id2}": {"id1", "id2"},
+		"/derp/{id1}/dderc": {"id1"},
+		"/derp/{id1}/derc": {"id1"},
+		"/derp/{id1}/derc/{id2}": {"id1", "id2"},
 		"/edev/{id1}/der": {"id1"},
 		"/edev/{id1}/der/{id2}": {"id1", "id2"},
 		"/edev/{id1}/der/{id2}/cdc": {"id1", "id2"},
@@ -103,6 +112,14 @@ func TestDerHTTPMethods(t *testing.T) {
 		path   string
 		expect bool
 	}{
+		{"DELETE", "/derp", true},
+		{"DELETE", "/derp/{id1}", true},
+		{"DELETE", "/derp/{id1}/actderc", true},
+		{"DELETE", "/derp/{id1}/dc", true},
+		{"DELETE", "/derp/{id1}/dc/{id2}", true},
+		{"DELETE", "/derp/{id1}/dderc", true},
+		{"DELETE", "/derp/{id1}/derc", true},
+		{"DELETE", "/derp/{id1}/derc/{id2}", true},
 		{"DELETE", "/edev/{id1}/der", true},
 		{"DELETE", "/edev/{id1}/der/{id2}", true},
 		{"DELETE", "/edev/{id1}/der/{id2}/cdc", true},
@@ -115,6 +132,14 @@ func TestDerHTTPMethods(t *testing.T) {
 		{"DELETE", "/edev/{id1}/der/{id2}/derp", true},
 		{"DELETE", "/edev/{id1}/der/{id2}/ders", true},
 		{"DELETE", "/edev/{id1}/der/{id2}/upt", true},
+		{"GET", "/derp", true},
+		{"GET", "/derp/{id1}", true},
+		{"GET", "/derp/{id1}/actderc", true},
+		{"GET", "/derp/{id1}/dc", true},
+		{"GET", "/derp/{id1}/dc/{id2}", true},
+		{"GET", "/derp/{id1}/dderc", true},
+		{"GET", "/derp/{id1}/derc", true},
+		{"GET", "/derp/{id1}/derc/{id2}", true},
 		{"GET", "/edev/{id1}/der", true},
 		{"GET", "/edev/{id1}/der/{id2}", true},
 		{"GET", "/edev/{id1}/der/{id2}/cdc", true},
@@ -127,6 +152,14 @@ func TestDerHTTPMethods(t *testing.T) {
 		{"GET", "/edev/{id1}/der/{id2}/derp", true},
 		{"GET", "/edev/{id1}/der/{id2}/ders", true},
 		{"GET", "/edev/{id1}/der/{id2}/upt", true},
+		{"HEAD", "/derp", true},
+		{"HEAD", "/derp/{id1}", true},
+		{"HEAD", "/derp/{id1}/actderc", true},
+		{"HEAD", "/derp/{id1}/dc", true},
+		{"HEAD", "/derp/{id1}/dc/{id2}", true},
+		{"HEAD", "/derp/{id1}/dderc", true},
+		{"HEAD", "/derp/{id1}/derc", true},
+		{"HEAD", "/derp/{id1}/derc/{id2}", true},
 		{"HEAD", "/edev/{id1}/der", true},
 		{"HEAD", "/edev/{id1}/der/{id2}", true},
 		{"HEAD", "/edev/{id1}/der/{id2}/cdc", true},
@@ -139,6 +172,14 @@ func TestDerHTTPMethods(t *testing.T) {
 		{"HEAD", "/edev/{id1}/der/{id2}/derp", true},
 		{"HEAD", "/edev/{id1}/der/{id2}/ders", true},
 		{"HEAD", "/edev/{id1}/der/{id2}/upt", true},
+		{"POST", "/derp", true},
+		{"POST", "/derp/{id1}", true},
+		{"POST", "/derp/{id1}/actderc", true},
+		{"POST", "/derp/{id1}/dc", true},
+		{"POST", "/derp/{id1}/dc/{id2}", true},
+		{"POST", "/derp/{id1}/dderc", true},
+		{"POST", "/derp/{id1}/derc", true},
+		{"POST", "/derp/{id1}/derc/{id2}", true},
 		{"POST", "/edev/{id1}/der", true},
 		{"POST", "/edev/{id1}/der/{id2}", true},
 		{"POST", "/edev/{id1}/der/{id2}/cdc", true},
@@ -151,6 +192,14 @@ func TestDerHTTPMethods(t *testing.T) {
 		{"POST", "/edev/{id1}/der/{id2}/derp", true},
 		{"POST", "/edev/{id1}/der/{id2}/ders", true},
 		{"POST", "/edev/{id1}/der/{id2}/upt", true},
+		{"PUT", "/derp", true},
+		{"PUT", "/derp/{id1}", true},
+		{"PUT", "/derp/{id1}/actderc", true},
+		{"PUT", "/derp/{id1}/dc", true},
+		{"PUT", "/derp/{id1}/dc/{id2}", true},
+		{"PUT", "/derp/{id1}/dderc", true},
+		{"PUT", "/derp/{id1}/derc", true},
+		{"PUT", "/derp/{id1}/derc/{id2}", true},
 		{"PUT", "/edev/{id1}/der", true},
 		{"PUT", "/edev/{id1}/der/{id2}", true},
 		{"PUT", "/edev/{id1}/der/{id2}/cdc", true},
@@ -175,64 +224,104 @@ func TestDerHTTPMethods(t *testing.T) {
 }
 
 func registerDerRoutes(mux *http.ServeMux, h *handler.Handler) {
+	mux.Handle("DELETE /derp", http.HandlerFunc(h.DELETEDERProgramList))
+	mux.Handle("DELETE /derp/{id1}", http.HandlerFunc(h.DELETEDERProgram))
+	mux.Handle("DELETE /derp/{id1}/actderc", http.HandlerFunc(h.DELETEActiveDERControlList))
+	mux.Handle("DELETE /derp/{id1}/dc", http.HandlerFunc(h.DELETEDERCurveList))
+	mux.Handle("DELETE /derp/{id1}/dc/{id2}", http.HandlerFunc(h.DELETEDERCurve))
+	mux.Handle("DELETE /derp/{id1}/dderc", http.HandlerFunc(h.DELETEDefaultDERControl))
+	mux.Handle("DELETE /derp/{id1}/derc", http.HandlerFunc(h.DELETEDERControlList))
+	mux.Handle("DELETE /derp/{id1}/derc/{id2}", http.HandlerFunc(h.DELETEDERControl))
 	mux.Handle("DELETE /edev/{id1}/der", http.HandlerFunc(h.DELETEDERList))
 	mux.Handle("DELETE /edev/{id1}/der/{id2}", http.HandlerFunc(h.DELETEDER))
-	mux.Handle("DELETE /edev/{id1}/der/{id2}/cdc", http.HandlerFunc(h.DELETECurrentDERControlsList))
-	mux.Handle("DELETE /edev/{id1}/der/{id2}/cdp", http.HandlerFunc(h.DELETECurrentDERProgramList))
-	mux.Handle("DELETE /edev/{id1}/der/{id2}/dera", http.HandlerFunc(h.DELETEDERAvailabilityList))
+	mux.Handle("DELETE /edev/{id1}/der/{id2}/cdc", http.HandlerFunc(h.DELETECurrentDERControls))
+	mux.Handle("DELETE /edev/{id1}/der/{id2}/cdp", http.HandlerFunc(h.DELETECurrentDERProgram))
+	mux.Handle("DELETE /edev/{id1}/der/{id2}/dera", http.HandlerFunc(h.DELETEDERAvailability))
 	mux.Handle("DELETE /edev/{id1}/der/{id2}/dercap", http.HandlerFunc(h.DELETEDERCapability))
 	mux.Handle("DELETE /edev/{id1}/der/{id2}/dercom", http.HandlerFunc(h.DELETEDERComponentList))
 	mux.Handle("DELETE /edev/{id1}/der/{id2}/dercom/{id3}", http.HandlerFunc(h.DELETEDERComponent))
 	mux.Handle("DELETE /edev/{id1}/der/{id2}/derg", http.HandlerFunc(h.DELETEDERSettings))
 	mux.Handle("DELETE /edev/{id1}/der/{id2}/derp", http.HandlerFunc(h.DELETEDERProgramList))
 	mux.Handle("DELETE /edev/{id1}/der/{id2}/ders", http.HandlerFunc(h.DELETEDERStatus))
-	mux.Handle("DELETE /edev/{id1}/der/{id2}/upt", http.HandlerFunc(h.DELETEUsagePointList))
+	mux.Handle("DELETE /edev/{id1}/der/{id2}/upt", http.HandlerFunc(h.DELETEAssociatedUsagePoint))
+	mux.Handle("GET /derp", http.HandlerFunc(h.GETDERProgramList))
+	mux.Handle("GET /derp/{id1}", http.HandlerFunc(h.GETDERProgram))
+	mux.Handle("GET /derp/{id1}/actderc", http.HandlerFunc(h.GETActiveDERControlList))
+	mux.Handle("GET /derp/{id1}/dc", http.HandlerFunc(h.GETDERCurveList))
+	mux.Handle("GET /derp/{id1}/dc/{id2}", http.HandlerFunc(h.GETDERCurve))
+	mux.Handle("GET /derp/{id1}/dderc", http.HandlerFunc(h.GETDefaultDERControl))
+	mux.Handle("GET /derp/{id1}/derc", http.HandlerFunc(h.GETDERControlList))
+	mux.Handle("GET /derp/{id1}/derc/{id2}", http.HandlerFunc(h.GETDERControl))
 	mux.Handle("GET /edev/{id1}/der", http.HandlerFunc(h.GETDERList))
 	mux.Handle("GET /edev/{id1}/der/{id2}", http.HandlerFunc(h.GETDER))
-	mux.Handle("GET /edev/{id1}/der/{id2}/cdc", http.HandlerFunc(h.GETCurrentDERControlsList))
-	mux.Handle("GET /edev/{id1}/der/{id2}/cdp", http.HandlerFunc(h.GETCurrentDERProgramList))
-	mux.Handle("GET /edev/{id1}/der/{id2}/dera", http.HandlerFunc(h.GETDERAvailabilityList))
+	mux.Handle("GET /edev/{id1}/der/{id2}/cdc", http.HandlerFunc(h.GETCurrentDERControls))
+	mux.Handle("GET /edev/{id1}/der/{id2}/cdp", http.HandlerFunc(h.GETCurrentDERProgram))
+	mux.Handle("GET /edev/{id1}/der/{id2}/dera", http.HandlerFunc(h.GETDERAvailability))
 	mux.Handle("GET /edev/{id1}/der/{id2}/dercap", http.HandlerFunc(h.GETDERCapability))
 	mux.Handle("GET /edev/{id1}/der/{id2}/dercom", http.HandlerFunc(h.GETDERComponentList))
 	mux.Handle("GET /edev/{id1}/der/{id2}/dercom/{id3}", http.HandlerFunc(h.GETDERComponent))
 	mux.Handle("GET /edev/{id1}/der/{id2}/derg", http.HandlerFunc(h.GETDERSettings))
 	mux.Handle("GET /edev/{id1}/der/{id2}/derp", http.HandlerFunc(h.GETDERProgramList))
 	mux.Handle("GET /edev/{id1}/der/{id2}/ders", http.HandlerFunc(h.GETDERStatus))
-	mux.Handle("GET /edev/{id1}/der/{id2}/upt", http.HandlerFunc(h.GETUsagePointList))
+	mux.Handle("GET /edev/{id1}/der/{id2}/upt", http.HandlerFunc(h.GETAssociatedUsagePoint))
+	mux.Handle("HEAD /derp", http.HandlerFunc(h.HEADDERProgramList))
+	mux.Handle("HEAD /derp/{id1}", http.HandlerFunc(h.HEADDERProgram))
+	mux.Handle("HEAD /derp/{id1}/actderc", http.HandlerFunc(h.HEADActiveDERControlList))
+	mux.Handle("HEAD /derp/{id1}/dc", http.HandlerFunc(h.HEADDERCurveList))
+	mux.Handle("HEAD /derp/{id1}/dc/{id2}", http.HandlerFunc(h.HEADDERCurve))
+	mux.Handle("HEAD /derp/{id1}/dderc", http.HandlerFunc(h.HEADDefaultDERControl))
+	mux.Handle("HEAD /derp/{id1}/derc", http.HandlerFunc(h.HEADDERControlList))
+	mux.Handle("HEAD /derp/{id1}/derc/{id2}", http.HandlerFunc(h.HEADDERControl))
 	mux.Handle("HEAD /edev/{id1}/der", http.HandlerFunc(h.HEADDERList))
 	mux.Handle("HEAD /edev/{id1}/der/{id2}", http.HandlerFunc(h.HEADDER))
-	mux.Handle("HEAD /edev/{id1}/der/{id2}/cdc", http.HandlerFunc(h.HEADCurrentDERControlsList))
-	mux.Handle("HEAD /edev/{id1}/der/{id2}/cdp", http.HandlerFunc(h.HEADCurrentDERProgramList))
-	mux.Handle("HEAD /edev/{id1}/der/{id2}/dera", http.HandlerFunc(h.HEADDERAvailabilityList))
+	mux.Handle("HEAD /edev/{id1}/der/{id2}/cdc", http.HandlerFunc(h.HEADCurrentDERControls))
+	mux.Handle("HEAD /edev/{id1}/der/{id2}/cdp", http.HandlerFunc(h.HEADCurrentDERProgram))
+	mux.Handle("HEAD /edev/{id1}/der/{id2}/dera", http.HandlerFunc(h.HEADDERAvailability))
 	mux.Handle("HEAD /edev/{id1}/der/{id2}/dercap", http.HandlerFunc(h.HEADDERCapability))
 	mux.Handle("HEAD /edev/{id1}/der/{id2}/dercom", http.HandlerFunc(h.HEADDERComponentList))
 	mux.Handle("HEAD /edev/{id1}/der/{id2}/dercom/{id3}", http.HandlerFunc(h.HEADDERComponent))
 	mux.Handle("HEAD /edev/{id1}/der/{id2}/derg", http.HandlerFunc(h.HEADDERSettings))
 	mux.Handle("HEAD /edev/{id1}/der/{id2}/derp", http.HandlerFunc(h.HEADDERProgramList))
 	mux.Handle("HEAD /edev/{id1}/der/{id2}/ders", http.HandlerFunc(h.HEADDERStatus))
-	mux.Handle("HEAD /edev/{id1}/der/{id2}/upt", http.HandlerFunc(h.HEADUsagePointList))
+	mux.Handle("HEAD /edev/{id1}/der/{id2}/upt", http.HandlerFunc(h.HEADAssociatedUsagePoint))
+	mux.Handle("POST /derp", http.HandlerFunc(h.POSTDERProgramList))
+	mux.Handle("POST /derp/{id1}", http.HandlerFunc(h.POSTDERProgram))
+	mux.Handle("POST /derp/{id1}/actderc", http.HandlerFunc(h.POSTActiveDERControlList))
+	mux.Handle("POST /derp/{id1}/dc", http.HandlerFunc(h.POSTDERCurveList))
+	mux.Handle("POST /derp/{id1}/dc/{id2}", http.HandlerFunc(h.POSTDERCurve))
+	mux.Handle("POST /derp/{id1}/dderc", http.HandlerFunc(h.POSTDefaultDERControl))
+	mux.Handle("POST /derp/{id1}/derc", http.HandlerFunc(h.POSTDERControlList))
+	mux.Handle("POST /derp/{id1}/derc/{id2}", http.HandlerFunc(h.POSTDERControl))
 	mux.Handle("POST /edev/{id1}/der", http.HandlerFunc(h.POSTDERList))
 	mux.Handle("POST /edev/{id1}/der/{id2}", http.HandlerFunc(h.POSTDER))
-	mux.Handle("POST /edev/{id1}/der/{id2}/cdc", http.HandlerFunc(h.POSTCurrentDERControlsList))
-	mux.Handle("POST /edev/{id1}/der/{id2}/cdp", http.HandlerFunc(h.POSTCurrentDERProgramList))
-	mux.Handle("POST /edev/{id1}/der/{id2}/dera", http.HandlerFunc(h.POSTDERAvailabilityList))
+	mux.Handle("POST /edev/{id1}/der/{id2}/cdc", http.HandlerFunc(h.POSTCurrentDERControls))
+	mux.Handle("POST /edev/{id1}/der/{id2}/cdp", http.HandlerFunc(h.POSTCurrentDERProgram))
+	mux.Handle("POST /edev/{id1}/der/{id2}/dera", http.HandlerFunc(h.POSTDERAvailability))
 	mux.Handle("POST /edev/{id1}/der/{id2}/dercap", http.HandlerFunc(h.POSTDERCapability))
 	mux.Handle("POST /edev/{id1}/der/{id2}/dercom", http.HandlerFunc(h.POSTDERComponentList))
 	mux.Handle("POST /edev/{id1}/der/{id2}/dercom/{id3}", http.HandlerFunc(h.POSTDERComponent))
 	mux.Handle("POST /edev/{id1}/der/{id2}/derg", http.HandlerFunc(h.POSTDERSettings))
 	mux.Handle("POST /edev/{id1}/der/{id2}/derp", http.HandlerFunc(h.POSTDERProgramList))
 	mux.Handle("POST /edev/{id1}/der/{id2}/ders", http.HandlerFunc(h.POSTDERStatus))
-	mux.Handle("POST /edev/{id1}/der/{id2}/upt", http.HandlerFunc(h.POSTUsagePointList))
+	mux.Handle("POST /edev/{id1}/der/{id2}/upt", http.HandlerFunc(h.POSTAssociatedUsagePoint))
+	mux.Handle("PUT /derp", http.HandlerFunc(h.PUTDERProgramList))
+	mux.Handle("PUT /derp/{id1}", http.HandlerFunc(h.PUTDERProgram))
+	mux.Handle("PUT /derp/{id1}/actderc", http.HandlerFunc(h.PUTActiveDERControlList))
+	mux.Handle("PUT /derp/{id1}/dc", http.HandlerFunc(h.PUTDERCurveList))
+	mux.Handle("PUT /derp/{id1}/dc/{id2}", http.HandlerFunc(h.PUTDERCurve))
+	mux.Handle("PUT /derp/{id1}/dderc", http.HandlerFunc(h.PUTDefaultDERControl))
+	mux.Handle("PUT /derp/{id1}/derc", http.HandlerFunc(h.PUTDERControlList))
+	mux.Handle("PUT /derp/{id1}/derc/{id2}", http.HandlerFunc(h.PUTDERControl))
 	mux.Handle("PUT /edev/{id1}/der", http.HandlerFunc(h.PUTDERList))
 	mux.Handle("PUT /edev/{id1}/der/{id2}", http.HandlerFunc(h.PUTDER))
-	mux.Handle("PUT /edev/{id1}/der/{id2}/cdc", http.HandlerFunc(h.PUTCurrentDERControlsList))
-	mux.Handle("PUT /edev/{id1}/der/{id2}/cdp", http.HandlerFunc(h.PUTCurrentDERProgramList))
-	mux.Handle("PUT /edev/{id1}/der/{id2}/dera", http.HandlerFunc(h.PUTDERAvailabilityList))
+	mux.Handle("PUT /edev/{id1}/der/{id2}/cdc", http.HandlerFunc(h.PUTCurrentDERControls))
+	mux.Handle("PUT /edev/{id1}/der/{id2}/cdp", http.HandlerFunc(h.PUTCurrentDERProgram))
+	mux.Handle("PUT /edev/{id1}/der/{id2}/dera", http.HandlerFunc(h.PUTDERAvailability))
 	mux.Handle("PUT /edev/{id1}/der/{id2}/dercap", http.HandlerFunc(h.PUTDERCapability))
 	mux.Handle("PUT /edev/{id1}/der/{id2}/dercom", http.HandlerFunc(h.PUTDERComponentList))
 	mux.Handle("PUT /edev/{id1}/der/{id2}/dercom/{id3}", http.HandlerFunc(h.PUTDERComponent))
 	mux.Handle("PUT /edev/{id1}/der/{id2}/derg", http.HandlerFunc(h.PUTDERSettings))
 	mux.Handle("PUT /edev/{id1}/der/{id2}/derp", http.HandlerFunc(h.PUTDERProgramList))
 	mux.Handle("PUT /edev/{id1}/der/{id2}/ders", http.HandlerFunc(h.PUTDERStatus))
-	mux.Handle("PUT /edev/{id1}/der/{id2}/upt", http.HandlerFunc(h.PUTUsagePointList))
+	mux.Handle("PUT /edev/{id1}/der/{id2}/upt", http.HandlerFunc(h.PUTAssociatedUsagePoint))
 }

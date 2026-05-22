@@ -48,6 +48,7 @@ func TestEdevRouteRegistration(t *testing.T) {
 	}
 
 	helper := routing.NewTestHelper(mux)
+	helper.RegisterExpectedRoutes(expectations)
 	all, missing := helper.AssertAllRoutesExist(expectations)
 	if !all {
 		t.Errorf("Missing %d routes:", len(missing))
@@ -69,26 +70,10 @@ func TestEdevPathParameters(t *testing.T) {
 		"/edev/{id1}/cfg": {"id1"},
 		"/edev/{id1}/cfg/prcfg": {"id1"},
 		"/edev/{id1}/cfg/prcfg/{id2}": {"id1", "id2"},
-		"/edev/{id1}/der": {"id1"},
-		"/edev/{id1}/der/{id2}": {"id1", "id2"},
-		"/edev/{id1}/der/{id2}/cdc": {"id1", "id2"},
-		"/edev/{id1}/der/{id2}/cdp": {"id1", "id2"},
-		"/edev/{id1}/der/{id2}/dera": {"id1", "id2"},
-		"/edev/{id1}/der/{id2}/dercap": {"id1", "id2"},
-		"/edev/{id1}/der/{id2}/dercom": {"id1", "id2"},
-		"/edev/{id1}/der/{id2}/dercom/{id3}": {"id1", "id2", "id3"},
-		"/edev/{id1}/der/{id2}/derg": {"id1", "id2"},
-		"/edev/{id1}/der/{id2}/derp": {"id1", "id2"},
-		"/edev/{id1}/der/{id2}/ders": {"id1", "id2"},
-		"/edev/{id1}/der/{id2}/upt": {"id1", "id2"},
 		"/edev/{id1}/di": {"id1"},
 		"/edev/{id1}/di/loc": {"id1"},
 		"/edev/{id1}/di/loc/{id2}": {"id1", "id2"},
 		"/edev/{id1}/dstat": {"id1"},
-		"/edev/{id1}/frp": {"id1"},
-		"/edev/{id1}/frp/{id2}": {"id1", "id2"},
-		"/edev/{id1}/frq": {"id1"},
-		"/edev/{id1}/frq/{id2}": {"id1", "id2"},
 		"/edev/{id1}/fs": {"id1"},
 		"/edev/{id1}/fsa": {"id1"},
 		"/edev/{id1}/fsa/{id2}": {"id1", "id2"},
@@ -152,26 +137,10 @@ func TestEdevHTTPMethods(t *testing.T) {
 		{"DELETE", "/edev/{id1}/cfg", true},
 		{"DELETE", "/edev/{id1}/cfg/prcfg", true},
 		{"DELETE", "/edev/{id1}/cfg/prcfg/{id2}", true},
-		{"DELETE", "/edev/{id1}/der", true},
-		{"DELETE", "/edev/{id1}/der/{id2}", true},
-		{"DELETE", "/edev/{id1}/der/{id2}/cdc", true},
-		{"DELETE", "/edev/{id1}/der/{id2}/cdp", true},
-		{"DELETE", "/edev/{id1}/der/{id2}/dera", true},
-		{"DELETE", "/edev/{id1}/der/{id2}/dercap", true},
-		{"DELETE", "/edev/{id1}/der/{id2}/dercom", true},
-		{"DELETE", "/edev/{id1}/der/{id2}/dercom/{id3}", true},
-		{"DELETE", "/edev/{id1}/der/{id2}/derg", true},
-		{"DELETE", "/edev/{id1}/der/{id2}/derp", true},
-		{"DELETE", "/edev/{id1}/der/{id2}/ders", true},
-		{"DELETE", "/edev/{id1}/der/{id2}/upt", true},
 		{"DELETE", "/edev/{id1}/di", true},
 		{"DELETE", "/edev/{id1}/di/loc", true},
 		{"DELETE", "/edev/{id1}/di/loc/{id2}", true},
 		{"DELETE", "/edev/{id1}/dstat", true},
-		{"DELETE", "/edev/{id1}/frp", true},
-		{"DELETE", "/edev/{id1}/frp/{id2}", true},
-		{"DELETE", "/edev/{id1}/frq", true},
-		{"DELETE", "/edev/{id1}/frq/{id2}", true},
 		{"DELETE", "/edev/{id1}/fs", true},
 		{"DELETE", "/edev/{id1}/fsa", true},
 		{"DELETE", "/edev/{id1}/fsa/{id2}", true},
@@ -205,26 +174,10 @@ func TestEdevHTTPMethods(t *testing.T) {
 		{"GET", "/edev/{id1}/cfg", true},
 		{"GET", "/edev/{id1}/cfg/prcfg", true},
 		{"GET", "/edev/{id1}/cfg/prcfg/{id2}", true},
-		{"GET", "/edev/{id1}/der", true},
-		{"GET", "/edev/{id1}/der/{id2}", true},
-		{"GET", "/edev/{id1}/der/{id2}/cdc", true},
-		{"GET", "/edev/{id1}/der/{id2}/cdp", true},
-		{"GET", "/edev/{id1}/der/{id2}/dera", true},
-		{"GET", "/edev/{id1}/der/{id2}/dercap", true},
-		{"GET", "/edev/{id1}/der/{id2}/dercom", true},
-		{"GET", "/edev/{id1}/der/{id2}/dercom/{id3}", true},
-		{"GET", "/edev/{id1}/der/{id2}/derg", true},
-		{"GET", "/edev/{id1}/der/{id2}/derp", true},
-		{"GET", "/edev/{id1}/der/{id2}/ders", true},
-		{"GET", "/edev/{id1}/der/{id2}/upt", true},
 		{"GET", "/edev/{id1}/di", true},
 		{"GET", "/edev/{id1}/di/loc", true},
 		{"GET", "/edev/{id1}/di/loc/{id2}", true},
 		{"GET", "/edev/{id1}/dstat", true},
-		{"GET", "/edev/{id1}/frp", true},
-		{"GET", "/edev/{id1}/frp/{id2}", true},
-		{"GET", "/edev/{id1}/frq", true},
-		{"GET", "/edev/{id1}/frq/{id2}", true},
 		{"GET", "/edev/{id1}/fs", true},
 		{"GET", "/edev/{id1}/fsa", true},
 		{"GET", "/edev/{id1}/fsa/{id2}", true},
@@ -258,26 +211,10 @@ func TestEdevHTTPMethods(t *testing.T) {
 		{"HEAD", "/edev/{id1}/cfg", true},
 		{"HEAD", "/edev/{id1}/cfg/prcfg", true},
 		{"HEAD", "/edev/{id1}/cfg/prcfg/{id2}", true},
-		{"HEAD", "/edev/{id1}/der", true},
-		{"HEAD", "/edev/{id1}/der/{id2}", true},
-		{"HEAD", "/edev/{id1}/der/{id2}/cdc", true},
-		{"HEAD", "/edev/{id1}/der/{id2}/cdp", true},
-		{"HEAD", "/edev/{id1}/der/{id2}/dera", true},
-		{"HEAD", "/edev/{id1}/der/{id2}/dercap", true},
-		{"HEAD", "/edev/{id1}/der/{id2}/dercom", true},
-		{"HEAD", "/edev/{id1}/der/{id2}/dercom/{id3}", true},
-		{"HEAD", "/edev/{id1}/der/{id2}/derg", true},
-		{"HEAD", "/edev/{id1}/der/{id2}/derp", true},
-		{"HEAD", "/edev/{id1}/der/{id2}/ders", true},
-		{"HEAD", "/edev/{id1}/der/{id2}/upt", true},
 		{"HEAD", "/edev/{id1}/di", true},
 		{"HEAD", "/edev/{id1}/di/loc", true},
 		{"HEAD", "/edev/{id1}/di/loc/{id2}", true},
 		{"HEAD", "/edev/{id1}/dstat", true},
-		{"HEAD", "/edev/{id1}/frp", true},
-		{"HEAD", "/edev/{id1}/frp/{id2}", true},
-		{"HEAD", "/edev/{id1}/frq", true},
-		{"HEAD", "/edev/{id1}/frq/{id2}", true},
 		{"HEAD", "/edev/{id1}/fs", true},
 		{"HEAD", "/edev/{id1}/fsa", true},
 		{"HEAD", "/edev/{id1}/fsa/{id2}", true},
@@ -311,26 +248,10 @@ func TestEdevHTTPMethods(t *testing.T) {
 		{"POST", "/edev/{id1}/cfg", true},
 		{"POST", "/edev/{id1}/cfg/prcfg", true},
 		{"POST", "/edev/{id1}/cfg/prcfg/{id2}", true},
-		{"POST", "/edev/{id1}/der", true},
-		{"POST", "/edev/{id1}/der/{id2}", true},
-		{"POST", "/edev/{id1}/der/{id2}/cdc", true},
-		{"POST", "/edev/{id1}/der/{id2}/cdp", true},
-		{"POST", "/edev/{id1}/der/{id2}/dera", true},
-		{"POST", "/edev/{id1}/der/{id2}/dercap", true},
-		{"POST", "/edev/{id1}/der/{id2}/dercom", true},
-		{"POST", "/edev/{id1}/der/{id2}/dercom/{id3}", true},
-		{"POST", "/edev/{id1}/der/{id2}/derg", true},
-		{"POST", "/edev/{id1}/der/{id2}/derp", true},
-		{"POST", "/edev/{id1}/der/{id2}/ders", true},
-		{"POST", "/edev/{id1}/der/{id2}/upt", true},
 		{"POST", "/edev/{id1}/di", true},
 		{"POST", "/edev/{id1}/di/loc", true},
 		{"POST", "/edev/{id1}/di/loc/{id2}", true},
 		{"POST", "/edev/{id1}/dstat", true},
-		{"POST", "/edev/{id1}/frp", true},
-		{"POST", "/edev/{id1}/frp/{id2}", true},
-		{"POST", "/edev/{id1}/frq", true},
-		{"POST", "/edev/{id1}/frq/{id2}", true},
 		{"POST", "/edev/{id1}/fs", true},
 		{"POST", "/edev/{id1}/fsa", true},
 		{"POST", "/edev/{id1}/fsa/{id2}", true},
@@ -364,26 +285,10 @@ func TestEdevHTTPMethods(t *testing.T) {
 		{"PUT", "/edev/{id1}/cfg", true},
 		{"PUT", "/edev/{id1}/cfg/prcfg", true},
 		{"PUT", "/edev/{id1}/cfg/prcfg/{id2}", true},
-		{"PUT", "/edev/{id1}/der", true},
-		{"PUT", "/edev/{id1}/der/{id2}", true},
-		{"PUT", "/edev/{id1}/der/{id2}/cdc", true},
-		{"PUT", "/edev/{id1}/der/{id2}/cdp", true},
-		{"PUT", "/edev/{id1}/der/{id2}/dera", true},
-		{"PUT", "/edev/{id1}/der/{id2}/dercap", true},
-		{"PUT", "/edev/{id1}/der/{id2}/dercom", true},
-		{"PUT", "/edev/{id1}/der/{id2}/dercom/{id3}", true},
-		{"PUT", "/edev/{id1}/der/{id2}/derg", true},
-		{"PUT", "/edev/{id1}/der/{id2}/derp", true},
-		{"PUT", "/edev/{id1}/der/{id2}/ders", true},
-		{"PUT", "/edev/{id1}/der/{id2}/upt", true},
 		{"PUT", "/edev/{id1}/di", true},
 		{"PUT", "/edev/{id1}/di/loc", true},
 		{"PUT", "/edev/{id1}/di/loc/{id2}", true},
 		{"PUT", "/edev/{id1}/dstat", true},
-		{"PUT", "/edev/{id1}/frp", true},
-		{"PUT", "/edev/{id1}/frp/{id2}", true},
-		{"PUT", "/edev/{id1}/frq", true},
-		{"PUT", "/edev/{id1}/frq/{id2}", true},
 		{"PUT", "/edev/{id1}/fs", true},
 		{"PUT", "/edev/{id1}/fsa", true},
 		{"PUT", "/edev/{id1}/fsa/{id2}", true},
@@ -429,26 +334,10 @@ func registerEdevRoutes(mux *http.ServeMux, h *handler.Handler) {
 	mux.Handle("DELETE /edev/{id1}/cfg", http.HandlerFunc(h.DELETEConfiguration))
 	mux.Handle("DELETE /edev/{id1}/cfg/prcfg", http.HandlerFunc(h.DELETEPriceResponseCfgList))
 	mux.Handle("DELETE /edev/{id1}/cfg/prcfg/{id2}", http.HandlerFunc(h.DELETEPriceResponseCfg))
-	mux.Handle("DELETE /edev/{id1}/der", http.HandlerFunc(h.DELETEDERList))
-	mux.Handle("DELETE /edev/{id1}/der/{id2}", http.HandlerFunc(h.DELETEDER))
-	mux.Handle("DELETE /edev/{id1}/der/{id2}/cdc", http.HandlerFunc(h.DELETECurrentDERControlsList))
-	mux.Handle("DELETE /edev/{id1}/der/{id2}/cdp", http.HandlerFunc(h.DELETECurrentDERProgramList))
-	mux.Handle("DELETE /edev/{id1}/der/{id2}/dera", http.HandlerFunc(h.DELETEDERAvailabilityList))
-	mux.Handle("DELETE /edev/{id1}/der/{id2}/dercap", http.HandlerFunc(h.DELETEDERCapability))
-	mux.Handle("DELETE /edev/{id1}/der/{id2}/dercom", http.HandlerFunc(h.DELETEDERComponentList))
-	mux.Handle("DELETE /edev/{id1}/der/{id2}/dercom/{id3}", http.HandlerFunc(h.DELETEDERComponent))
-	mux.Handle("DELETE /edev/{id1}/der/{id2}/derg", http.HandlerFunc(h.DELETEDERSettings))
-	mux.Handle("DELETE /edev/{id1}/der/{id2}/derp", http.HandlerFunc(h.DELETEDERProgramList))
-	mux.Handle("DELETE /edev/{id1}/der/{id2}/ders", http.HandlerFunc(h.DELETEDERStatus))
-	mux.Handle("DELETE /edev/{id1}/der/{id2}/upt", http.HandlerFunc(h.DELETEUsagePointList))
 	mux.Handle("DELETE /edev/{id1}/di", http.HandlerFunc(h.DELETEDeviceInformation))
 	mux.Handle("DELETE /edev/{id1}/di/loc", http.HandlerFunc(h.DELETESupportedLocaleList))
 	mux.Handle("DELETE /edev/{id1}/di/loc/{id2}", http.HandlerFunc(h.DELETESupportedLocale))
 	mux.Handle("DELETE /edev/{id1}/dstat", http.HandlerFunc(h.DELETEDeviceStatus))
-	mux.Handle("DELETE /edev/{id1}/frp", http.HandlerFunc(h.DELETEFlowReservationResponseList))
-	mux.Handle("DELETE /edev/{id1}/frp/{id2}", http.HandlerFunc(h.DELETEFlowReservationResponse))
-	mux.Handle("DELETE /edev/{id1}/frq", http.HandlerFunc(h.DELETEFlowReservationRequestList))
-	mux.Handle("DELETE /edev/{id1}/frq/{id2}", http.HandlerFunc(h.DELETEFlowReservationRequest))
 	mux.Handle("DELETE /edev/{id1}/fs", http.HandlerFunc(h.DELETEFileStatus))
 	mux.Handle("DELETE /edev/{id1}/fsa", http.HandlerFunc(h.DELETEFunctionSetAssignmentsList))
 	mux.Handle("DELETE /edev/{id1}/fsa/{id2}", http.HandlerFunc(h.DELETEFunctionSetAssignments))
@@ -482,26 +371,10 @@ func registerEdevRoutes(mux *http.ServeMux, h *handler.Handler) {
 	mux.Handle("GET /edev/{id1}/cfg", http.HandlerFunc(h.GETConfiguration))
 	mux.Handle("GET /edev/{id1}/cfg/prcfg", http.HandlerFunc(h.GETPriceResponseCfgList))
 	mux.Handle("GET /edev/{id1}/cfg/prcfg/{id2}", http.HandlerFunc(h.GETPriceResponseCfg))
-	mux.Handle("GET /edev/{id1}/der", http.HandlerFunc(h.GETDERList))
-	mux.Handle("GET /edev/{id1}/der/{id2}", http.HandlerFunc(h.GETDER))
-	mux.Handle("GET /edev/{id1}/der/{id2}/cdc", http.HandlerFunc(h.GETCurrentDERControlsList))
-	mux.Handle("GET /edev/{id1}/der/{id2}/cdp", http.HandlerFunc(h.GETCurrentDERProgramList))
-	mux.Handle("GET /edev/{id1}/der/{id2}/dera", http.HandlerFunc(h.GETDERAvailabilityList))
-	mux.Handle("GET /edev/{id1}/der/{id2}/dercap", http.HandlerFunc(h.GETDERCapability))
-	mux.Handle("GET /edev/{id1}/der/{id2}/dercom", http.HandlerFunc(h.GETDERComponentList))
-	mux.Handle("GET /edev/{id1}/der/{id2}/dercom/{id3}", http.HandlerFunc(h.GETDERComponent))
-	mux.Handle("GET /edev/{id1}/der/{id2}/derg", http.HandlerFunc(h.GETDERSettings))
-	mux.Handle("GET /edev/{id1}/der/{id2}/derp", http.HandlerFunc(h.GETDERProgramList))
-	mux.Handle("GET /edev/{id1}/der/{id2}/ders", http.HandlerFunc(h.GETDERStatus))
-	mux.Handle("GET /edev/{id1}/der/{id2}/upt", http.HandlerFunc(h.GETUsagePointList))
 	mux.Handle("GET /edev/{id1}/di", http.HandlerFunc(h.GETDeviceInformation))
 	mux.Handle("GET /edev/{id1}/di/loc", http.HandlerFunc(h.GETSupportedLocaleList))
 	mux.Handle("GET /edev/{id1}/di/loc/{id2}", http.HandlerFunc(h.GETSupportedLocale))
 	mux.Handle("GET /edev/{id1}/dstat", http.HandlerFunc(h.GETDeviceStatus))
-	mux.Handle("GET /edev/{id1}/frp", http.HandlerFunc(h.GETFlowReservationResponseList))
-	mux.Handle("GET /edev/{id1}/frp/{id2}", http.HandlerFunc(h.GETFlowReservationResponse))
-	mux.Handle("GET /edev/{id1}/frq", http.HandlerFunc(h.GETFlowReservationRequestList))
-	mux.Handle("GET /edev/{id1}/frq/{id2}", http.HandlerFunc(h.GETFlowReservationRequest))
 	mux.Handle("GET /edev/{id1}/fs", http.HandlerFunc(h.GETFileStatus))
 	mux.Handle("GET /edev/{id1}/fsa", http.HandlerFunc(h.GETFunctionSetAssignmentsList))
 	mux.Handle("GET /edev/{id1}/fsa/{id2}", http.HandlerFunc(h.GETFunctionSetAssignments))
@@ -535,26 +408,10 @@ func registerEdevRoutes(mux *http.ServeMux, h *handler.Handler) {
 	mux.Handle("HEAD /edev/{id1}/cfg", http.HandlerFunc(h.HEADConfiguration))
 	mux.Handle("HEAD /edev/{id1}/cfg/prcfg", http.HandlerFunc(h.HEADPriceResponseCfgList))
 	mux.Handle("HEAD /edev/{id1}/cfg/prcfg/{id2}", http.HandlerFunc(h.HEADPriceResponseCfg))
-	mux.Handle("HEAD /edev/{id1}/der", http.HandlerFunc(h.HEADDERList))
-	mux.Handle("HEAD /edev/{id1}/der/{id2}", http.HandlerFunc(h.HEADDER))
-	mux.Handle("HEAD /edev/{id1}/der/{id2}/cdc", http.HandlerFunc(h.HEADCurrentDERControlsList))
-	mux.Handle("HEAD /edev/{id1}/der/{id2}/cdp", http.HandlerFunc(h.HEADCurrentDERProgramList))
-	mux.Handle("HEAD /edev/{id1}/der/{id2}/dera", http.HandlerFunc(h.HEADDERAvailabilityList))
-	mux.Handle("HEAD /edev/{id1}/der/{id2}/dercap", http.HandlerFunc(h.HEADDERCapability))
-	mux.Handle("HEAD /edev/{id1}/der/{id2}/dercom", http.HandlerFunc(h.HEADDERComponentList))
-	mux.Handle("HEAD /edev/{id1}/der/{id2}/dercom/{id3}", http.HandlerFunc(h.HEADDERComponent))
-	mux.Handle("HEAD /edev/{id1}/der/{id2}/derg", http.HandlerFunc(h.HEADDERSettings))
-	mux.Handle("HEAD /edev/{id1}/der/{id2}/derp", http.HandlerFunc(h.HEADDERProgramList))
-	mux.Handle("HEAD /edev/{id1}/der/{id2}/ders", http.HandlerFunc(h.HEADDERStatus))
-	mux.Handle("HEAD /edev/{id1}/der/{id2}/upt", http.HandlerFunc(h.HEADUsagePointList))
 	mux.Handle("HEAD /edev/{id1}/di", http.HandlerFunc(h.HEADDeviceInformation))
 	mux.Handle("HEAD /edev/{id1}/di/loc", http.HandlerFunc(h.HEADSupportedLocaleList))
 	mux.Handle("HEAD /edev/{id1}/di/loc/{id2}", http.HandlerFunc(h.HEADSupportedLocale))
 	mux.Handle("HEAD /edev/{id1}/dstat", http.HandlerFunc(h.HEADDeviceStatus))
-	mux.Handle("HEAD /edev/{id1}/frp", http.HandlerFunc(h.HEADFlowReservationResponseList))
-	mux.Handle("HEAD /edev/{id1}/frp/{id2}", http.HandlerFunc(h.HEADFlowReservationResponse))
-	mux.Handle("HEAD /edev/{id1}/frq", http.HandlerFunc(h.HEADFlowReservationRequestList))
-	mux.Handle("HEAD /edev/{id1}/frq/{id2}", http.HandlerFunc(h.HEADFlowReservationRequest))
 	mux.Handle("HEAD /edev/{id1}/fs", http.HandlerFunc(h.HEADFileStatus))
 	mux.Handle("HEAD /edev/{id1}/fsa", http.HandlerFunc(h.HEADFunctionSetAssignmentsList))
 	mux.Handle("HEAD /edev/{id1}/fsa/{id2}", http.HandlerFunc(h.HEADFunctionSetAssignments))
@@ -588,26 +445,10 @@ func registerEdevRoutes(mux *http.ServeMux, h *handler.Handler) {
 	mux.Handle("POST /edev/{id1}/cfg", http.HandlerFunc(h.POSTConfiguration))
 	mux.Handle("POST /edev/{id1}/cfg/prcfg", http.HandlerFunc(h.POSTPriceResponseCfgList))
 	mux.Handle("POST /edev/{id1}/cfg/prcfg/{id2}", http.HandlerFunc(h.POSTPriceResponseCfg))
-	mux.Handle("POST /edev/{id1}/der", http.HandlerFunc(h.POSTDERList))
-	mux.Handle("POST /edev/{id1}/der/{id2}", http.HandlerFunc(h.POSTDER))
-	mux.Handle("POST /edev/{id1}/der/{id2}/cdc", http.HandlerFunc(h.POSTCurrentDERControlsList))
-	mux.Handle("POST /edev/{id1}/der/{id2}/cdp", http.HandlerFunc(h.POSTCurrentDERProgramList))
-	mux.Handle("POST /edev/{id1}/der/{id2}/dera", http.HandlerFunc(h.POSTDERAvailabilityList))
-	mux.Handle("POST /edev/{id1}/der/{id2}/dercap", http.HandlerFunc(h.POSTDERCapability))
-	mux.Handle("POST /edev/{id1}/der/{id2}/dercom", http.HandlerFunc(h.POSTDERComponentList))
-	mux.Handle("POST /edev/{id1}/der/{id2}/dercom/{id3}", http.HandlerFunc(h.POSTDERComponent))
-	mux.Handle("POST /edev/{id1}/der/{id2}/derg", http.HandlerFunc(h.POSTDERSettings))
-	mux.Handle("POST /edev/{id1}/der/{id2}/derp", http.HandlerFunc(h.POSTDERProgramList))
-	mux.Handle("POST /edev/{id1}/der/{id2}/ders", http.HandlerFunc(h.POSTDERStatus))
-	mux.Handle("POST /edev/{id1}/der/{id2}/upt", http.HandlerFunc(h.POSTUsagePointList))
 	mux.Handle("POST /edev/{id1}/di", http.HandlerFunc(h.POSTDeviceInformation))
 	mux.Handle("POST /edev/{id1}/di/loc", http.HandlerFunc(h.POSTSupportedLocaleList))
 	mux.Handle("POST /edev/{id1}/di/loc/{id2}", http.HandlerFunc(h.POSTSupportedLocale))
 	mux.Handle("POST /edev/{id1}/dstat", http.HandlerFunc(h.POSTDeviceStatus))
-	mux.Handle("POST /edev/{id1}/frp", http.HandlerFunc(h.POSTFlowReservationResponseList))
-	mux.Handle("POST /edev/{id1}/frp/{id2}", http.HandlerFunc(h.POSTFlowReservationResponse))
-	mux.Handle("POST /edev/{id1}/frq", http.HandlerFunc(h.POSTFlowReservationRequestList))
-	mux.Handle("POST /edev/{id1}/frq/{id2}", http.HandlerFunc(h.POSTFlowReservationRequest))
 	mux.Handle("POST /edev/{id1}/fs", http.HandlerFunc(h.POSTFileStatus))
 	mux.Handle("POST /edev/{id1}/fsa", http.HandlerFunc(h.POSTFunctionSetAssignmentsList))
 	mux.Handle("POST /edev/{id1}/fsa/{id2}", http.HandlerFunc(h.POSTFunctionSetAssignments))
@@ -641,26 +482,10 @@ func registerEdevRoutes(mux *http.ServeMux, h *handler.Handler) {
 	mux.Handle("PUT /edev/{id1}/cfg", http.HandlerFunc(h.PUTConfiguration))
 	mux.Handle("PUT /edev/{id1}/cfg/prcfg", http.HandlerFunc(h.PUTPriceResponseCfgList))
 	mux.Handle("PUT /edev/{id1}/cfg/prcfg/{id2}", http.HandlerFunc(h.PUTPriceResponseCfg))
-	mux.Handle("PUT /edev/{id1}/der", http.HandlerFunc(h.PUTDERList))
-	mux.Handle("PUT /edev/{id1}/der/{id2}", http.HandlerFunc(h.PUTDER))
-	mux.Handle("PUT /edev/{id1}/der/{id2}/cdc", http.HandlerFunc(h.PUTCurrentDERControlsList))
-	mux.Handle("PUT /edev/{id1}/der/{id2}/cdp", http.HandlerFunc(h.PUTCurrentDERProgramList))
-	mux.Handle("PUT /edev/{id1}/der/{id2}/dera", http.HandlerFunc(h.PUTDERAvailabilityList))
-	mux.Handle("PUT /edev/{id1}/der/{id2}/dercap", http.HandlerFunc(h.PUTDERCapability))
-	mux.Handle("PUT /edev/{id1}/der/{id2}/dercom", http.HandlerFunc(h.PUTDERComponentList))
-	mux.Handle("PUT /edev/{id1}/der/{id2}/dercom/{id3}", http.HandlerFunc(h.PUTDERComponent))
-	mux.Handle("PUT /edev/{id1}/der/{id2}/derg", http.HandlerFunc(h.PUTDERSettings))
-	mux.Handle("PUT /edev/{id1}/der/{id2}/derp", http.HandlerFunc(h.PUTDERProgramList))
-	mux.Handle("PUT /edev/{id1}/der/{id2}/ders", http.HandlerFunc(h.PUTDERStatus))
-	mux.Handle("PUT /edev/{id1}/der/{id2}/upt", http.HandlerFunc(h.PUTUsagePointList))
 	mux.Handle("PUT /edev/{id1}/di", http.HandlerFunc(h.PUTDeviceInformation))
 	mux.Handle("PUT /edev/{id1}/di/loc", http.HandlerFunc(h.PUTSupportedLocaleList))
 	mux.Handle("PUT /edev/{id1}/di/loc/{id2}", http.HandlerFunc(h.PUTSupportedLocale))
 	mux.Handle("PUT /edev/{id1}/dstat", http.HandlerFunc(h.PUTDeviceStatus))
-	mux.Handle("PUT /edev/{id1}/frp", http.HandlerFunc(h.PUTFlowReservationResponseList))
-	mux.Handle("PUT /edev/{id1}/frp/{id2}", http.HandlerFunc(h.PUTFlowReservationResponse))
-	mux.Handle("PUT /edev/{id1}/frq", http.HandlerFunc(h.PUTFlowReservationRequestList))
-	mux.Handle("PUT /edev/{id1}/frq/{id2}", http.HandlerFunc(h.PUTFlowReservationRequest))
 	mux.Handle("PUT /edev/{id1}/fs", http.HandlerFunc(h.PUTFileStatus))
 	mux.Handle("PUT /edev/{id1}/fsa", http.HandlerFunc(h.PUTFunctionSetAssignmentsList))
 	mux.Handle("PUT /edev/{id1}/fsa/{id2}", http.HandlerFunc(h.PUTFunctionSetAssignments))

@@ -45,6 +45,19 @@ func main() {
 	http.Handle("POST /edev/{id1}/frq/{id2}", http.HandlerFunc(h.POSTFlowReservationRequest))
 	http.Handle("DELETE /edev/{id1}/frq/{id2}", http.HandlerFunc(h.DELETEFlowReservationRequest))
 
+	// EDevice FRP sub-resource routes mapped to FlowReservation service
+	http.Handle("GET /edev/{id1}/frp", http.HandlerFunc(h.GETFlowReservationResponseList))
+	http.Handle("HEAD /edev/{id1}/frp", http.HandlerFunc(h.HEADFlowReservationResponseList))
+	http.Handle("PUT /edev/{id1}/frp", http.HandlerFunc(h.PUTFlowReservationResponseList))
+	http.Handle("POST /edev/{id1}/frp", http.HandlerFunc(h.POSTFlowReservationResponseList))
+	http.Handle("DELETE /edev/{id1}/frp", http.HandlerFunc(h.DELETEFlowReservationResponseList))
+	http.Handle("GET /edev/{id1}/frp/{id2}", http.HandlerFunc(h.GETFlowReservationResponse))
+	http.Handle("HEAD /edev/{id1}/frp/{id2}", http.HandlerFunc(h.HEADFlowReservationResponse))
+	http.Handle("PUT /edev/{id1}/frp/{id2}", http.HandlerFunc(h.PUTFlowReservationResponse))
+	http.Handle("POST /edev/{id1}/frp/{id2}", http.HandlerFunc(h.POSTFlowReservationResponse))
+	http.Handle("DELETE /edev/{id1}/frp/{id2}", http.HandlerFunc(h.DELETEFlowReservationResponse))
+
+
 	log.Printf("Starting FlowReservation on %s", routes.FlowReservation)
 	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
 	if err != nil {

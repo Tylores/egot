@@ -48,6 +48,7 @@ func TestFlowreservationRouteRegistration(t *testing.T) {
 	}
 
 	helper := routing.NewTestHelper(mux)
+	helper.RegisterExpectedRoutes(expectations)
 	all, missing := helper.AssertAllRoutesExist(expectations)
 	if !all {
 		t.Errorf("Missing %d routes:", len(missing))
@@ -61,6 +62,8 @@ func TestFlowreservationPathParameters(t *testing.T) {
 	validator := routing.NewPathParameterValidator()
 
 	patterns := map[string][]string{
+		"/edev/{id1}/frp": {"id1"},
+		"/edev/{id1}/frp/{id2}": {"id1", "id2"},
 		"/edev/{id1}/frq": {"id1"},
 		"/edev/{id1}/frq/{id2}": {"id1", "id2"},
 	}
@@ -93,14 +96,24 @@ func TestFlowreservationHTTPMethods(t *testing.T) {
 		path   string
 		expect bool
 	}{
+		{"DELETE", "/edev/{id1}/frp", true},
+		{"DELETE", "/edev/{id1}/frp/{id2}", true},
 		{"DELETE", "/edev/{id1}/frq", true},
 		{"DELETE", "/edev/{id1}/frq/{id2}", true},
+		{"GET", "/edev/{id1}/frp", true},
+		{"GET", "/edev/{id1}/frp/{id2}", true},
 		{"GET", "/edev/{id1}/frq", true},
 		{"GET", "/edev/{id1}/frq/{id2}", true},
+		{"HEAD", "/edev/{id1}/frp", true},
+		{"HEAD", "/edev/{id1}/frp/{id2}", true},
 		{"HEAD", "/edev/{id1}/frq", true},
 		{"HEAD", "/edev/{id1}/frq/{id2}", true},
+		{"POST", "/edev/{id1}/frp", true},
+		{"POST", "/edev/{id1}/frp/{id2}", true},
 		{"POST", "/edev/{id1}/frq", true},
 		{"POST", "/edev/{id1}/frq/{id2}", true},
+		{"PUT", "/edev/{id1}/frp", true},
+		{"PUT", "/edev/{id1}/frp/{id2}", true},
 		{"PUT", "/edev/{id1}/frq", true},
 		{"PUT", "/edev/{id1}/frq/{id2}", true},
 	}
@@ -115,14 +128,24 @@ func TestFlowreservationHTTPMethods(t *testing.T) {
 }
 
 func registerFlowreservationRoutes(mux *http.ServeMux, h *handler.Handler) {
+	mux.Handle("DELETE /edev/{id1}/frp", http.HandlerFunc(h.DELETEFlowReservationResponseList))
+	mux.Handle("DELETE /edev/{id1}/frp/{id2}", http.HandlerFunc(h.DELETEFlowReservationResponse))
 	mux.Handle("DELETE /edev/{id1}/frq", http.HandlerFunc(h.DELETEFlowReservationRequestList))
 	mux.Handle("DELETE /edev/{id1}/frq/{id2}", http.HandlerFunc(h.DELETEFlowReservationRequest))
+	mux.Handle("GET /edev/{id1}/frp", http.HandlerFunc(h.GETFlowReservationResponseList))
+	mux.Handle("GET /edev/{id1}/frp/{id2}", http.HandlerFunc(h.GETFlowReservationResponse))
 	mux.Handle("GET /edev/{id1}/frq", http.HandlerFunc(h.GETFlowReservationRequestList))
 	mux.Handle("GET /edev/{id1}/frq/{id2}", http.HandlerFunc(h.GETFlowReservationRequest))
+	mux.Handle("HEAD /edev/{id1}/frp", http.HandlerFunc(h.HEADFlowReservationResponseList))
+	mux.Handle("HEAD /edev/{id1}/frp/{id2}", http.HandlerFunc(h.HEADFlowReservationResponse))
 	mux.Handle("HEAD /edev/{id1}/frq", http.HandlerFunc(h.HEADFlowReservationRequestList))
 	mux.Handle("HEAD /edev/{id1}/frq/{id2}", http.HandlerFunc(h.HEADFlowReservationRequest))
+	mux.Handle("POST /edev/{id1}/frp", http.HandlerFunc(h.POSTFlowReservationResponseList))
+	mux.Handle("POST /edev/{id1}/frp/{id2}", http.HandlerFunc(h.POSTFlowReservationResponse))
 	mux.Handle("POST /edev/{id1}/frq", http.HandlerFunc(h.POSTFlowReservationRequestList))
 	mux.Handle("POST /edev/{id1}/frq/{id2}", http.HandlerFunc(h.POSTFlowReservationRequest))
+	mux.Handle("PUT /edev/{id1}/frp", http.HandlerFunc(h.PUTFlowReservationResponseList))
+	mux.Handle("PUT /edev/{id1}/frp/{id2}", http.HandlerFunc(h.PUTFlowReservationResponse))
 	mux.Handle("PUT /edev/{id1}/frq", http.HandlerFunc(h.PUTFlowReservationRequestList))
 	mux.Handle("PUT /edev/{id1}/frq/{id2}", http.HandlerFunc(h.PUTFlowReservationRequest))
 }

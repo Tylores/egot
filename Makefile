@@ -1,6 +1,6 @@
 .PHONY: test test-unit test-integration test-verbose test-coverage coverage-report test-watch help lint test-routes test-route-registration test-http-methods
 .PHONY: build-all build-services build-tools
-.PHONY: build-BRS build-Bill build-DCAP build-DERP build-DR build-EDevice build-File build-MUP build-Messaging build-Notify build-PPY build-SDevice build-TariffProfile build-TimeOfUse build-UPT
+.PHONY: build-BRS build-Bill build-DCAP build-DR build-EDevice build-File build-MUP build-Messaging build-Notify build-PPY build-SDevice build-TariffProfile build-TimeOfUse build-UPT
 .PHONY: build-crawler build-client build-scaffold-gen build-wadl-extract
 .PHONY: start stop status restart nginx-config
 .PHONY: ssl-refresh ssl-clients
@@ -17,10 +17,6 @@ build-FlowReservation:
 build-DER:
 	@echo "Building DER..."
 	@go build -o $(BIN_DIR)/DER ./cmd/DER/
-
-build-DERP:
-	@echo "Building DERP..."
-	@go build -o $(BIN_DIR)/DERP ./cmd/DERP/
 
 build-MUP:
 	@echo "Building MUP..."
@@ -53,10 +49,6 @@ build-Bill:
 build-DCAP:
 	@echo "Building DCAP..."
 	@go build -o $(BIN_DIR)/DCAP ./cmd/DCAP/
-
-build-DERP:
-	@echo "Building DERP..."
-	@go build -o $(BIN_DIR)/DERP ./cmd/DERP/
 
 build-DR:
 	@echo "Building DR..."
@@ -124,7 +116,7 @@ build-nginx-config-gen:
 
 # Build all microservice servers (excludes tools/clients)
 build-services: build-FlowReservation build-operator build-rsps \
-	build-BRS build-Bill build-DCAP build-DERP build-DR build-EDevice \
+	build-BRS build-Bill build-DCAP build-DR build-EDevice \
 	build-File build-MUP build-Messaging build-Notify build-PPY \
 	build-SDevice build-TariffProfile build-TimeOfUse build-UPT build-DER
 	@echo "✅ All services built in $(BIN_DIR)/"
@@ -154,7 +146,7 @@ PIDS_DIR := $(BIN_DIR)/pids
 LOGS_DIR := $(BIN_DIR)/logs
 
 SERVICES := FlowReservation operator rsps \
-	BRS Bill DCAP DERP DR EDevice File MUP Messaging Notify PPY \
+	BRS Bill DCAP DR EDevice File MUP Messaging Notify PPY \
 	SDevice TariffProfile TimeOfUse UPT DER
 
 # Start all microservices in the background

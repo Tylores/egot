@@ -21,7 +21,6 @@ var ServiceMapping = map[string]struct {
 	"brs":            {dir: "BRS", pkgName: "handler", dataName: "brs", handlerImport: "github.com/Tylores/egot/internal/BRS/handler"},
 	"bill":           {dir: "Bill", pkgName: "handler", dataName: "bill", handlerImport: "github.com/Tylores/egot/internal/Bill/handler"},
 	"dcap":           {dir: "DCAP", pkgName: "handler", dataName: "dcap", handlerImport: "github.com/Tylores/egot/internal/DCAP/handler"},
-	"derp":           {dir: "DERP", pkgName: "handler", dataName: "derp", handlerImport: "github.com/Tylores/egot/internal/DERP/handler"},
 	"dr":             {dir: "DR", pkgName: "handler", dataName: "dr", handlerImport: "github.com/Tylores/egot/internal/DR/handler"},
 	"edev":           {dir: "EDevice", pkgName: "handler", dataName: "edev", handlerImport: "github.com/Tylores/egot/internal/EDevice/handler"},
 	"file":           {dir: "File", pkgName: "handler", dataName: "file", handlerImport: "github.com/Tylores/egot/internal/File/handler"},
@@ -171,6 +170,7 @@ func Test%sRouteRegistration(t *testing.T) {
 	}
 
 	helper := routing.NewTestHelper(mux)
+	helper.RegisterExpectedRoutes(expectations)
 	all, missing := helper.AssertAllRoutesExist(expectations)
 	if !all {
 		t.Errorf("Missing %%d routes:", len(missing))
@@ -251,6 +251,23 @@ func generateRegistrationCode(handlerVar string, routes []Route) string {
 }
 
 func getResourceNameFromPath(path string) string {
+	// Specialized mapping for path patterns or top-level paths that don't follow standard rules
+	if strings.HasSuffix(path, "/dderc") {
+		return "DefaultDERControl"
+	}
+	if strings.HasSuffix(path, "/cdc") {
+		return "CurrentDERControls"
+	}
+	if strings.HasSuffix(path, "/cdp") {
+		return "CurrentDERProgram"
+	}
+	if strings.HasSuffix(path, "/dera") {
+		return "DERAvailability"
+	}
+	if strings.HasSuffix(path, "/upt") && strings.Contains(path, "/der/") {
+		return "AssociatedUsagePoint"
+	}
+
 	// Specialized mapping for top-level paths that don't follow the pattern
 	switch path {
 	case "/dcap": return "DeviceCapability"

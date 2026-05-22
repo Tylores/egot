@@ -10,7 +10,6 @@ const (
 	BRS             = "localhost:8010"
 	Bill            = "localhost:8011"
 	DCAP            = "localhost:8012"
-	DERP            = "localhost:8013"
 	DR              = "localhost:8014"
 	EDevice         = "localhost:8015"
 	File            = "localhost:8016"
@@ -50,8 +49,8 @@ var serviceMap = map[string]string{
 	"/edev/{id1}/di/loc":                                  EDevice,
 	"/edev/{id1}/di/loc/{id2}":                            EDevice,
 	"/edev/{id1}/dstat":                                   EDevice,
-	"/edev/{id1}/frp":                                     EDevice,
-	"/edev/{id1}/frp/{id2}":                               EDevice,
+	"/edev/{id1}/frp":                                     FlowReservation,
+	"/edev/{id1}/frp/{id2}":                               FlowReservation,
 	"/edev/{id1}/fs":                                      EDevice,
 	"/edev/{id1}/fsa":                                     EDevice,
 	"/edev/{id1}/fsa/{id2}":                               EDevice,
@@ -119,14 +118,14 @@ var serviceMap = map[string]string{
 	"/bill/{id1}/ss":                 Bill,
 
 	// DERP
-	"/derp":                  DERP,
-	"/derp/{id1}":            DERP,
-	"/derp/{id1}/actderc":    DERP,
-	"/derp/{id1}/dc":         DERP,
-	"/derp/{id1}/dc/{id2}":   DERP,
-	"/derp/{id1}/dderc":      DERP,
-	"/derp/{id1}/derc":       DERP,
-	"/derp/{id1}/derc/{id2}": DERP,
+	"/derp":                  DER,
+	"/derp/{id1}":            DER,
+	"/derp/{id1}/actderc":    DER,
+	"/derp/{id1}/dc":         DER,
+	"/derp/{id1}/dc/{id2}":   DER,
+	"/derp/{id1}/dderc":      DER,
+	"/derp/{id1}/derc":       DER,
+	"/derp/{id1}/derc/{id2}": DER,
 
 	// DR
 	"/dr":                 DR,

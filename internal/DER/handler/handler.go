@@ -797,3 +797,1221 @@ func (h *Handler) DELETEDERCurve(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	xml.NewEncoder(w).Encode(&sep.DERCurve{})
 }
+
+// DERList resource handlers
+
+func (h *Handler) GETDERList(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.DERList{})
+}
+
+func (h *Handler) HEADDERList(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) PUTDERList(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) POSTDERList(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.Header().Set("location", "/edev/{id1}/der/"+fmt.Sprintf("%d", sfdi))
+	w.WriteHeader(http.StatusCreated)
+}
+
+func (h *Handler) DELETEDERList(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+// DER resource handlers
+
+func (h *Handler) GETDER(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.DER{})
+}
+
+func (h *Handler) HEADDER(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) PUTDER(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) POSTDER(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) DELETEDER(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.DER{})
+}
+
+// AssociatedUsagePoint resource handlers
+
+func (h *Handler) GETAssociatedUsagePoint(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.UsagePoint{})
+}
+
+func (h *Handler) HEADAssociatedUsagePoint(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) PUTAssociatedUsagePoint(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) POSTAssociatedUsagePoint(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) DELETEAssociatedUsagePoint(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.UsagePoint{})
+}
+
+// AssociatedDERProgramList resource handlers
+
+func (h *Handler) GETAssociatedDERProgramList(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.DERProgramList{})
+}
+
+func (h *Handler) HEADAssociatedDERProgramList(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) PUTAssociatedDERProgramList(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) POSTAssociatedDERProgramList(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.Header().Set("location", "/edev/{id1}/der/{id2}/derp/"+fmt.Sprintf("%d", sfdi))
+	w.WriteHeader(http.StatusCreated)
+}
+
+func (h *Handler) DELETEAssociatedDERProgramList(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+// CurrentDERControls resource handlers
+
+func (h *Handler) GETCurrentDERControls(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.CurrentDERControls{})
+}
+
+func (h *Handler) HEADCurrentDERControls(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) PUTCurrentDERControls(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) POSTCurrentDERControls(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) DELETECurrentDERControls(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+// CurrentDERProgram resource handlers
+
+func (h *Handler) GETCurrentDERProgram(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.DERProgram{})
+}
+
+func (h *Handler) HEADCurrentDERProgram(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) PUTCurrentDERProgram(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) POSTCurrentDERProgram(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) DELETECurrentDERProgram(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.DERProgram{})
+}
+
+// DERSettings resource handlers
+
+func (h *Handler) GETDERSettings(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.DERSettings{})
+}
+
+func (h *Handler) HEADDERSettings(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) PUTDERSettings(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) POSTDERSettings(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) DELETEDERSettings(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+// DERStatus resource handlers
+
+func (h *Handler) GETDERStatus(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.DERStatus{})
+}
+
+func (h *Handler) HEADDERStatus(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) PUTDERStatus(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) POSTDERStatus(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) DELETEDERStatus(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+// DERAvailability resource handlers
+
+func (h *Handler) GETDERAvailability(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.DERAvailability{})
+}
+
+func (h *Handler) HEADDERAvailability(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) PUTDERAvailability(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) POSTDERAvailability(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) DELETEDERAvailability(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+// DERCapability resource handlers
+
+func (h *Handler) GETDERCapability(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.DERCapability{})
+}
+
+func (h *Handler) HEADDERCapability(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) PUTDERCapability(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) POSTDERCapability(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) DELETEDERCapability(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+// DERComponentList resource handlers
+
+func (h *Handler) GETDERComponentList(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.DERComponentList{})
+}
+
+func (h *Handler) HEADDERComponentList(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) PUTDERComponentList(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) POSTDERComponentList(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.Header().Set("location", "/edev/{id1}/der/{id2}/dercom/"+fmt.Sprintf("%d", sfdi))
+	w.WriteHeader(http.StatusCreated)
+}
+
+func (h *Handler) DELETEDERComponentList(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+// DERComponent resource handlers
+
+func (h *Handler) GETDERComponent(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id3")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.DERComponent{})
+}
+
+func (h *Handler) HEADDERComponent(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id3")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) PUTDERComponent(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id3")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) POSTDERComponent(w http.ResponseWriter, req *http.Request) {
+	_, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusMethodNotAllowed)
+}
+
+func (h *Handler) DELETEDERComponent(w http.ResponseWriter, req *http.Request) {
+	lfdi, err := h.getLFDI(req)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	sfdi, err := h.getSFDI(lfdi)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	_ = h.buildStoreKey(sfdi)
+	if _, err := strconv.Atoi(req.PathValue("id1")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id2")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if _, err := strconv.Atoi(req.PathValue("id3")); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", sep.ContentType)
+	w.WriteHeader(http.StatusOK)
+	xml.NewEncoder(w).Encode(&sep.DERComponent{})
+}
+
