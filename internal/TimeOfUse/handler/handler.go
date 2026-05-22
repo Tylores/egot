@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/Tylores/egot/internal/store"
 	"github.com/Tylores/egot/internal/registry"
@@ -64,9 +65,15 @@ func (h *Handler) GETTime(w http.ResponseWriter, req *http.Request) {
 	}
 	_ = h.buildStoreKey(sfdi)
 
+	now := time.Now().Unix()
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.Time{})
+	xml.NewEncoder(w).Encode(&sep.Time{
+		Resource:    &sep.Resource{HrefAttr: "/tm"},
+		CurrentTime: sep.TimeType(now),
+		LocalTime:   sep.TimeType(now),
+		Quality:     7,
+	})
 }
 
 func (h *Handler) HEADTime(w http.ResponseWriter, req *http.Request) {

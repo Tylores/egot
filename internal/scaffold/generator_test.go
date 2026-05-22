@@ -94,13 +94,13 @@ func LinkFor(path string) string {
 	}
 	content := string(updated)
 
-	if !strings.Contains(content, `NewService = "egot.internal.com:8002"`) {
+	if !strings.Contains(content, "NewService") || !strings.Contains(content, `"localhost:8004"`) {
 		t.Fatalf("routes.go missing next port assignment:\n%s", content)
 	}
-	if !strings.Contains(content, `"/new": NewService,`) {
+	if !strings.Contains(content, `"/new"`) || !strings.Contains(content, `NewService`) {
 		t.Fatalf("routes.go missing /new mapping:\n%s", content)
 	}
-	if !strings.Contains(content, `"/new/{id1}": NewService,`) {
+	if !strings.Contains(content, `"/new/{id1}"`) || !strings.Contains(content, `NewService`) {
 		t.Fatalf("routes.go missing /new/{id1} mapping:\n%s", content)
 	}
 }

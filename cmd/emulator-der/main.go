@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/xml"
@@ -35,10 +36,21 @@ type Config struct {
 	Interval time.Duration
 }
 
+type ControlState struct {
+	mrid      string
+	control   *sep.DERControl
+	received  bool
+	started   bool
+	completed bool
+}
+
 type Emulator struct {
-	cfg    Config
-	client *http.Client
-	state  State
+	cfg      Config
+	client   *http.Client
+	state    State
+	lfdi     string
+	sfdi     sep.SFDIType
+	controls map[string]*ControlState
 }
 
 type State struct {
@@ -102,6 +114,17 @@ func NewEmulator(c Config) (*Emulator, error) {
 		return nil, err
 	}
 
+	// Parse x509 cert to extract LFDI and SFDI
+	x509Cert, err := x509.ParseCertificate(cert.Certificate[0])
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse client certificate: %w", err)
+	}
+	lfdi := fmt.Sprintf("%X", sha256.Sum256(x509Cert.Raw))[0:40]
+	sfdi, err := sep.ToSFDI(lfdi)
+	if err != nil {
+		return nil, fmt.Errorf("failed to compute SFDI from LFDI: %w", err)
+	}
+
 	client := &http.Client{
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
@@ -120,15 +143,120 @@ func NewEmulator(c Config) (*Emulator, error) {
 	}
 
 	return &Emulator{
-		cfg:    c,
-		client: client,
-		state:  initialState,
+		cfg:      c,
+		client:   client,
+		state:    initialState,
+		lfdi:     lfdi,
+		sfdi:     sfdi,
+		controls: make(map[string]*ControlState),
 	}, nil
 }
 
+func (e *Emulator) onboard() (string, error) {
+	// Step 1: Discovery (GET /dcap)
+	dcapURL := "https://" + e.cfg.Gateway + "/dcap"
+	log.Printf("[%s] [CSIP] Step 1: Discovery GET %s", e.cfg.Name, dcapURL)
+	resp, err := e.client.Get(dcapURL)
+	if err != nil {
+		return "", fmt.Errorf("discovery failed: %w", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("discovery returned status %d", resp.StatusCode)
+	}
+	var dcap sep.DeviceCapability
+	if err := xml.NewDecoder(resp.Body).Decode(&dcap); err != nil {
+		return "", fmt.Errorf("failed to decode discovery response: %w", err)
+	}
+	log.Printf("[%s] [CSIP] Discovery successful", e.cfg.Name)
+
+	// Step 2: Time Sync (GET /tm)
+	timeURL := "https://" + e.cfg.Gateway + "/tm"
+	log.Printf("[%s] [CSIP] Step 2: Time Sync GET %s", e.cfg.Name, timeURL)
+	resp, err = e.client.Get(timeURL)
+	if err != nil {
+		return "", fmt.Errorf("time sync failed: %w", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("time sync returned status %d", resp.StatusCode)
+	}
+	var sTime sep.Time
+	if err := xml.NewDecoder(resp.Body).Decode(&sTime); err != nil {
+		return "", fmt.Errorf("failed to decode time response: %w", err)
+	}
+	if sTime.Quality != 7 {
+		return "", fmt.Errorf("time quality is not 7 (got %d)", sTime.Quality)
+	}
+	log.Printf("[%s] [CSIP] Time Sync successful (server time: %d, quality: %d)", e.cfg.Name, sTime.CurrentTime, sTime.Quality)
+
+	// Step 3: Device Registration (POST /edev)
+	ed := &sep.EndDevice{
+		ExternalDevice: &sep.ExternalDevice{
+			AbstractDevice: &sep.AbstractDevice{
+				LFDI: e.lfdi,
+				SFDI: &e.sfdi,
+			},
+		},
+	}
+	var buf bytes.Buffer
+	if err := xml.NewEncoder(&buf).Encode(ed); err != nil {
+		return "", fmt.Errorf("failed to encode EndDevice: %w", err)
+	}
+
+	edevURL := "https://" + e.cfg.Gateway + "/edev"
+	log.Printf("[%s] [CSIP] Step 3: Device Registration POST %s", e.cfg.Name, edevURL)
+	resp, err = e.client.Post(edevURL, sep.ContentType, &buf)
+	if err != nil {
+		return "", fmt.Errorf("registration POST failed: %w", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("registration POST returned status %d", resp.StatusCode)
+	}
+
+	location := resp.Header.Get("Location")
+	if location == "" {
+		location = "/edev/" + fmt.Sprintf("%d", e.sfdi)
+	}
+	log.Printf("[%s] [CSIP] Registration successful, device location: %s", e.cfg.Name, location)
+
+	// Step 4: PIN Verification (GET /edev/{id1}/rg)
+	pinURL := "https://" + e.cfg.Gateway + location + "/rg"
+	log.Printf("[%s] [CSIP] Step 4: PIN Verification GET %s", e.cfg.Name, pinURL)
+	resp, err = e.client.Get(pinURL)
+	if err != nil {
+		return "", fmt.Errorf("PIN verification GET failed: %w", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("PIN verification GET returned status %d", resp.StatusCode)
+	}
+	var reg sep.Registration
+	if err := xml.NewDecoder(resp.Body).Decode(&reg); err != nil {
+		return "", fmt.Errorf("failed to decode registration response: %w", err)
+	}
+	if reg.PIN == nil {
+		return "", fmt.Errorf("registration response PIN is nil")
+	}
+	if *reg.PIN != 111115 {
+		return "", fmt.Errorf("registration PIN %d does not match expected 111115", *reg.PIN)
+	}
+	log.Printf("[%s] [CSIP] PIN verification successful (PIN: %d)", e.cfg.Name, *reg.PIN)
+
+	return location, nil
+}
+
 func (e *Emulator) Run() {
-	// 1. Discovery (Skipped for brevity, assuming direct paths work through gateway)
-	
+	// 1. Onboard using CSIP procedure
+	devicePath, err := e.onboard()
+	if err != nil {
+		log.Printf("[%s] CSIP Onboarding failed: %v", e.cfg.Name, err)
+		// Proceed anyway, but log warning
+	} else {
+		log.Printf("[%s] CSIP Onboarding completed successfully (Device Path: %s)", e.cfg.Name, devicePath)
+	}
+
 	// 2. Register with MUP
 	mupPath, err := e.registerMUP()
 	if err != nil {
@@ -142,6 +270,7 @@ func (e *Emulator) Run() {
 		e.updateState()
 		e.pushTelemetry(mupPath)
 		e.pollControls()
+		e.updateTrackedControls()
 	}
 }
 
@@ -263,7 +392,6 @@ func (e *Emulator) pollControls() {
 	}
 
 	// Poll DERP for active controls (assuming /derp/1/actderc)
-	// In a real setup, we would use the link from DCAP
 	resp, err := e.client.Get("https://"+e.cfg.Gateway+"/derp/1/actderc")
 	if err != nil {
 		log.Printf("Failed to poll controls: %v", err)
@@ -282,8 +410,136 @@ func (e *Emulator) pollControls() {
 	}
 
 	for _, c := range list.DERControl {
-		e.applyControl(c)
+		e.processControl(c)
 	}
+}
+
+func (e *Emulator) processControl(c *sep.DERControl) {
+	if c == nil || c.DERControlBase == nil || c.MRID == nil || c.MRID.HexBinary128 == nil {
+		return
+	}
+
+	mridStr := *c.MRID.HexBinary128
+	cs, exists := e.controls[mridStr]
+	if !exists {
+		cs = &ControlState{
+			mrid:    mridStr,
+			control: c,
+		}
+		e.controls[mridStr] = cs
+	}
+
+	now := time.Now().Unix()
+	var startTime int64
+	if c.Interval != nil && c.Interval.Start != nil {
+		startTime = int64(*c.Interval.Start)
+	}
+	duration := uint32(0)
+	if c.Interval != nil {
+		duration = c.Interval.Duration
+	}
+	endTime := startTime + int64(duration)
+
+	// Transition 1: Received
+	if !cs.received {
+		log.Printf("[%s] Control %s received. Posting status Received (1)", e.cfg.Name, mridStr)
+		if err := e.postControlResponse(c, 1); err == nil {
+			cs.received = true
+		} else {
+			log.Printf("[%s] Failed to post Received status for control %s: %v", e.cfg.Name, mridStr, err)
+		}
+	}
+
+	// Transition 2: Started
+	if cs.received && !cs.started && now >= startTime && now < endTime {
+		log.Printf("[%s] Control %s starting. Posting status Started (2)", e.cfg.Name, mridStr)
+		if err := e.postControlResponse(c, 2); err == nil {
+			cs.started = true
+			e.applyControl(c)
+		} else {
+			log.Printf("[%s] Failed to post Started status for control %s: %v", e.cfg.Name, mridStr, err)
+		}
+	}
+
+	// Transition 3: Completed
+	if cs.started && !cs.completed && now >= endTime {
+		log.Printf("[%s] Control %s completed. Posting status Completed (3)", e.cfg.Name, mridStr)
+		if err := e.postControlResponse(c, 3); err == nil {
+			cs.completed = true
+		} else {
+			log.Printf("[%s] Failed to post Completed status for control %s: %v", e.cfg.Name, mridStr, err)
+		}
+	}
+}
+
+func (e *Emulator) updateTrackedControls() {
+	now := time.Now().Unix()
+	for mridStr, cs := range e.controls {
+		c := cs.control
+		var startTime int64
+		if c.Interval != nil && c.Interval.Start != nil {
+			startTime = int64(*c.Interval.Start)
+		}
+		duration := uint32(0)
+		if c.Interval != nil {
+			duration = c.Interval.Duration
+		}
+		endTime := startTime + int64(duration)
+
+		// Transition 2: Started
+		if cs.received && !cs.started && now >= startTime && now < endTime {
+			log.Printf("[%s] Control %s starting. Posting status Started (2)", e.cfg.Name, mridStr)
+			if err := e.postControlResponse(c, 2); err == nil {
+				cs.started = true
+				e.applyControl(c)
+			} else {
+				log.Printf("[%s] Failed to post Started status for control %s: %v", e.cfg.Name, mridStr, err)
+			}
+		}
+
+		// Transition 3: Completed
+		if cs.started && !cs.completed && now >= endTime {
+			log.Printf("[%s] Control %s completed. Posting status Completed (3)", e.cfg.Name, mridStr)
+			if err := e.postControlResponse(c, 3); err == nil {
+				cs.completed = true
+			} else {
+				log.Printf("[%s] Failed to post Completed status for control %s: %v", e.cfg.Name, mridStr, err)
+			}
+		}
+	}
+}
+
+func (e *Emulator) postControlResponse(c *sep.DERControl, status uint8) error {
+	nowVal := sep.TimeType(time.Now().Unix())
+
+	respPayload := &sep.DERControlResponse{
+		Response: &sep.Response{
+			CreatedDateTime: &nowVal,
+			EndDeviceLFDI:   e.lfdi,
+			Status:          status,
+			Subject:         c.MRID,
+		},
+	}
+
+	var buf bytes.Buffer
+	if err := xml.NewEncoder(&buf).Encode(respPayload); err != nil {
+		return fmt.Errorf("failed to encode control response: %w", err)
+	}
+
+	url := fmt.Sprintf("https://%s/rsps/%d/rsp", e.cfg.Gateway, e.sfdi)
+	resp, err := e.client.Post(url, sep.ContentType, &buf)
+	if err != nil {
+		return fmt.Errorf("HTTP POST failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		return fmt.Errorf("server returned status %d: %s", resp.StatusCode, string(body))
+	}
+
+	log.Printf("[%s] Successfully posted control response status %d to %s", e.cfg.Name, status, url)
+	return nil
 }
 
 func (e *Emulator) applyControl(c *sep.DERControl) {

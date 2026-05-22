@@ -20,6 +20,7 @@ func main() {
 	server := http.Server{
 		Addr:      routes.DCAP,
 		TLSConfig: cfg,
+		Handler:   tlsutil.CertHeaderMiddleware(http.DefaultServeMux),
 	}
 
 	reg := registry.New(filepath.Join("data", "registry.db"))

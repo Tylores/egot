@@ -18,6 +18,7 @@ func main() {
 	server := http.Server{
 		Addr:      routes.Operator,
 		TLSConfig: cfg,
+		Handler:   tlsutil.CertHeaderMiddleware(http.DefaultServeMux),
 	}
 
 	// In a real implementation, these would poll the FlowReservation and MUP services

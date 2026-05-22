@@ -247,9 +247,13 @@ func (h *Handler) GETRegistration(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	pinVal := sep.PINType(111115)
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.WriteHeader(http.StatusOK)
-	xml.NewEncoder(w).Encode(&sep.Registration{})
+	xml.NewEncoder(w).Encode(&sep.Registration{
+		Resource: &sep.Resource{HrefAttr: "/edev/" + req.PathValue("id1") + "/rg"},
+		PIN:      &pinVal,
+	})
 }
 
 func (h *Handler) HEADRegistration(w http.ResponseWriter, req *http.Request) {

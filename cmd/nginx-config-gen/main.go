@@ -225,6 +225,7 @@ func generateLocationBlocks(pathMappings []PathMapping) string {
 		fmt.Fprintf(&buf, "            proxy_set_header X-Real-IP $remote_addr;\n")
 		fmt.Fprintf(&buf, "            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n")
 		fmt.Fprintf(&buf, "            proxy_set_header X-Forwarded-Proto $scheme;\n")
+		fmt.Fprintf(&buf, "            proxy_set_header X-SSL-Client-Cert $ssl_client_escaped_cert;\n")
 		fmt.Fprintf(&buf, "            proxy_ssl_verify off;\n")
 		fmt.Fprintf(&buf, "        }\n\n")
 	}
@@ -262,10 +263,10 @@ func generateNginxConf(cfg *NginxYAML, upstreamBlocks, locationBlocks string) st
 	return buf.String()
 }
 
-const nginxTemplate = `user www-data www-data;
+const nginxTemplate = `# user www-data www-data;
 worker_processes auto;
 error_log {{.ErrorLog}} {{.ErrorLogLevel}};
-pid /var/run/nginx.pid;
+pid ./logs/nginx.pid;
 
 events {
     worker_connections 1024;
@@ -297,6 +298,8 @@ http {
         # TLS configuration
         ssl_certificate {{.TLSCert}};
         ssl_certificate_key {{.TLSKey}};
+        ssl_client_certificate ./ssl/ca.crt;
+        ssl_verify_client on;
         ssl_protocols TLSv1.2 TLSv1.3;
         ssl_ciphers HIGH:!aNULL:!MD5;
 

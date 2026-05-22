@@ -1,40 +1,55 @@
 # ESI Lifecycle Sequence Diagrams: Blackstart & DR Dispatch
 
-This document covers the client/server interactions and sequence diagrams for the **Blackstart & DR Dispatch** grid service (cold-start recovery / feeder load-shed dispatcher) across all 5 ESI lifecycle phases.
+This document covers the client/server interactions and sequence diagrams for the **Blackstart & DR Dispatch** grid service (cold-start recovery / feeder load-shed dispatcher) across all 5 ESI lifecycle phases, aligned with IEEE 2030.5 CSIP test procedures.
 
 ---
 
 ## 1. Registration
 
-In the Registration phase, the client registers as an End Device, registers its load-shed capacity telemetry (SheddablePower), and discovers available Demand Response (DR) programs.
+During Registration, the client performs discovery, synchronizes time, and registers its identity.
 
 ```mermaid
 sequenceDiagram
     autonumber
     participant Client as "End Device / DER Client"
     participant GW as "Nginx API Gateway"
+    participant DCAP as "DCAP Service (:8012)"
+    participant TimeOfUse as "TimeOfUse Service (:8023)"
     participant EDev as "EDevice Service (:8015)"
     participant DR as "DR Service (:8014)"
 
-    Note over Client, GW: mTLS Handshake initiated by Client
+    Note over Client, GW: [CORE-001] mTLS Handshake initiated by Client
+    
+    Client->>GW: GET /dcap (Discover root capabilities)
+    GW->>DCAP: Forward GET /dcap
+    DCAP-->>GW: 200 OK (DeviceCapability List Links)
+    GW-->>Client: 200 OK
+    
+    Client->>GW: GET /tm (Retrieve Server Time for sync)
+    GW->>TimeOfUse: Forward GET /tm
+    Note over TimeOfUse: [CORE-005] Confirm quality metric = 7 (uncoordinated)
+    TimeOfUse-->>GW: 200 OK (Time resource with quality = 7)
+    GW-->>Client: 200 OK (Client synchronizes local clock)
+
     Client->>GW: POST /edev (SFDI / registration payload)
-    GW->>EDev: Forward POST /edev
+    GW->>EDev: Forward POST /edev (with peer certificate metadata)
     EDev-->>GW: 201 Created (Location: /edev/123)
     GW-->>Client: 201 Created (Location: /edev/123)
 
-    Client->>GW: POST /edev/123/rg (Pin/SFDI verification)
-    GW->>EDev: Forward POST /edev/123/rg
+    Client->>GW: POST /edev/123/rg (Registration PIN verification)
+    GW->>EDev: Forward POST /edev/123/rg (PIN validation)
+    Note over EDev: [CORE-003] / [BASIC-001] Verify LFDI matches and PIN is 111115
     EDev-->>GW: 201 Created
     GW-->>Client: 201 Created
 
-    Client->>GW: POST /edev/123/lsl (Register LoadShedAvailability)
-    GW->>EDev: Forward POST /edev/123/lsl (Sends SheddablePower baseline)
+    Client->>GW: POST /edev/123/lsl (Register sheddable capacity baseline)
+    GW->>EDev: Forward POST /edev/123/lsl
     EDev-->>GW: 201 Created
     GW-->>Client: 201 Created
 
     Client->>GW: GET /dr (Discover available DR Programs)
     GW->>DR: Forward GET /dr
-    DR-->>GW: 200 OK (DemandResponseProgramList)
+    DR-->>GW: 200 OK (DemandResponseProgramList with pollRate=900)
     GW-->>Client: 200 OK (DemandResponseProgramList)
 ```
 
@@ -42,8 +57,9 @@ sequenceDiagram
 
 ## 2. Scheduling
 
-In the Scheduling phase, the client queries scheduled End Device Controls (EDC) associated with the Demand Response Program to identify future planned events.
+In the Scheduling phase, the client monitors and parses future planned load-shed events using either Polling or Subscriptions.
 
+### Option A: Polling Interaction
 ```mermaid
 sequenceDiagram
     autonumber
@@ -51,6 +67,7 @@ sequenceDiagram
     participant GW as "Nginx API Gateway"
     participant DR as "DR Service (:8014)"
 
+    Note over Client: [CORE-003] Client polls at interval defined by pollRate (e.g. 900s)
     Client->>GW: GET /dr/1 (Fetch target DemandResponseProgram details)
     GW->>DR: Forward GET /dr/1
     DR-->>GW: 200 OK (DemandResponseProgram detailing event windows)
@@ -62,11 +79,31 @@ sequenceDiagram
     GW-->>Client: 200 OK (EndDeviceControlList)
 ```
 
+### Option B: Subscription/Notification
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Client as "End Device / DER Client"
+    participant GW as "Nginx API Gateway"
+    participant DR as "DR Service (:8014)"
+
+    Client->>GW: POST /dr/1/edc/sub (Subscribe to EndDeviceControlList changes)
+    GW->>DR: Forward POST /dr/1/edc/sub (Includes Client Notification URI)
+    DR-->>GW: 201 Created (Location: /dr/1/edc/sub/5)
+    GW-->>Client: 201 Created (Location: /dr/1/edc/sub/5)
+
+    Note over DR: [CORE-018] / [CORE-019] Event is scheduled by Grid Operator
+    DR->>GW: POST /client/notification (Notify client of resource change)
+    GW->>Client: Forward POST /client/notification (Contains updated EndDeviceControlList)
+    Client-->>GW: 204 No Content
+    GW-->>DR: 204 No Content
+```
+
 ---
 
 ## 3. Operation
 
-During the Operation phase (e.g. during a cold-start recovery or emergency feeder overload), the operator triggers a critical load-shed event. The client fetches active controls, parses the emergency signal, and immediately disconnects or limits its load.
+During the Operation phase, the client tracks active controls, applies event randomization, manages priorities, and triggers shedding.
 
 ```mermaid
 sequenceDiagram
@@ -80,15 +117,16 @@ sequenceDiagram
     DR-->>GW: 200 OK (ActiveEndDeviceControl detailing immediate load shed event)
     GW-->>Client: 200 OK (ActiveEndDeviceControl)
 
-    Note over Client: Client executes emergency load-shed trigger
-    Note over Client: Client sheds requested sheddable load (kW)
+    Note over Client: [CORE-021] Client applies randomizeStart / randomizeDuration values
+    Note over Client: [BASIC-021] Priority Check: If overlapping events occur, SP (Service Point) level supersedes SY (System) level
+    Note over Client: Client executes emergency load-shed trigger at randomized start time
 ```
 
 ---
 
 ## 4. Verify
 
-In the Verification phase, the client posts confirmation responses to the Rsps service and updates its Device Status to prove command compliance.
+In the Verification phase, the client posts status confirmations, reports execution states, updates statuses, and logs alarms.
 
 ```mermaid
 sequenceDiagram
@@ -98,22 +136,42 @@ sequenceDiagram
     participant RSPS as "Rsps Service (:8041)"
     participant EDev as "EDevice Service (:8015)"
 
-    Client->>GW: POST /rsps/123/rsp (Post control execution status)
-    GW->>RSPS: Forward POST /rsps/123/rsp (Sends status = event started/completed)
-    RSPS-->>GW: 201 Created (Stores Response payload)
+    Note over Client: [CORE-022] / [BASIC-017] Response State Reporting
+    Client->>GW: POST /rsps/123/rsp (Post Status = 1 [Received])
+    GW->>RSPS: Forward POST /rsps/123/rsp
+    RSPS-->>GW: 201 Created
     GW-->>Client: 201 Created
 
-    Client->>GW: GET /edev/123/dstat (Fetch DeviceStatus for confirmation)
-    GW->>EDev: Forward GET /edev/123/dstat
-    EDev-->>GW: 200 OK (DeviceStatus reflecting reduced load level)
-    GW-->>Client: 200 OK (DeviceStatus)
+    Note over Client: Event starts executing
+    Client->>GW: POST /rsps/123/rsp (Post Status = 2 [Started])
+    GW->>RSPS: Forward POST /rsps/123/rsp
+    RSPS-->>GW: 201 Created
+    GW-->>Client: 201 Created
+
+    Note over Client: [BASIC-028] Inverter Status Update
+    Client->>GW: PUT /edev/123/dstat (Periodically report device status)
+    GW->>EDev: Forward PUT /edev/123/dstat
+    EDev-->>GW: 204 No Content
+    GW-->>Client: 204 No Content
+
+    Note over Client: [BASIC-027] Alarm Logging (If fault occurs during event)
+    Client->>GW: POST /edev/123/lel (POST LogEvent for fault alarm)
+    GW->>EDev: Forward POST /edev/123/lel
+    EDev-->>GW: 201 Created
+    GW-->>Client: 201 Created
+
+    Note over Client: Event completes execution
+    Client->>GW: POST /rsps/123/rsp (Post Status = 3 [Completed])
+    GW->>RSPS: Forward POST /rsps/123/rsp
+    RSPS-->>GW: 201 Created
+    GW-->>Client: 201 Created
 ```
 
 ---
 
 ## 5. Settlement
 
-In the Settlement phase, telemetry data from the Mirror Usage Point is evaluated by the Billing service against the customer agreement and the baselines to credit the account for emergency load shedding.
+In the Settlement phase, telemetry data is evaluated by the Billing service to reconcile consumption against sheddable capacity agreements.
 
 ```mermaid
 sequenceDiagram
@@ -123,14 +181,17 @@ sequenceDiagram
     participant MUP as "MUP Service (:8017)"
     participant Bill as "Bill Service (:8011)"
 
-    Client->>GW: POST /mup/123 (Submit telemetry meter readings)
-    GW->>MUP: Forward POST /mup/123
-    MUP-->>GW: 201 Created (Stores usage telemetry logs)
+    Note over Client: [BASIC-029] Client periodically posts cumulative Wh readings
+    Client->>GW: POST /mup/123 (Submit telemetry meter readings payload)
+    GW->>MUP: Forward POST /mup/123 (XML payload validation)
+    MUP-->>GW: 201 Created
     GW-->>Client: 201 Created
 
     Note over Bill: Periodic billing process runs
     Bill->>MUP: GET /mup/123 (Fetch delivered energy readings)
     MUP-->>Bill: 200 OK (UsagePoint readings list)
-    Bill->>Bill: Reconcile shed energy baseline vs actual consumption during event
-    Bill->>Bill: Apply blackstart/DR tariff & credit CustomerAccount
+    
+    Bill->>Bill: Reconcile baseline sheddable energy vs actual consumption during event window
+    Bill->>Bill: Fetch customer agreement active billing periods (/bill/123/ca/1/actbp)
+    Bill->>Bill: Reconcile & credit CustomerAccount
 ```

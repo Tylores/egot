@@ -21,17 +21,17 @@ This roadmap outlines the task-oriented steps required to complete the PhD disse
 ## Phase 2: GMLC Service Validation (Simulation)
 *Focus: Evaluating grid service performance via steady-state simulation (excluding transient frequency/voltage).*
 
-- [ ] **Scenario 2.1: Day-Ahead & 5-min EIM Regulation**
-    - [ ] Task 2.1: Define a simulation window using the IEEE 13-node model featuring hourly scheduling and 5-minute imbalance corrections.
-    - [ ] Task 2.2: Validate the coordination between `FlowReservation` and `DERControl` dispatch.
-- [ ] **Scenario 2.2: Blackstart Coordination**
-    - [ ] Task 2.3: Execute a "Cold-Start" scenario where `DemandResponse` manages load pick-up for devices within specific feeder segments.
-    - [ ] Task 2.4: Measure the impact of managed load pick-up on generation ramp-rate requirements.
-- [ ] **Scenario 2.3: Reserve Capacity Validation**
-    - [ ] Task 2.5: Trigger a simulated contingency and compare "Load Shed Availability" telemetry from `EDevice` against actual DR performance.
-    - [ ] Task 2.6: Analyze "Grid Service Reliability" metrics using the `SettlementEngine`.
-- [ ] **Data Export & Visualization**
-    - [ ] Task 2.7: Generate publication-ready figures for EIM and Blackstart scenarios using `generate_dissertation_plots.py`.
+- [x] **Scenario 2.1: Day-Ahead & 5-min EIM Regulation**
+    - [x] Task 2.1: Define a simulation window using the IEEE 13-node model featuring hourly scheduling and 5-minute imbalance corrections.
+    - [x] Task 2.2: Validate the coordination between `FlowReservation` and `DERControl` dispatch.
+- [x] **Scenario 2.2: Blackstart Coordination**
+    - [x] Task 2.3: Execute a "Cold-Start" scenario where `DemandResponse` manages load pick-up for devices within specific feeder segments.
+    - [x] Task 2.4: Measure the impact of managed load pick-up on generation ramp-rate requirements.
+- [x] **Scenario 2.3: Reserve Capacity Validation**
+    - [x] Task 2.5: Trigger a simulated contingency and compare "Load Shed Availability" telemetry from `EDevice` against actual DR performance.
+    - [x] Task 2.6: Analyze "Grid Service Reliability" metrics using the `SettlementEngine`.
+- [x] **Data Export & Visualization**
+    - [x] Task 2.7: Generate publication-ready figures for EIM and Blackstart scenarios using `generate_dissertation_plots.py`.
 
 ## Phase 3: Dissertation Composition (LaTeX)
 *Focus: Translating technical success into academic contribution.*

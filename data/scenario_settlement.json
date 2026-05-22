@@ -1,0 +1,30 @@
+{
+  "ContingencyEvent": {
+    "DurationMinutes": 60,
+    "RequestedReductionKW": 12,
+    "StartTime": "2026-05-22T05:45:26-07:00"
+  },
+  "Settlement": [
+    {
+      "AccuracyPercent": 96.25,
+      "DeliveredKW": 3.85,
+      "DeviceLFDI": "device-1",
+      "ScheduledKW": 4,
+      "Status": "Compliant"
+    },
+    {
+      "AccuracyPercent": 98.75,
+      "DeliveredKW": 8.1,
+      "DeviceLFDI": "device-2",
+      "ScheduledKW": 8,
+      "Status": "Compliant"
+    }
+  ],
+  "Timestamp": "2026-05-22T06:45:26-07:00",
+  "TotalReserveVerification": {
+    "OverallAccuracy": 97.50000000000001,
+    "TargetMet": false,
+    "TotalDeliveredKW": 11.95,
+    "TotalScheduledKW": 12
+  }
+}

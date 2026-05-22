@@ -68,11 +68,13 @@ func updateConstants(f *ast.File, serviceConstant string) {
 			if len(vspec.Values) > i {
 				if lit, ok := vspec.Values[i].(*ast.BasicLit); ok && lit.Kind == token.STRING {
 					val := strings.Trim(lit.Value, "\"")
-					if strings.HasPrefix(val, "localhost:") {
+					idx := strings.LastIndex(val, ":")
+					if idx != -1 {
 						var port int
-						fmt.Sscanf(val, "localhost:%d", &port)
-						if port > maxPort {
-							maxPort = port
+						if _, err := fmt.Sscanf(val[idx:], ":%d", &port); err == nil {
+							if port > maxPort {
+								maxPort = port
+							}
 						}
 					}
 				}

@@ -1,3 +1,5 @@
+//go:build xmlvalidate
+
 package main
 
 import (
