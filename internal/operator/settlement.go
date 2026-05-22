@@ -19,33 +19,39 @@ type SettlementEngine struct{}
 
 // CalculatePerformance compares a list of controls against usage telemetry.
 func (e *SettlementEngine) CalculatePerformance(lfdi string, controls []*sep.DERControl, readings []*sep.MirrorUsagePoint) PerformanceReport {
-	// Simple integration of readings to find energy delivered
-	// And comparison against the scheduled controls.
-	
 	totalDelivered := 0.0
 	totalScheduled := 0.0
-	
-	// This is a placeholder for actual performance math.
-	// In a real PhD implementation, you'd use Root Mean Square Error (RMSE)
-	// or similar metrics to track setpoint following.
-	
+
 	for _, r := range readings {
 		for _, mmr := range r.MirrorMeterReading {
 			if mmr.Reading != nil {
-				totalDelivered += float64(mmr.Reading.Value)
+				dt := 3600.0 // default to 1 hour (3600 seconds) if missing
+				if mmr.Reading.TimePeriod != nil && mmr.Reading.TimePeriod.Duration > 0 {
+					dt = float64(mmr.Reading.TimePeriod.Duration)
+				}
+				energyKWh := (float64(mmr.Reading.Value) * dt) / (3600.0 * 1000.0)
+				totalDelivered += energyKWh
 			}
 		}
 	}
-	
+
 	for _, c := range controls {
 		if c.DERControlBase != nil && c.DERControlBase.OpModTargetW != nil {
-			totalScheduled += float64(c.DERControlBase.OpModTargetW.Value)
+			dt := 3600.0 // default to 1 hour if missing
+			if c.RandomizableEvent != nil &&
+				c.RandomizableEvent.Event != nil &&
+				c.RandomizableEvent.Event.Interval != nil &&
+				c.RandomizableEvent.Event.Interval.Duration > 0 {
+				dt = float64(c.RandomizableEvent.Event.Interval.Duration)
+			}
+			energyKWh := (float64(c.DERControlBase.OpModTargetW.Value) * dt) / (3600.0 * 1000.0)
+			totalScheduled += energyKWh
 		}
 	}
-	
+
 	accuracy := 1.0
-	if totalScheduled > 0 {
-		accuracy = 1.0 - math.Abs(totalDelivered-totalScheduled)/totalScheduled
+	if totalScheduled != 0 {
+		accuracy = 1.0 - math.Abs(totalDelivered-totalScheduled)/math.Abs(totalScheduled)
 	}
 	if accuracy < 0 {
 		accuracy = 0

@@ -209,7 +209,10 @@ func (h *Handler) POSTFlowReservationRequestList(w http.ResponseWriter, req *htt
 	}
 
 	key := h.buildStoreKey(sfdi, mrid)
-	h.repo.SetWithOwner(key, &frq, fmt.Sprintf("%d", sfdi))
+	if err := h.repo.SetWithOwner(key, &frq, fmt.Sprintf("%d", sfdi)); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.Header().Set("Location", "/frq/"+mrid)

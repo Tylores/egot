@@ -3833,7 +3833,10 @@ func (h *Handler) POSTLoadShedAvailabilityList(w http.ResponseWriter, req *http.
 	// For GMLC Task 1.3, we typically want the latest availability.
 	mrid := "lsa-" + strconv.FormatInt(int64(sfdi), 10)
 	key := h.buildStoreKey(sfdi, mrid)
-	h.repo.SetWithOwner(key, &lsa, fmt.Sprintf("%d", sfdi))
+	if err := h.repo.SetWithOwner(key, &lsa, fmt.Sprintf("%d", sfdi)); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.Header().Set("Location", "/edev/"+req.PathValue("id1")+"/lsl/"+mrid)

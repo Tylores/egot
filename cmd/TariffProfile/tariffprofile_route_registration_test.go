@@ -17,8 +17,10 @@ func TestTariffprofileRouteRegistration(t *testing.T) {
 	mux := http.NewServeMux()
 	reg := registry.New(":memory:")
 	reg.Load()
+	defer reg.Close()
 	repo := store.New(":memory:")
 	repo.Load()
+	defer repo.Close()
 	h := handler.NewHandler(repo, reg)
 
 	registerTariffprofileRoutes(mux, h)
@@ -89,8 +91,10 @@ func TestTariffprofileHTTPMethods(t *testing.T) {
 	mux := http.NewServeMux()
 	reg := registry.New(":memory:")
 	reg.Load()
+	defer reg.Close()
 	repo := store.New(":memory:")
 	repo.Load()
+	defer repo.Close()
 	h := handler.NewHandler(repo, reg)
 
 	registerTariffprofileRoutes(mux, h)

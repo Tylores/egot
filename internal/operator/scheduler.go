@@ -2,6 +2,7 @@ package operator
 
 import (
 	"fmt"
+	"math"
 	"sort"
 	"time"
 
@@ -77,14 +78,14 @@ func (s *GreedyScheduler) scheduleHourly(gridReq GridServiceRequest) ([]Schedule
 	// slotPowerKW[i] tracks the net power committed for slot i (positive = injection).
 	slotPowerKW := make([]float64, numSlots)
 
-	// Sort requests by power descending to maximise per-assignment impact.
+	// Sort requests by absolute power descending to maximise per-assignment impact.
 	sort.Slice(s.Requests, func(i, j int) bool {
-		pi, pj := 0, 0
+		pi, pj := 0.0, 0.0
 		if s.Requests[i].PowerRequested != nil {
-			pi = int(s.Requests[i].PowerRequested.Value)
+			pi = math.Abs(float64(s.Requests[i].PowerRequested.Value))
 		}
 		if s.Requests[j].PowerRequested != nil {
-			pj = int(s.Requests[j].PowerRequested.Value)
+			pj = math.Abs(float64(s.Requests[j].PowerRequested.Value))
 		}
 		return pi > pj
 	})
@@ -174,14 +175,14 @@ func (s *GreedyScheduler) ScheduleWithWindow(gridReq GridServiceRequest, window 
 		slotBalances[i] = gridReq.PowerKW
 	}
 
-	// Sort requests by power (greedy)
+	// Sort requests by absolute power (greedy)
 	sort.Slice(s.Requests, func(i, j int) bool {
-		pi, pj := 0, 0
+		pi, pj := 0.0, 0.0
 		if s.Requests[i].PowerRequested != nil {
-			pi = int(s.Requests[i].PowerRequested.Value)
+			pi = math.Abs(float64(s.Requests[i].PowerRequested.Value))
 		}
 		if s.Requests[j].PowerRequested != nil {
-			pj = int(s.Requests[j].PowerRequested.Value)
+			pj = math.Abs(float64(s.Requests[j].PowerRequested.Value))
 		}
 		return pi > pj
 	})
@@ -206,13 +207,14 @@ func (s *GreedyScheduler) ScheduleWithWindow(gridReq GridServiceRequest, window 
 
 		// See if this request covers any slots that still need power
 		coversNeededSlot := false
+		derPowerKW := float64(derReq.PowerRequested.Value) * 1e-3
 		for i := 0; i < numSlots; i++ {
 			slotStart := gridReq.StartTime.Add(time.Duration(i) * interval)
 			slotEnd := slotStart.Add(interval)
 
 			if (derStart.Before(slotEnd) || derStart.Equal(slotStart)) && derEnd.After(slotStart) {
 				// This request overlaps with the slot
-				if (gridReq.PowerKW > 0 && slotBalances[i] > 0) || (gridReq.PowerKW < 0 && slotBalances[i] < 0) {
+				if (gridReq.PowerKW > 0 && slotBalances[i] > 0 && derPowerKW > 0) || (gridReq.PowerKW < 0 && slotBalances[i] < 0 && derPowerKW < 0) {
 					coversNeededSlot = true
 					break
 				}
@@ -221,7 +223,6 @@ func (s *GreedyScheduler) ScheduleWithWindow(gridReq GridServiceRequest, window 
 
 		if coversNeededSlot {
 			// Assign this request
-			derPowerKW := float64(derReq.PowerRequested.Value) * 1e-3
 			for i := 0; i < numSlots; i++ {
 				slotStart := gridReq.StartTime.Add(time.Duration(i) * interval)
 				slotEnd := slotStart.Add(interval)

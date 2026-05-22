@@ -139,8 +139,10 @@ func Test%sRouteRegistration(t *testing.T) {
 	mux := http.NewServeMux()
 	reg := registry.New(":memory:")
 	reg.Load()
+	defer reg.Close()
 	repo := store.New(":memory:")
 	repo.Load()
+	defer repo.Close()
 	h := handler.NewHandler(repo, reg)
 
 	register%sRoutes(mux, h)
@@ -203,8 +205,10 @@ func Test%sHTTPMethods(t *testing.T) {
 	mux := http.NewServeMux()
 	reg := registry.New(":memory:")
 	reg.Load()
+	defer reg.Close()
 	repo := store.New(":memory:")
 	repo.Load()
+	defer repo.Close()
 	h := handler.NewHandler(repo, reg)
 
 	register%sRoutes(mux, h)
@@ -365,17 +369,23 @@ func getResourceNameFromPath(path string) string {
 	case "rg":   name = "Registration"
 	case "sub":  name = "Subscription"
 	case "rt":   name = "ReadingType"
+	case "dr":   name = "DemandResponseProgram"
+	case "rsps": name = "ResponseSet"
+	case "rsp":  name = "Response"
+	case "rc":   name = "RateComponent"
+	case "actbp": name = "ActiveBillingPeriod"
 	default:
 		name = strings.ToUpper(last[:1]) + last[1:]
 	}
 
 	// If it's a list (ends with resource segment but no ID), append "List"
 	if !strings.HasSuffix(path, "}") {
-		// Exceptions: top-level discovery/status resources are usually NOT suffixed with List in WADL IDs
+		// Exceptions: top-level discovery/status/single resources are usually NOT suffixed with List in WADL IDs
 		if !strings.HasSuffix(name, "Capability") && !strings.HasSuffix(name, "Status") && 
 		   !strings.HasSuffix(name, "Priority") && !strings.HasSuffix(name, "Information") &&
 		   !strings.HasSuffix(name, "Settings") && name != "PowerStatus" && 
-		   name != "Registration" && name != "Configuration" && name != "AccountBalance" {
+		   name != "Registration" && name != "Configuration" && name != "AccountBalance" &&
+		   name != "ReadingType" && name != "ServiceSupplier" {
 			name += "List"
 		}
 	}

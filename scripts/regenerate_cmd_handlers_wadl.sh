@@ -28,8 +28,8 @@ declare -A SERVICE_WADL=(
   [Notify]=ntfy
   [PPY]=ppy
   [SDevice]=sdev
-  [TariffProfile]=tariff-profile
-  [TimeOfUse]=time-of-use
+  [TariffProfile]=tp
+  [TimeOfUse]=tm
   [UPT]=upt
   [rsps]=rsps
 )
@@ -151,7 +151,7 @@ for service in "${SERVICES[@]}"; do
   port=${SERVICE_PORTS[$service]:-8000}
   handler_file="internal/$service/handler/handler.go"
   cmd_file="cmd/$service/main.go"
-  wadl_file=$(find_wadl_file "$service")
+  wadl_file=$(find_wadl_file "$service" || echo "")
   
   if [ ! -f "$handler_file" ]; then
     echo "⚠ Skipping $service - $handler_file not found"
@@ -206,7 +206,7 @@ h := handler.NewHandler(repo)
 EOFMAIN
   
   # Add handler registrations with WADL-extracted routes
-  local route_count=0
+  route_count=0
   for method in "${methods[@]}"; do
     # Extract route from handler method name using WADL
     route_info=$(extract_route "$method" "$wadl_file" 2>/dev/null || echo "ERROR")
@@ -223,7 +223,7 @@ EOFMAIN
     
     # Generate http.Handle() call
     echo -e "\thttp.Handle(\"$http_method $path\", http.HandlerFunc(h.$method))" >> "$cmd_file"
-    ((route_count++))
+    route_count=$((route_count + 1))
   done
   
   # Add server startup

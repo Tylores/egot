@@ -1,0 +1,162 @@
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wx="urn:ieee:std:2030.5:wadlExt" xmlns:sep="urn:ieee:std:2030.5:ns" xmlns="http://wadl.dev.java.net/2009/02" xsi:schemaLocation="http://wadl.dev.java.net/2009/02 wadl.xsd">
+  <doc title="SEP 2 Application">SEP 2.2</doc>
+  <grammars>
+    <include href="sep.xsd"/>
+  </grammars>
+  <resources wx:sampleBase="http://localhost/sep/">
+    <resource id="BillingReadingSetList" wx:samplePath="/brs">
+      <doc title="BillingReadingSetList">A list of billing reading sets</doc>
+      <method id="GETBillingReadingSetList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="a" style="query" type="xsd:int">
+            <doc>after</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:BillingReadingSetList"/>
+          <representation mediaType="application/sep-exi" element="sep:BillingReadingSetList"/>
+        </response>
+      </method>
+      <method id="HEADBillingReadingSetList" name="HEAD" wx:mode="M"/>
+      <method id="PUTBillingReadingSetList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:BillingReadingSet"/>
+          <representation mediaType="application/sep-exi" element="sep:BillingReadingSet"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTBillingReadingSetList" name="POST" wx:mode="D">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:BillingReadingSet"/>
+          <representation mediaType="application/sep-exi" element="sep:BillingReadingSet"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETEBillingReadingSetList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+    </resource>
+    <resource id="BillingReadingSet" wx:samplePath="/brs/{id1}">
+      <doc title="BillingReadingSet">A specific billing reading set</doc>
+      <method id="GETBillingReadingSet" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:BillingReadingSet"/>
+          <representation mediaType="application/sep-exi" element="sep:BillingReadingSet"/>
+        </response>
+      </method>
+      <method id="HEADBillingReadingSet" name="HEAD" wx:mode="M"/>
+      <method id="PUTBillingReadingSet" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:BillingReadingSet"/>
+          <representation mediaType="application/sep-exi" element="sep:BillingReadingSet"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTBillingReadingSet" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:BillingReadingSet"/>
+          <representation mediaType="application/sep-exi" element="sep:BillingReadingSet"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEBillingReadingSet" name="DELETE" wx:mode="D">
+        <response>
+          <representation mediaType="application/xml" element="sep:BillingReadingSet"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="BillingReadingList" wx:samplePath="/brs/{id1}/br">
+      <doc title="BillingReadingList">A list of billing readings</doc>
+      <method id="GETBillingReadingList" name="GET" wx:mode="M">
+        <request>
+          <param name="s" style="query" type="xsd:int">
+            <doc>start</doc>
+          </param>
+          <param name="a" style="query" type="xsd:int">
+            <doc>after</doc>
+          </param>
+          <param name="l" style="query" type="xsd:int">
+            <doc>limit</doc>
+          </param>
+        </request>
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:BillingReadingList"/>
+          <representation mediaType="application/sep-exi" element="sep:BillingReadingList"/>
+        </response>
+      </method>
+      <method id="HEADBillingReadingList" name="HEAD" wx:mode="M"/>
+      <method id="PUTBillingReadingList" name="PUT" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:BillingReading"/>
+          <representation mediaType="application/sep-exi" element="sep:BillingReading"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="POSTBillingReadingList" name="POST" wx:mode="D">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:BillingReading"/>
+          <representation mediaType="application/sep-exi" element="sep:BillingReading"/>
+        </request>
+        <response status="200">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+        <response status="201">
+          <param name="location" style="header" type="xsd:anyURI" required="true"/>
+        </response>
+      </method>
+      <method id="DELETEBillingReadingList" name="DELETE" wx:mode="E">
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+    </resource>
+    <resource id="BillingReading" wx:samplePath="/brs/{id1}/br/{id2}">
+      <doc title="BillingReading">A specific billing reading</doc>
+      <method id="GETBillingReading" name="GET" wx:mode="M">
+        <response>
+          <representation mediaType="application/sep+xml" element="sep:BillingReading"/>
+          <representation mediaType="application/sep-exi" element="sep:BillingReading"/>
+        </response>
+      </method>
+      <method id="HEADBillingReading" name="HEAD" wx:mode="M"/>
+      <method id="PUTBillingReading" name="PUT" wx:mode="D">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:BillingReading"/>
+          <representation mediaType="application/sep-exi" element="sep:BillingReading"/>
+        </request>
+      </method>
+      <method id="POSTBillingReading" name="POST" wx:mode="E">
+        <request>
+          <representation mediaType="application/sep+xml" element="sep:BillingReading"/>
+          <representation mediaType="application/sep-exi" element="sep:BillingReading"/>
+        </request>
+        <response status="400"/>
+        <response status="405"/>
+      </method>
+      <method id="DELETEBillingReading" name="DELETE" wx:mode="D">
+        <response>
+          <representation mediaType="application/xml" element="sep:BillingReading"/>
+        </response>
+      </method>
+      <wx:sampleParam name="id1" style="template" type="idType"/>
+      <wx:sampleParam name="id2" style="template" type="idType"/>
+    </resource>
+  </resources>
+</application>

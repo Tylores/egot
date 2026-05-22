@@ -2,6 +2,7 @@ package operator
 
 import (
 	"fmt"
+	"math"
 	"sort"
 	"time"
 
@@ -52,9 +53,16 @@ func (d *FeederAwareDispatcher) Schedule(gridReq GridServiceRequest) ([]Schedule
 	// nodeSlotLoading[nodeID][slotIndex] = current power in KW
 	nodeSlotLoading := make(map[string][]float64)
 
-	// Sort requests by power (greedy)
+	// Sort requests by absolute power (greedy)
 	sort.Slice(d.scheduler.Requests, func(i, j int) bool {
-		return d.scheduler.Requests[i].PowerRequested.Value > d.scheduler.Requests[j].PowerRequested.Value
+		pi, pj := 0.0, 0.0
+		if d.scheduler.Requests[i].PowerRequested != nil {
+			pi = math.Abs(float64(d.scheduler.Requests[i].PowerRequested.Value))
+		}
+		if d.scheduler.Requests[j].PowerRequested != nil {
+			pj = math.Abs(float64(d.scheduler.Requests[j].PowerRequested.Value))
+		}
+		return pi > pj
 	})
 
 	var scheduled []ScheduledEvent
@@ -89,14 +97,14 @@ func (d *FeederAwareDispatcher) Schedule(gridReq GridServiceRequest) ([]Schedule
 
 			if (derStart.Before(slotEnd) || derStart.Equal(slotStart)) && derEnd.After(slotStart) {
 				// This request overlaps with the slot
-				if (gridReq.PowerKW > 0 && slotBalances[i] > 0) || (gridReq.PowerKW < 0 && slotBalances[i] < 0) {
+				if (gridReq.PowerKW > 0 && slotBalances[i] > 0 && derPowerKW > 0) || (gridReq.PowerKW < 0 && slotBalances[i] < 0 && derPowerKW < 0) {
 					coversNeededSlot = true
 				}
 
 				// Check feeder capacity at this node for this slot
 				if nodeID != "" {
 					if limit, ok := d.nodeCapacities[nodeID]; ok {
-						if nodeSlotLoading[nodeID][i]+derPowerKW > limit {
+						if math.Abs(nodeSlotLoading[nodeID][i]+derPowerKW) > limit {
 							causesOverload = true
 							break
 						}
@@ -190,7 +198,7 @@ func (d *FeederAwareDispatcher) ScheduleDR(gridReq GridServiceRequest) ([]Schedu
 	})
 
 	var scheduled []ScheduledDREvent
-	targetShedKW := gridReq.PowerKW
+	targetShedKW := math.Abs(gridReq.PowerKW)
 	shedSoFarKW := 0.0
 
 	nowUnix := sep.TimeType(gridReq.StartTime.Unix())

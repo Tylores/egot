@@ -1,6 +1,7 @@
 package sep
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 )
@@ -14,9 +15,12 @@ func GetTime() TimeType {
 }
 
 func ToSFDI(lfdi string) (SFDIType, error) {
-	sfdi, error := strconv.ParseUint(lfdi[:9], 16, 64)
-	if error != nil {
-		return 0, nil
+	if len(lfdi) < 9 {
+		return 0, fmt.Errorf("lfdi too short: %s", lfdi)
+	}
+	sfdi, err := strconv.ParseUint(lfdi[:9], 16, 64)
+	if err != nil {
+		return 0, err
 	}
 
 	return sfdi, nil

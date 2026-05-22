@@ -17,8 +17,10 @@ func TestTimeofuseRouteRegistration(t *testing.T) {
 	mux := http.NewServeMux()
 	reg := registry.New(":memory:")
 	reg.Load()
+	defer reg.Close()
 	repo := store.New(":memory:")
 	repo.Load()
+	defer repo.Close()
 	h := handler.NewHandler(repo, reg)
 
 	registerTimeofuseRoutes(mux, h)
@@ -81,8 +83,10 @@ func TestTimeofuseHTTPMethods(t *testing.T) {
 	mux := http.NewServeMux()
 	reg := registry.New(":memory:")
 	reg.Load()
+	defer reg.Close()
 	repo := store.New(":memory:")
 	repo.Load()
+	defer repo.Close()
 	h := handler.NewHandler(repo, reg)
 
 	registerTimeofuseRoutes(mux, h)

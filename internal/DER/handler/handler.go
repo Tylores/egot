@@ -676,7 +676,10 @@ func (h *Handler) POSTDERCurveList(w http.ResponseWriter, req *http.Request) {
 	}
 
 	key := h.buildStoreKey(sfdi, mrid)
-	h.repo.SetWithOwner(key, &curve, fmt.Sprintf("%d", sfdi))
+	if err := h.repo.SetWithOwner(key, &curve, fmt.Sprintf("%d", sfdi)); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.Header().Set("Location", "/derp/"+req.PathValue("id1")+"/dc/"+mrid)

@@ -12,9 +12,14 @@ import (
 const mainTemplate = `package main
 
 import (
+	"context"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
 	"path/filepath"
+	"syscall"
+	"time"
 
 	"github.com/Tylores/egot/internal/{{.ServiceName}}/handler"
 	"github.com/Tylores/egot/internal/store"
@@ -31,12 +36,14 @@ func main() {
 	server := http.Server{
 		Addr:      routes.{{.ServiceConstant}},
 		TLSConfig: cfg,
+		Handler:   tlsutil.CertHeaderMiddleware(http.DefaultServeMux),
 	}
 
 	reg := registry.New(filepath.Join("data", "registry.db"))
 	if err := reg.Load(); err != nil {
 		log.Fatal(err)
 	}
+	defer reg.Close()
 	// Auto-populate registry from known client certs
 	_ = reg.PopulateFromCertDir("./ssl")
 
@@ -44,15 +51,30 @@ func main() {
 	if err := repo.Load(); err != nil {
 		log.Fatal(err)
 	}
+	defer repo.Close()
 
 	h := handler.NewHandler(repo, reg)
 {{range .Routes}}	http.Handle("{{.HTTPMethod}} {{.Path}}", http.HandlerFunc(h.{{.FuncName}}))
 {{end}}
-	log.Printf("Starting {{.ServiceName}} on %s", routes.{{.ServiceConstant}})
-	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
-	if err != nil {
-		log.Fatal(err)
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+
+	go func() {
+		log.Printf("Starting {{.ServiceName}} on %s", routes.{{.ServiceConstant}})
+		err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+		if err != nil && err != http.ErrServerClosed {
+			log.Fatalf("Server failed: %v", err)
+		}
+	}()
+
+	<-sigChan
+	log.Println("Shutting down {{.ServiceName}} server...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		log.Printf("Server shutdown error: %v", err)
 	}
+	log.Println("Database connections closed.")
 }
 `
 
@@ -269,6 +291,12 @@ func (g *Generator) generateMain(outputDir, serviceName string) error {
 }
 
 func (g *Generator) generateHandler(outputDir, serviceName string) error {
+	path := filepath.Join(outputDir, fmt.Sprintf("internal/%s/handler/handler.go", serviceName))
+	if _, err := os.Stat(path); err == nil {
+		fmt.Printf("  - Skipping handler generation: %s already exists\n", path)
+		return nil
+	}
+
 	hasPathParams := false
 	var resources []ResourceTemplateData
 
@@ -296,7 +324,7 @@ func (g *Generator) generateHandler(outputDir, serviceName string) error {
 		HasPathParams: hasPathParams,
 	}
 
-	return renderTemplate("handler", handlerTemplate, filepath.Join(outputDir, fmt.Sprintf("internal/%s/handler/handler.go", serviceName)), data)
+	return renderTemplate("handler", handlerTemplate, path, data)
 }
 
 func (g *Generator) generateServer(outputDir, serviceName string) error {

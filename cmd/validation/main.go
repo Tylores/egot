@@ -319,24 +319,24 @@ func runScenario23() {
 		"Settlement": []map[string]interface{}{
 			{
 				"DeviceLFDI":      perf1.DeviceLFDI,
-				"ScheduledKW":     perf1.EnergyScheduled / 1000.0,
-				"DeliveredKW":     perf1.EnergyDelivered / 1000.0,
+				"ScheduledKWh":    perf1.EnergyScheduled,
+				"DeliveredKWh":    perf1.EnergyDelivered,
 				"AccuracyPercent": perf1.Accuracy * 100.0,
 				"Status":          "Compliant",
 			},
 			{
 				"DeviceLFDI":      perf2.DeviceLFDI,
-				"ScheduledKW":     perf2.EnergyScheduled / 1000.0,
-				"DeliveredKW":     perf2.EnergyDelivered / 1000.0,
+				"ScheduledKWh":    perf2.EnergyScheduled,
+				"DeliveredKWh":    perf2.EnergyDelivered,
 				"AccuracyPercent": perf2.Accuracy * 100.0,
 				"Status":          "Compliant",
 			},
 		},
 		"TotalReserveVerification": map[string]interface{}{
-			"TotalScheduledKW": (perf1.EnergyScheduled + perf2.EnergyScheduled) / 1000.0,
-			"TotalDeliveredKW": (perf1.EnergyDelivered + perf2.EnergyDelivered) / 1000.0,
-			"OverallAccuracy":  ((perf1.Accuracy + perf2.Accuracy) / 2.0) * 100.0,
-			"TargetMet":        ((perf1.EnergyDelivered + perf2.EnergyDelivered) >= 12000.0),
+			"TotalScheduledKWh": perf1.EnergyScheduled + perf2.EnergyScheduled,
+			"TotalDeliveredKWh": perf1.EnergyDelivered + perf2.EnergyDelivered,
+			"OverallAccuracy":   ((perf1.Accuracy + perf2.Accuracy) / 2.0) * 100.0,
+			"TargetMet":         (perf1.EnergyDelivered + perf2.EnergyDelivered) >= 12.0,
 		},
 	}
 

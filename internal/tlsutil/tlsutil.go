@@ -5,6 +5,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -40,6 +41,16 @@ func CertHeaderMiddleware(next http.Handler) http.Handler {
 
 		if len(req.TLS.PeerCertificates) == 0 {
 			if headerVal := req.Header.Get("X-SSL-Client-Cert"); headerVal != "" {
+				host, _, err := net.SplitHostPort(req.RemoteAddr)
+				if err != nil {
+					host = req.RemoteAddr
+				}
+				ip := net.ParseIP(host)
+				if ip == nil || !ip.IsLoopback() {
+					http.Error(w, "Forbidden - client cert header only allowed from loopback", http.StatusForbidden)
+					return
+				}
+
 				unescaped, err := url.PathUnescape(headerVal)
 				if err == nil && unescaped != "" {
 					block, _ := pem.Decode([]byte(unescaped))

@@ -1,9 +1,14 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
 	"path/filepath"
+	"syscall"
+	"time"
 
 	"github.com/Tylores/egot/internal/EDevice/handler"
 	"github.com/Tylores/egot/internal/store"
@@ -27,12 +32,15 @@ func main() {
 	if err := reg.Load(); err != nil {
 		log.Fatal(err)
 	}
+	defer reg.Close()
 	// Auto-populate registry from known client certs
+	_ = reg.PopulateFromCertDir("./ssl")
 
 	repo := store.New(filepath.Join("data", "EDevice.db"))
 	if err := repo.Load(); err != nil {
 		log.Fatal(err)
 	}
+	defer repo.Close()
 
 	h := handler.NewHandler(repo, reg)
 	http.Handle("GET /edev", http.HandlerFunc(h.GETEndDeviceList))
@@ -221,10 +229,23 @@ func main() {
 	http.Handle("POST /edev/{id1}/lsl/{id2}", http.HandlerFunc(h.POSTLoadShedAvailability))
 	http.Handle("DELETE /edev/{id1}/lsl/{id2}", http.HandlerFunc(h.DELETELoadShedAvailability))
 
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 
-	log.Printf("Starting EDevice on %s", routes.EDevice)
-	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
-	if err != nil {
-		log.Fatal(err)
+	go func() {
+		log.Printf("Starting EDevice on %s", routes.EDevice)
+		err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+		if err != nil && err != http.ErrServerClosed {
+			log.Fatalf("Server failed: %v", err)
+		}
+	}()
+
+	<-sigChan
+	log.Println("Shutting down EDevice server...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		log.Printf("Server shutdown error: %v", err)
 	}
+	log.Println("Database connections closed.")
 }

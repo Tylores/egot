@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/Tylores/egot/sep"
 	_ "modernc.org/sqlite"
 )
 
@@ -138,15 +139,11 @@ func ComputeLFDI(certRaw []byte) string {
 }
 
 // ComputeSFDI calculates the SFDI from an LFDI.
-// SFDI is the first 36 bits of the LFDI hash, represented as a decimal with a check digit.
-// For simplicity in this research project, we take the first 9 digits of the hex-to-decimal conversion.
+// It uses sep.ToSFDI internally.
 func ComputeSFDI(lfdi string) string {
-	// Real IEEE 2030.5 SFDI is more complex, but this satisfies the research needs
-	// ensuring a stable 1:1 mapping from LFDI to SFDI.
-	val, _ := hex.DecodeString(lfdi[:10]) // Take first 40 bits
-	sum := uint64(0)
-	for i, b := range val {
-		sum += uint64(b) << (8 * (len(val) - 1 - i))
+	sfdiVal, err := sep.ToSFDI(lfdi)
+	if err != nil {
+		return ""
 	}
-	return fmt.Sprintf("%012d", sum)[:11] // 11 digits + 1 check digit (omitted here for simplicity)
+	return fmt.Sprintf("%d", sfdiVal)
 }

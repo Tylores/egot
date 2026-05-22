@@ -145,7 +145,10 @@ func (h *Handler) POSTDemandResponseProgramList(w http.ResponseWriter, req *http
 	}
 
 	key := h.buildStoreKey(sfdi, mrid)
-	h.repo.SetWithOwner(key, &drp, fmt.Sprintf("%d", sfdi))
+	if err := h.repo.SetWithOwner(key, &drp, fmt.Sprintf("%d", sfdi)); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.Header().Set("Location", "/dr/"+mrid)
@@ -424,7 +427,10 @@ func (h *Handler) POSTEndDeviceControlList(w http.ResponseWriter, req *http.Requ
 	}
 
 	key := h.buildStoreKey(sfdi, mrid)
-	h.repo.SetWithOwner(key, &edc, fmt.Sprintf("%d", sfdi))
+	if err := h.repo.SetWithOwner(key, &edc, fmt.Sprintf("%d", sfdi)); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", sep.ContentType)
 	w.Header().Set("Location", "/dr/"+req.PathValue("id1")+"/edc/"+mrid)

@@ -216,3 +216,62 @@ func TestGreedyScheduler_EIMWindow(t *testing.T) {
 	t.Logf("EIM schedule: %.2fkW across %d devices", totalPower, len(scheduled))
 }
 
+func TestGreedyScheduler_Schedule_NegativeLoadShed(t *testing.T) {
+	now := time.Now().Truncate(time.Hour)
+	mrid1 := "mrid1"
+	mrid2 := "mrid2"
+
+	nowUnix := sep.TimeType(now.Unix())
+
+	requests := []*sep.FlowReservationRequest{
+		{
+			IdentifiedObject: &sep.IdentifiedObject{
+				MRID: &sep.MRIDType{HexBinary128: &mrid1},
+			},
+			PowerRequested: &sep.ActivePower{Value: -10000}, // -10kW
+			IntervalRequested: &sep.DateTimeInterval{
+				Start:    &nowUnix,
+				Duration: 300, // 5 min
+			},
+		},
+		{
+			IdentifiedObject: &sep.IdentifiedObject{
+				MRID: &sep.MRIDType{HexBinary128: &mrid2},
+			},
+			PowerRequested: &sep.ActivePower{Value: -5000}, // -5kW
+			IntervalRequested: &sep.DateTimeInterval{
+				Start:    &nowUnix,
+				Duration: 300, // 5 min
+			},
+		},
+	}
+
+	scheduler := NewScheduler(requests)
+
+	// Grid request: -15kW load reduction needed
+	gridReq := GridServiceRequest{
+		StartTime: now,
+		Duration:  5 * time.Minute,
+		PowerKW:   -15.0,
+	}
+
+	scheduled, err := scheduler.Schedule(gridReq)
+	if err != nil {
+		t.Fatalf("Schedule failed: %v", err)
+	}
+
+	if len(scheduled) != 2 {
+		t.Errorf("Expected 2 scheduled events, got %d", len(scheduled))
+	}
+
+	totalPower := 0.0
+	for _, ev := range scheduled {
+		totalPower += float64(ev.Control.DERControlBase.OpModTargetW.Value) * 1e-3
+	}
+
+	if totalPower != -15.0 {
+		t.Errorf("Expected -15.0kW scheduled, got %.2fkW", totalPower)
+	}
+}
+
+

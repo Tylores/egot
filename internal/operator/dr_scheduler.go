@@ -1,6 +1,7 @@
 package operator
 
 import (
+	"math"
 	"sort"
 
 	"github.com/Tylores/egot/sep"
@@ -42,7 +43,7 @@ func (s *DRScheduler) ScheduleDR(gridReq GridServiceRequest) ([]ScheduledDREvent
 	})
 
 	var scheduled []ScheduledDREvent
-	targetShedKW := gridReq.PowerKW
+	targetShedKW := math.Abs(gridReq.PowerKW)
 	shedSoFarKW := 0.0
 
 	nowUnix := sep.TimeType(gridReq.StartTime.Unix())

@@ -97,6 +97,28 @@ type Generator struct {
 	serviceName string
 }
 
+var serviceCasing = map[string]string{
+	"brs":             "BRS",
+	"bill":            "Bill",
+	"dcap":            "DCAP",
+	"dr":              "DR",
+	"edev":            "EDevice",
+	"file":            "File",
+	"mup":             "MUP",
+	"msg":             "Messaging",
+	"ntfy":            "Notify",
+	"ppy":             "PPY",
+	"sdev":            "SDevice",
+	"tp":              "TariffProfile",
+	"tariff":          "TariffProfile",
+	"tm":              "TimeOfUse",
+	"time-of-use":     "TimeOfUse",
+	"upt":             "UPT",
+	"der":             "DER",
+	"fr":              "FlowReservation",
+	"flowreservation": "FlowReservation",
+}
+
 // NewGenerator creates a new generator from a SEP 2 WADL file.
 // The service name is derived from the WADL filename (without extension).
 //
@@ -105,6 +127,13 @@ type Generator struct {
 // - Cross-service element references use the shared sep: namespace
 // - All representations reference the shared SEP schema through local includes
 func NewGenerator(wadlPath string) (*Generator, error) {
+	base := filepath.Base(wadlPath)
+	rawName := strings.TrimSuffix(base, filepath.Ext(base))
+	serviceName := rawName
+	if mapped, ok := serviceCasing[strings.ToLower(rawName)]; ok {
+		serviceName = mapped
+	}
+
 	data, err := os.ReadFile(wadlPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read WADL file: %w", err)
@@ -115,19 +144,16 @@ func NewGenerator(wadlPath string) (*Generator, error) {
 		return nil, fmt.Errorf("failed to parse WADL: %w", err)
 	}
 
-	spec, err := buildSpec(app)
+	spec, err := buildSpec(app, serviceName)
 	if err != nil {
 		return nil, err
 	}
-
-	base := filepath.Base(wadlPath)
-	serviceName := strings.TrimSuffix(base, filepath.Ext(base))
 
 	return &Generator{spec: spec, serviceName: serviceName}, nil
 }
 
 // buildSpec converts a parsed SEP 2 application into the internal service spec.
-func buildSpec(app *sep2Application) (serviceSpec, error) {
+func buildSpec(app *sep2Application, serviceName string) (serviceSpec, error) {
 	spec := serviceSpec{MaxEntities: 100}
 
 	for _, a := range app.Attrs {
@@ -143,6 +169,11 @@ func buildSpec(app *sep2Application) (serviceSpec, error) {
 	for _, res := range app.Resources.Resources {
 		path := res.samplePath()
 		if path == "" {
+			continue
+		}
+		path = flattenPath(path)
+
+		if !belongsToService(path, serviceName) {
 			continue
 		}
 
@@ -184,6 +215,13 @@ func buildSpec(app *sep2Application) (serviceSpec, error) {
 	}
 
 	return spec, nil
+}
+
+func belongsToService(path string, serviceName string) bool {
+	if serviceName == "EDevice" {
+		return strings.HasPrefix(path, "/edev")
+	}
+	return true
 }
 
 // extractPathParams returns param names from a path like "/brs/{id1}/br/{id2}".
@@ -247,4 +285,22 @@ func toCamelCase(s string) string {
 // toConstantFormat converts "device-manager" → "DEVICE_MANAGER".
 func toConstantFormat(s string) string {
 	return strings.ToUpper(strings.ReplaceAll(s, "-", "_"))
+}
+
+func flattenPath(path string) string {
+	if strings.HasPrefix(path, "/edev/{id1}/der") {
+		path = strings.Replace(path, "/edev/{id1}/der", "/der", 1)
+	} else if strings.HasPrefix(path, "/edev/{id1}/frq") {
+		path = strings.Replace(path, "/edev/{id1}/frq", "/frq", 1)
+	} else if strings.HasPrefix(path, "/edev/{id1}/frp") {
+		path = strings.Replace(path, "/edev/{id1}/frp", "/frp", 1)
+	} else {
+		return path
+	}
+	for i := 2; i <= 10; i++ {
+		oldParam := fmt.Sprintf("{id%d}", i)
+		newParam := fmt.Sprintf("{id%d}", i-1)
+		path = strings.ReplaceAll(path, oldParam, newParam)
+	}
+	return path
 }

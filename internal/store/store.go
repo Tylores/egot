@@ -114,25 +114,26 @@ func (s *Store) Get(key string) (any, bool) {
 }
 
 // Set stores val under key, replacing any existing value.
-func (s *Store) Set(key string, val any) {
-	s.SetWithOwner(key, val, "")
+func (s *Store) Set(key string, val any) error {
+	return s.SetWithOwner(key, val, "")
 }
 
 // SetWithOwner stores val under key with an associated ownerID for secondary indexing.
-func (s *Store) SetWithOwner(key string, val any, ownerID string) {
+func (s *Store) SetWithOwner(key string, val any, ownerID string) error {
 	if s.db == nil {
-		return
+		return fmt.Errorf("store: database not loaded")
 	}
 
 	var buf bytes.Buffer
 	if err := gob.NewEncoder(&buf).Encode(&val); err != nil {
-		return
+		return fmt.Errorf("store: gob encode: %w", err)
 	}
 
 	_, err := s.db.Exec("INSERT OR REPLACE INTO kv (key, val, owner_id) VALUES (?, ?, ?)", key, buf.Bytes(), ownerID)
 	if err != nil {
-		fmt.Printf("store: set error: %v\n", err)
+		return fmt.Errorf("store: database execute: %w", err)
 	}
+	return nil
 }
 
 // GetByOwner returns all values associated with a specific ownerID.

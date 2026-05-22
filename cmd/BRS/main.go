@@ -1,9 +1,14 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
 	"path/filepath"
+	"syscall"
+	"time"
 
 	"github.com/Tylores/egot/internal/BRS/handler"
 	"github.com/Tylores/egot/internal/store"
@@ -27,12 +32,15 @@ func main() {
 	if err := reg.Load(); err != nil {
 		log.Fatal(err)
 	}
+	defer reg.Close()
 	// Auto-populate registry from known client certs
+	_ = reg.PopulateFromCertDir("./ssl")
 
 	repo := store.New(filepath.Join("data", "BRS.db"))
 	if err := repo.Load(); err != nil {
 		log.Fatal(err)
 	}
+	defer repo.Close()
 
 	h := handler.NewHandler(repo, reg)
 	http.Handle("GET /brs", http.HandlerFunc(h.GETBillingReadingSetList))
@@ -56,9 +64,23 @@ func main() {
 	http.Handle("POST /brs/{id1}/br/{id2}", http.HandlerFunc(h.POSTBillingReading))
 	http.Handle("DELETE /brs/{id1}/br/{id2}", http.HandlerFunc(h.DELETEBillingReading))
 
-	log.Printf("Starting BRS on %s", routes.BRS)
-	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
-	if err != nil {
-		log.Fatal(err)
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+
+	go func() {
+		log.Printf("Starting BRS on %s", routes.BRS)
+		err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+		if err != nil && err != http.ErrServerClosed {
+			log.Fatalf("Server failed: %v", err)
+		}
+	}()
+
+	<-sigChan
+	log.Println("Shutting down BRS server...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		log.Printf("Server shutdown error: %v", err)
 	}
+	log.Println("Database connections closed.")
 }

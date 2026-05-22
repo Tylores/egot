@@ -1,9 +1,14 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
 	"path/filepath"
+	"syscall"
+	"time"
 
 	"github.com/Tylores/egot/internal/Notify/handler"
 	"github.com/Tylores/egot/internal/store"
@@ -27,12 +32,15 @@ func main() {
 	if err := reg.Load(); err != nil {
 		log.Fatal(err)
 	}
+	defer reg.Close()
 	// Auto-populate registry from known client certs
+	_ = reg.PopulateFromCertDir("./ssl")
 
 	repo := store.New(filepath.Join("data", "Notify.db"))
 	if err := repo.Load(); err != nil {
 		log.Fatal(err)
 	}
+	defer repo.Close()
 
 	h := handler.NewHandler(repo, reg)
 	http.Handle("GET /ntfy", http.HandlerFunc(h.GETNotificationList))
@@ -46,9 +54,23 @@ func main() {
 	http.Handle("POST /ntfy/{id1}", http.HandlerFunc(h.POSTNotification))
 	http.Handle("DELETE /ntfy/{id1}", http.HandlerFunc(h.DELETENotification))
 
-	log.Printf("Starting Notify on %s", routes.Notify)
-	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
-	if err != nil {
-		log.Fatal(err)
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+
+	go func() {
+		log.Printf("Starting Notify on %s", routes.Notify)
+		err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+		if err != nil && err != http.ErrServerClosed {
+			log.Fatalf("Server failed: %v", err)
+		}
+	}()
+
+	<-sigChan
+	log.Println("Shutting down Notify server...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		log.Printf("Server shutdown error: %v", err)
 	}
+	log.Println("Database connections closed.")
 }

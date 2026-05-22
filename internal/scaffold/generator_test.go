@@ -27,7 +27,7 @@ func TestBuildSpecWithoutPort(t *testing.T) {
 		t.Fatalf("unmarshal WADL: %v", err)
 	}
 
-	spec, err := buildSpec(app)
+	spec, err := buildSpec(app, "BRS")
 	if err != nil {
 		t.Fatalf("buildSpec returned error without port: %v", err)
 	}

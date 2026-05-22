@@ -1,9 +1,14 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
 	"path/filepath"
+	"syscall"
+	"time"
 
 	"github.com/Tylores/egot/internal/DER/handler"
 	"github.com/Tylores/egot/internal/store"
@@ -27,56 +32,17 @@ func main() {
 	if err := reg.Load(); err != nil {
 		log.Fatal(err)
 	}
+	defer reg.Close()
 	// Auto-populate registry from known client certs
+	_ = reg.PopulateFromCertDir("./ssl")
 
 	repo := store.New(filepath.Join("data", "DER.db"))
 	if err := repo.Load(); err != nil {
 		log.Fatal(err)
 	}
+	defer repo.Close()
 
 	h := handler.NewHandler(repo, reg)
-	http.Handle("GET /derp", http.HandlerFunc(h.GETDERProgramList))
-	http.Handle("HEAD /derp", http.HandlerFunc(h.HEADDERProgramList))
-	http.Handle("PUT /derp", http.HandlerFunc(h.PUTDERProgramList))
-	http.Handle("POST /derp", http.HandlerFunc(h.POSTDERProgramList))
-	http.Handle("DELETE /derp", http.HandlerFunc(h.DELETEDERProgramList))
-	http.Handle("GET /derp/{id1}", http.HandlerFunc(h.GETDERProgram))
-	http.Handle("HEAD /derp/{id1}", http.HandlerFunc(h.HEADDERProgram))
-	http.Handle("PUT /derp/{id1}", http.HandlerFunc(h.PUTDERProgram))
-	http.Handle("POST /derp/{id1}", http.HandlerFunc(h.POSTDERProgram))
-	http.Handle("DELETE /derp/{id1}", http.HandlerFunc(h.DELETEDERProgram))
-	http.Handle("GET /derp/{id1}/actderc", http.HandlerFunc(h.GETActiveDERControlList))
-	http.Handle("HEAD /derp/{id1}/actderc", http.HandlerFunc(h.HEADActiveDERControlList))
-	http.Handle("PUT /derp/{id1}/actderc", http.HandlerFunc(h.PUTActiveDERControlList))
-	http.Handle("POST /derp/{id1}/actderc", http.HandlerFunc(h.POSTActiveDERControlList))
-	http.Handle("DELETE /derp/{id1}/actderc", http.HandlerFunc(h.DELETEActiveDERControlList))
-	http.Handle("GET /derp/{id1}/derc", http.HandlerFunc(h.GETDERControlList))
-	http.Handle("HEAD /derp/{id1}/derc", http.HandlerFunc(h.HEADDERControlList))
-	http.Handle("PUT /derp/{id1}/derc", http.HandlerFunc(h.PUTDERControlList))
-	http.Handle("POST /derp/{id1}/derc", http.HandlerFunc(h.POSTDERControlList))
-	http.Handle("DELETE /derp/{id1}/derc", http.HandlerFunc(h.DELETEDERControlList))
-	http.Handle("GET /derp/{id1}/derc/{id2}", http.HandlerFunc(h.GETDERControl))
-	http.Handle("HEAD /derp/{id1}/derc/{id2}", http.HandlerFunc(h.HEADDERControl))
-	http.Handle("PUT /derp/{id1}/derc/{id2}", http.HandlerFunc(h.PUTDERControl))
-	http.Handle("POST /derp/{id1}/derc/{id2}", http.HandlerFunc(h.POSTDERControl))
-	http.Handle("DELETE /derp/{id1}/derc/{id2}", http.HandlerFunc(h.DELETEDERControl))
-	http.Handle("GET /derp/{id1}/dderc", http.HandlerFunc(h.GETDefaultDERControl))
-	http.Handle("HEAD /derp/{id1}/dderc", http.HandlerFunc(h.HEADDefaultDERControl))
-	http.Handle("PUT /derp/{id1}/dderc", http.HandlerFunc(h.PUTDefaultDERControl))
-	http.Handle("POST /derp/{id1}/dderc", http.HandlerFunc(h.POSTDefaultDERControl))
-	http.Handle("DELETE /derp/{id1}/dderc", http.HandlerFunc(h.DELETEDefaultDERControl))
-	http.Handle("GET /derp/{id1}/dc", http.HandlerFunc(h.GETDERCurveList))
-	http.Handle("HEAD /derp/{id1}/dc", http.HandlerFunc(h.HEADDERCurveList))
-	http.Handle("PUT /derp/{id1}/dc", http.HandlerFunc(h.PUTDERCurveList))
-	http.Handle("POST /derp/{id1}/dc", http.HandlerFunc(h.POSTDERCurveList))
-	http.Handle("DELETE /derp/{id1}/dc", http.HandlerFunc(h.DELETEDERCurveList))
-	http.Handle("GET /derp/{id1}/dc/{id2}", http.HandlerFunc(h.GETDERCurve))
-	http.Handle("HEAD /derp/{id1}/dc/{id2}", http.HandlerFunc(h.HEADDERCurve))
-	http.Handle("PUT /derp/{id1}/dc/{id2}", http.HandlerFunc(h.PUTDERCurve))
-	http.Handle("POST /derp/{id1}/dc/{id2}", http.HandlerFunc(h.POSTDERCurve))
-	http.Handle("DELETE /derp/{id1}/dc/{id2}", http.HandlerFunc(h.DELETEDERCurve))
-
-	// EDevice DER sub-resource routes mapped to DER service
 	http.Handle("GET /der", http.HandlerFunc(h.GETDERList))
 	http.Handle("HEAD /der", http.HandlerFunc(h.HEADDERList))
 	http.Handle("PUT /der", http.HandlerFunc(h.PUTDERList))
@@ -137,11 +103,64 @@ func main() {
 	http.Handle("PUT /der/{id1}/dercom/{id2}", http.HandlerFunc(h.PUTDERComponent))
 	http.Handle("POST /der/{id1}/dercom/{id2}", http.HandlerFunc(h.POSTDERComponent))
 	http.Handle("DELETE /der/{id1}/dercom/{id2}", http.HandlerFunc(h.DELETEDERComponent))
+	http.Handle("GET /derp", http.HandlerFunc(h.GETDERProgramList))
+	http.Handle("HEAD /derp", http.HandlerFunc(h.HEADDERProgramList))
+	http.Handle("PUT /derp", http.HandlerFunc(h.PUTDERProgramList))
+	http.Handle("POST /derp", http.HandlerFunc(h.POSTDERProgramList))
+	http.Handle("DELETE /derp", http.HandlerFunc(h.DELETEDERProgramList))
+	http.Handle("GET /derp/{id1}", http.HandlerFunc(h.GETDERProgram))
+	http.Handle("HEAD /derp/{id1}", http.HandlerFunc(h.HEADDERProgram))
+	http.Handle("PUT /derp/{id1}", http.HandlerFunc(h.PUTDERProgram))
+	http.Handle("POST /derp/{id1}", http.HandlerFunc(h.POSTDERProgram))
+	http.Handle("DELETE /derp/{id1}", http.HandlerFunc(h.DELETEDERProgram))
+	http.Handle("GET /derp/{id1}/actderc", http.HandlerFunc(h.GETActiveDERControlList))
+	http.Handle("HEAD /derp/{id1}/actderc", http.HandlerFunc(h.HEADActiveDERControlList))
+	http.Handle("PUT /derp/{id1}/actderc", http.HandlerFunc(h.PUTActiveDERControlList))
+	http.Handle("POST /derp/{id1}/actderc", http.HandlerFunc(h.POSTActiveDERControlList))
+	http.Handle("DELETE /derp/{id1}/actderc", http.HandlerFunc(h.DELETEActiveDERControlList))
+	http.Handle("GET /derp/{id1}/derc", http.HandlerFunc(h.GETDERControlList))
+	http.Handle("HEAD /derp/{id1}/derc", http.HandlerFunc(h.HEADDERControlList))
+	http.Handle("PUT /derp/{id1}/derc", http.HandlerFunc(h.PUTDERControlList))
+	http.Handle("POST /derp/{id1}/derc", http.HandlerFunc(h.POSTDERControlList))
+	http.Handle("DELETE /derp/{id1}/derc", http.HandlerFunc(h.DELETEDERControlList))
+	http.Handle("GET /derp/{id1}/derc/{id2}", http.HandlerFunc(h.GETDERControl))
+	http.Handle("HEAD /derp/{id1}/derc/{id2}", http.HandlerFunc(h.HEADDERControl))
+	http.Handle("PUT /derp/{id1}/derc/{id2}", http.HandlerFunc(h.PUTDERControl))
+	http.Handle("POST /derp/{id1}/derc/{id2}", http.HandlerFunc(h.POSTDERControl))
+	http.Handle("DELETE /derp/{id1}/derc/{id2}", http.HandlerFunc(h.DELETEDERControl))
+	http.Handle("GET /derp/{id1}/dderc", http.HandlerFunc(h.GETDefaultDERControl))
+	http.Handle("HEAD /derp/{id1}/dderc", http.HandlerFunc(h.HEADDefaultDERControl))
+	http.Handle("PUT /derp/{id1}/dderc", http.HandlerFunc(h.PUTDefaultDERControl))
+	http.Handle("POST /derp/{id1}/dderc", http.HandlerFunc(h.POSTDefaultDERControl))
+	http.Handle("DELETE /derp/{id1}/dderc", http.HandlerFunc(h.DELETEDefaultDERControl))
+	http.Handle("GET /derp/{id1}/dc", http.HandlerFunc(h.GETDERCurveList))
+	http.Handle("HEAD /derp/{id1}/dc", http.HandlerFunc(h.HEADDERCurveList))
+	http.Handle("PUT /derp/{id1}/dc", http.HandlerFunc(h.PUTDERCurveList))
+	http.Handle("POST /derp/{id1}/dc", http.HandlerFunc(h.POSTDERCurveList))
+	http.Handle("DELETE /derp/{id1}/dc", http.HandlerFunc(h.DELETEDERCurveList))
+	http.Handle("GET /derp/{id1}/dc/{id2}", http.HandlerFunc(h.GETDERCurve))
+	http.Handle("HEAD /derp/{id1}/dc/{id2}", http.HandlerFunc(h.HEADDERCurve))
+	http.Handle("PUT /derp/{id1}/dc/{id2}", http.HandlerFunc(h.PUTDERCurve))
+	http.Handle("POST /derp/{id1}/dc/{id2}", http.HandlerFunc(h.POSTDERCurve))
+	http.Handle("DELETE /derp/{id1}/dc/{id2}", http.HandlerFunc(h.DELETEDERCurve))
 
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 
-	log.Printf("Starting DER on %s", routes.DER)
-	err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
-	if err != nil {
-		log.Fatal(err)
+	go func() {
+		log.Printf("Starting DER on %s", routes.DER)
+		err = server.ListenAndServeTLS("./ssl/server.crt", "./ssl/server.key")
+		if err != nil && err != http.ErrServerClosed {
+			log.Fatalf("Server failed: %v", err)
+		}
+	}()
+
+	<-sigChan
+	log.Println("Shutting down DER server...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		log.Printf("Server shutdown error: %v", err)
 	}
+	log.Println("Database connections closed.")
 }

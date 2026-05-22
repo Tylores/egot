@@ -17,8 +17,10 @@ func TestRspsRouteRegistration(t *testing.T) {
 	mux := http.NewServeMux()
 	reg := registry.New(":memory:")
 	reg.Load()
+	defer reg.Close()
 	repo := store.New(":memory:")
 	repo.Load()
+	defer repo.Close()
 	h := handler.NewHandler(repo, reg)
 
 	registerRspsRoutes(mux, h)
@@ -84,8 +86,10 @@ func TestRspsHTTPMethods(t *testing.T) {
 	mux := http.NewServeMux()
 	reg := registry.New(":memory:")
 	reg.Load()
+	defer reg.Close()
 	repo := store.New(":memory:")
 	repo.Load()
+	defer repo.Close()
 	h := handler.NewHandler(repo, reg)
 
 	registerRspsRoutes(mux, h)
@@ -149,4 +153,3 @@ func registerRspsRoutes(mux *http.ServeMux, h *handler.Handler) {
 	mux.Handle("PUT /rsps/{id1}/rsp", http.HandlerFunc(h.PUTResponseList))
 	mux.Handle("PUT /rsps/{id1}/rsp/{id2}", http.HandlerFunc(h.PUTResponse))
 }
-
