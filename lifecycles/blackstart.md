@@ -1,6 +1,11 @@
-# ESI Lifecycle Sequence Diagrams: Blackstart & DR Dispatch
+# ESI Lifecycle Sequence Diagrams: Blackstart & Cold Load Pickup
 
-This document covers the client/server interactions and sequence diagrams for the **Blackstart & DR Dispatch** grid service (cold-start recovery / feeder load-shed dispatcher) across all 5 ESI lifecycle phases, aligned with IEEE 2030.5 CSIP test procedures.
+This document covers the client/server interactions and sequence diagrams for the **Blackstart** grid service (cold-start recovery, islanded grid-forming activation, and feeder cold load pickup) across all 5 ESI lifecycle phases, aligned with IEEE 2030.5 CSIP test procedures.
+
+> [!NOTE]
+> Since IEEE Std 2030.5 lacks a native, dedicated 'Blackstart' resource, the ESI boundary maps this service to standard schemas:
+> 1. **Demand Response (DR) function set**: Used to coordinate the sequential, staggered reconnection of controllable loads (Cold Load Pickup) via `EndDeviceControls` to prevent feeder overloading.
+> 2. **DER Control (DERP) function set**: Used to dispatch local inverter frequency/voltage droop curves (`DERCurve` with `CurveType=12` Frequency-Watt) to provide transient balancing during island restoration.
 
 ---
 

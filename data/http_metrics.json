@@ -1,0 +1,133 @@
+{
+  "summary": {
+    "total_requests": 260,
+    "total_bytes_sent": 34070
+  },
+  "phases": {
+    "Registration & Discovery": {
+      "requests": 80,
+      "bytes_sent": 10685
+    },
+    "Scheduling": {
+      "requests": 60,
+      "bytes_sent": 8050
+    },
+    "Operation": {
+      "requests": 20,
+      "bytes_sent": 3140
+    },
+    "Verification": {
+      "requests": 60,
+      "bytes_sent": 7065
+    },
+    "Settlement": {
+      "requests": 40,
+      "bytes_sent": 5130
+    }
+  },
+  "endpoints": {
+    "GET /dcap": {
+      "count": 20,
+      "bytes_sent": 2540,
+      "statuses": {
+        "502": 15,
+        "200": 5
+      }
+    },
+    "GET /tm": {
+      "count": 20,
+      "bytes_sent": 3435,
+      "statuses": {
+        "502": 15,
+        "200": 5
+      }
+    },
+    "POST /edev": {
+      "count": 20,
+      "bytes_sent": 2355,
+      "statuses": {
+        "502": 15,
+        "201": 5
+      }
+    },
+    "POST /edev/{id}/rg": {
+      "count": 20,
+      "bytes_sent": 2355,
+      "statuses": {
+        "502": 15,
+        "405": 5
+      }
+    },
+    "POST /frq": {
+      "count": 20,
+      "bytes_sent": 2760,
+      "statuses": {
+        "502": 15,
+        "400": 5
+      }
+    },
+    "GET /frp/{id}": {
+      "count": 20,
+      "bytes_sent": 2610,
+      "statuses": {
+        "502": 15,
+        "200": 5
+      }
+    },
+    "GET /dr/{id}/edc": {
+      "count": 20,
+      "bytes_sent": 2680,
+      "statuses": {
+        "502": 15,
+        "200": 5
+      }
+    },
+    "GET /derp/{id}/actderc": {
+      "count": 20,
+      "bytes_sent": 3140,
+      "statuses": {
+        "502": 20
+      }
+    },
+    "POST /rsps/{id}/rsp": {
+      "count": 20,
+      "bytes_sent": 2355,
+      "statuses": {
+        "502": 15,
+        "201": 5
+      }
+    },
+    "PUT /edev/{id}/dstat": {
+      "count": 20,
+      "bytes_sent": 2355,
+      "statuses": {
+        "502": 15,
+        "200": 5
+      }
+    },
+    "POST /edev/{id}/lel": {
+      "count": 20,
+      "bytes_sent": 2355,
+      "statuses": {
+        "502": 15,
+        "201": 5
+      }
+    },
+    "POST /mup/{id}": {
+      "count": 20,
+      "bytes_sent": 2355,
+      "statuses": {
+        "502": 15,
+        "201": 5
+      }
+    },
+    "GET /mup/{id}": {
+      "count": 20,
+      "bytes_sent": 2775,
+      "statuses": {
+        "502": 15,
+        "200": 5
+      }
+    }
+  }
+}

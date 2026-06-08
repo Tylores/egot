@@ -190,6 +190,11 @@ sequenceDiagram
 
 In the Settlement phase, telemetry data is evaluated by the Billing service to credit the customer for active/reactive voltage support.
 
+> [!NOTE]
+> Unlike standard active-power billing, Voltage Management verification requires tracking reactive energy exchange. The client packages:
+> - **Reactive Energy (VARh)**: Captured using the standard IEEE 2030.5 `MirrorMeterReading` with the appropriate unit multiplier and type (Reactive Power).
+> - **Voltage Telemetry (V)**: Transmitted as part of the `MirrorMeterReading` readings or device status parameters to allow the settlement engine to correlate Volt-Var curve execution with local voltage levels.
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -198,17 +203,17 @@ sequenceDiagram
     participant MUP as "MUP Service (:8017)"
     participant Bill as "Bill Service (:8011)"
 
-    Note over Client: [BASIC-029] Client periodically posts cumulative Wh and VARh readings
-    Client->>GW: POST /mup/123 (Submit telemetry meter readings payload)
+    Note over Client: [BASIC-029] Client periodically posts cumulative Wh, VARh, and V telemetry
+    Client->>GW: POST /mup/123 (Submit MirrorUsagePoint payload containing VARh and V readings)
     GW->>MUP: Forward POST /mup/123 (XML payload validation)
     MUP-->>GW: 201 Created
     GW-->>Client: 201 Created
 
     Note over Bill: Periodic billing process runs
-    Bill->>MUP: GET /mup/123 (Fetch delivered reactive support readings)
-    MUP-->>Bill: 200 OK (UsagePoint readings list)
+    Bill->>MUP: GET /mup/123 (Fetch delivered reactive support and local voltage readings)
+    MUP-->>Bill: 200 OK (UsagePoint readings list containing VARh/V)
     
-    Bill->>Bill: Reconcile actual delivered active/reactive energy against baseline Volt-Var curve performance
+    Bill->>Bill: Reconcile actual delivered active/reactive energy against Volt-Var curve expectations at observed voltages
     Bill->>Bill: Fetch customer agreement active billing periods (/bill/123/ca/1/actbp)
     Bill->>Bill: Reconcile & credit CustomerAccount
 ```

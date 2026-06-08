@@ -25,10 +25,10 @@ if [ ! -f "$CONFIG_FILE" ]; then
     exit 1
 fi
 
-# Generate nginx config if generate-nginx-config.sh exists
-if [ -f "$SCRIPT_DIR/generate-nginx-config.sh" ]; then
-    echo "📝 Generating nginx.conf from configuration..."
-    bash "$SCRIPT_DIR/generate-nginx-config.sh" "$CONFIG_FILE" "$NGINX_CONF"
+# Generate nginx config using Go config generator if it exists
+if [ -f "$REPO_ROOT/bin/nginx-config-gen" ]; then
+    echo "📝 Generating nginx.conf using Go config generator..."
+    "$REPO_ROOT/bin/nginx-config-gen" -yaml "$CONFIG_FILE" -output "$NGINX_CONF"
     if [ $? -ne 0 ]; then
         echo "❌ Failed to generate nginx.conf"
         exit 1
@@ -41,9 +41,9 @@ if ! command -v nginx &> /dev/null; then
     exit 1
 fi
 
-if ! nginx -t -c "$(cd "$NGINX_DIR" && pwd)/nginx.conf" 2>&1 | grep -q "successful"; then
+if ! nginx -t -p "$NGINX_DIR" -c "$NGINX_CONF" 2>&1 | grep -q "successful"; then
     echo "❌ nginx configuration test failed"
-    nginx -t -c "$(cd "$NGINX_DIR" && pwd)/nginx.conf"
+    nginx -t -p "$NGINX_DIR" -c "$NGINX_CONF"
     exit 1
 fi
 
@@ -55,7 +55,7 @@ fi
 
 # Start nginx
 echo "▶ Starting nginx API gateway..."
-nginx -c "$(cd "$NGINX_DIR" && pwd)/nginx.conf"
+nginx -p "$NGINX_DIR" -c "$NGINX_CONF"
 
 # Get nginx PID (wait a moment for it to start)
 sleep 0.5

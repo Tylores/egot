@@ -172,6 +172,12 @@ sequenceDiagram
 
 In the Settlement phase, telemetry data is evaluated by the Billing service to credit the customer for active power delivery and performance-based tracking.
 
+> [!NOTE]
+> Fast sub-second regulation (e.g., 4-second PJM mileage) is structurally incompatible with the REST-based, client-driven polling architecture of IEEE 2030.5. To bridge this gap, the ESI boundary implements a **5-minute average tracking error metric**:
+> - **5-minute Telemetry Aggregation**: The client uploads average power levels and cumulative energy (`Wh`) at 5-minute intervals.
+> - **RMSE Validation**: The server's billing engine parses the 5-minute telemetry intervals and computes the root-mean-square tracking error against the active regulation profile.
+> - **Performance Credits**: Customer accounts are credited proportionally to their tracking accuracy, avoiding high-bandwidth network overhead.
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -180,17 +186,17 @@ sequenceDiagram
     participant MUP as "MUP Service (:8017)"
     participant Bill as "Bill Service (:8011)"
 
-    Note over Client: [BASIC-029] Client periodically posts cumulative Wh readings
-    Client->>GW: POST /mup/123 (Submit telemetry meter readings payload)
+    Note over Client: [BASIC-029] Client posts 5-minute aggregated Wh and power telemetry
+    Client->>GW: POST /mup/123 (Submit MirrorUsagePoint payload containing 5-minute logs)
     GW->>MUP: Forward POST /mup/123 (XML payload validation)
     MUP-->>GW: 201 Created
     GW-->>Client: 201 Created
 
     Note over Bill: Periodic billing process runs
-    Bill->>MUP: GET /mup/123 (Fetch delivered energy readings)
+    Bill->>MUP: GET /mup/123 (Fetch 5-minute interval energy readings)
     MUP-->>Bill: 200 OK (UsagePoint readings list)
     
-    Bill->>Bill: Reconcile actual delivered active energy against scheduled regulation tracking signals
+    Bill->>Bill: Compute tracking accuracy (RMSE) over 5-minute windows against scheduled regulation controls
     Bill->>Bill: Fetch customer agreement active billing periods (/bill/123/ca/1/actbp)
-    Bill->>Bill: Reconcile & credit CustomerAccount
+    Bill->>Bill: Reconcile & credit CustomerAccount based on tracking accuracy
 ```
