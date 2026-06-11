@@ -1,6 +1,7 @@
 package main
 
 import (
+	"time"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -21,6 +22,10 @@ func main() {
 		Addr:      routes.Rsps,
 		TLSConfig: cfg,
 		Handler:   tlsutil.CertHeaderMiddleware(http.DefaultServeMux),
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
 	}
 
 	reg := registry.New(filepath.Join("data", "registry.db"))

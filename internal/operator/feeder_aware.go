@@ -53,14 +53,18 @@ func (d *FeederAwareDispatcher) Schedule(gridReq GridServiceRequest) ([]Schedule
 	// nodeSlotLoading[nodeID][slotIndex] = current power in KW
 	nodeSlotLoading := make(map[string][]float64)
 
+	// Copy the requests slice to avoid concurrent data races when sorting in-place.
+	requests := make([]*sep.FlowReservationRequest, len(d.scheduler.Requests))
+	copy(requests, d.scheduler.Requests)
+
 	// Sort requests by absolute power (greedy)
-	sort.Slice(d.scheduler.Requests, func(i, j int) bool {
+	sort.Slice(requests, func(i, j int) bool {
 		pi, pj := 0.0, 0.0
-		if d.scheduler.Requests[i].PowerRequested != nil {
-			pi = math.Abs(float64(d.scheduler.Requests[i].PowerRequested.Value))
+		if requests[i] != nil && requests[i].PowerRequested != nil {
+			pi = math.Abs(float64(requests[i].PowerRequested.Value))
 		}
-		if d.scheduler.Requests[j].PowerRequested != nil {
-			pj = math.Abs(float64(d.scheduler.Requests[j].PowerRequested.Value))
+		if requests[j] != nil && requests[j].PowerRequested != nil {
+			pj = math.Abs(float64(requests[j].PowerRequested.Value))
 		}
 		return pi > pj
 	})
@@ -68,12 +72,15 @@ func (d *FeederAwareDispatcher) Schedule(gridReq GridServiceRequest) ([]Schedule
 	var scheduled []ScheduledEvent
 	usedMRIDs := make(map[string]bool)
 
-	for _, derReq := range d.scheduler.Requests {
+	for _, derReq := range requests {
 		if derReq.MRID == nil || derReq.MRID.HexBinary128 == nil {
 			continue
 		}
 		mrid := string(*derReq.MRID.HexBinary128)
 		if usedMRIDs[mrid] {
+			continue
+		}
+		if derReq.IntervalRequested == nil || derReq.IntervalRequested.Start == nil || derReq.PowerRequested == nil {
 			continue
 		}
 
@@ -186,11 +193,14 @@ func (d *FeederAwareDispatcher) ScheduleDR(gridReq GridServiceRequest) ([]Schedu
 		lsa  *sep.LoadShedAvailability
 	}
 	var availList []deviceAvail
+
+	d.drScheduler.mu.RLock()
 	for lfdi, lsa := range d.drScheduler.Availability {
-		if lsa.SheddablePower != nil && lsa.SheddablePower.Value > 0 {
+		if lsa != nil && lsa.SheddablePower != nil && lsa.SheddablePower.Value > 0 {
 			availList = append(availList, deviceAvail{lfdi: lfdi, lsa: lsa})
 		}
 	}
+	d.drScheduler.mu.RUnlock()
 
 	// Sort available devices by SheddablePower (largest first)
 	sort.Slice(availList, func(i, j int) bool {

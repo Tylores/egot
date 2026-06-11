@@ -3,6 +3,7 @@ package operator
 import (
 	"math"
 	"sort"
+	"sync"
 
 	"github.com/Tylores/egot/sep"
 )
@@ -15,12 +16,23 @@ type ScheduledDREvent struct {
 
 // DRScheduler picks devices to shed load to satisfy a GridServiceRequest during Blackstart or emergencies.
 type DRScheduler struct {
+	mu           sync.RWMutex
 	Availability map[string]*sep.LoadShedAvailability // Map of LFDI to their availability
 }
 
 // NewDRScheduler creates a new DRScheduler with the given available load shed resources.
 func NewDRScheduler(availability map[string]*sep.LoadShedAvailability) *DRScheduler {
 	return &DRScheduler{Availability: availability}
+}
+
+// UpdateAvailability updates the availability map in a thread-safe manner.
+func (s *DRScheduler) UpdateAvailability(lfdi string, lsa *sep.LoadShedAvailability) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.Availability == nil {
+		s.Availability = make(map[string]*sep.LoadShedAvailability)
+	}
+	s.Availability[lfdi] = lsa
 }
 
 // ScheduleDR generates a list of ScheduledDREvents to shed load to meet the grid request.
@@ -32,11 +44,14 @@ func (s *DRScheduler) ScheduleDR(gridReq GridServiceRequest) ([]ScheduledDREvent
 		lsa  *sep.LoadShedAvailability
 	}
 	var availList []deviceAvail
+
+	s.mu.RLock()
 	for lfdi, lsa := range s.Availability {
-		if lsa.SheddablePower != nil && lsa.SheddablePower.Value > 0 {
+		if lsa != nil && lsa.SheddablePower != nil && lsa.SheddablePower.Value > 0 {
 			availList = append(availList, deviceAvail{lfdi: lfdi, lsa: lsa})
 		}
 	}
+	s.mu.RUnlock()
 
 	sort.Slice(availList, func(i, j int) bool {
 		return availList[i].lsa.SheddablePower.Value > availList[j].lsa.SheddablePower.Value

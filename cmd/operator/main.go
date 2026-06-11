@@ -1,6 +1,7 @@
 package main
 
 import (
+	"time"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -19,6 +20,10 @@ func main() {
 		Addr:      routes.Operator,
 		TLSConfig: cfg,
 		Handler:   tlsutil.CertHeaderMiddleware(http.DefaultServeMux),
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
 	}
 
 	// In a real implementation, these would poll the FlowReservation and MUP services

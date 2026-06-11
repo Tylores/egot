@@ -23,8 +23,11 @@ func (e *SettlementEngine) CalculatePerformance(lfdi string, controls []*sep.DER
 	totalScheduled := 0.0
 
 	for _, r := range readings {
+		if r == nil {
+			continue
+		}
 		for _, mmr := range r.MirrorMeterReading {
-			if mmr.Reading != nil {
+			if mmr != nil && mmr.Reading != nil && mmr.Reading.ReadingBase != nil {
 				dt := 3600.0 // default to 1 hour (3600 seconds) if missing
 				if mmr.Reading.TimePeriod != nil && mmr.Reading.TimePeriod.Duration > 0 {
 					dt = float64(mmr.Reading.TimePeriod.Duration)
@@ -36,7 +39,7 @@ func (e *SettlementEngine) CalculatePerformance(lfdi string, controls []*sep.DER
 	}
 
 	for _, c := range controls {
-		if c.DERControlBase != nil && c.DERControlBase.OpModTargetW != nil {
+		if c != nil && c.DERControlBase != nil && c.DERControlBase.OpModTargetW != nil && c.DERControlBase.OpModTargetW.ActivePower != nil {
 			dt := 3600.0 // default to 1 hour if missing
 			if c.RandomizableEvent != nil &&
 				c.RandomizableEvent.Event != nil &&

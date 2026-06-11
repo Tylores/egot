@@ -1,6 +1,7 @@
 package server
 
 import (
+	"time"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -24,6 +25,10 @@ func ServeHTTPS() {
 	server := http.Server{
 		Addr:      routes.Rsps,
 		TLSConfig: cfg,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
 	}
 
 	reg := registry.New(filepath.Join("data", "registry.db"))

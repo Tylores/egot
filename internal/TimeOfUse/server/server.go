@@ -1,6 +1,7 @@
 package server
 
 import (
+	"time"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -22,19 +23,25 @@ func ServeHTTPS() {
 		log.Fatal(err)
 	}
 	server := http.Server{
-		Addr:      routes.TimeOfUse,
-		TLSConfig: cfg,
+		Addr:              routes.TimeOfUse,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		TLSConfig:         cfg,
 	}
 
 	reg := registry.New(filepath.Join("data", "registry.db"))
 	if err := reg.Load(); err != nil {
 		log.Fatal(err)
 	}
+	defer reg.Close()
 
 	repo := store.New(filepath.Join("data", "TimeOfUse.db"))
 	if err := repo.Load(); err != nil {
 		log.Fatal(err)
 	}
+	defer repo.Close()
 
 	h := handler.NewHandler(repo, reg)
 	AddRoutes(h)

@@ -23,9 +23,13 @@ func main() {
 		log.Fatal(err)
 	}
 	server := http.Server{
-		Addr:      routes.UPT,
-		TLSConfig: cfg,
-		Handler:   tlsutil.CertHeaderMiddleware(http.DefaultServeMux),
+		Addr:              routes.UPT,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		TLSConfig:         cfg,
+		Handler:           tlsutil.CertHeaderMiddleware(http.DefaultServeMux),
 	}
 
 	reg := registry.New(filepath.Join("data", "registry.db"))

@@ -34,9 +34,13 @@ func main() {
 		log.Fatal(err)
 	}
 	server := http.Server{
-		Addr:      routes.{{.ServiceConstant}},
-		TLSConfig: cfg,
-		Handler:   tlsutil.CertHeaderMiddleware(http.DefaultServeMux),
+		Addr:              routes.{{.ServiceConstant}},
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		TLSConfig:         cfg,
+		Handler:           tlsutil.CertHeaderMiddleware(http.DefaultServeMux),
 	}
 
 	reg := registry.New(filepath.Join("data", "registry.db"))
@@ -190,6 +194,7 @@ func (h *Handler) {{.FuncName}}(w http.ResponseWriter, req *http.Request) {
 const serverTemplate = `package server
 
 import (
+	"time"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -211,19 +216,25 @@ func ServeHTTPS() {
 		log.Fatal(err)
 	}
 	server := http.Server{
-		Addr:      routes.{{.ServiceConstant}},
-		TLSConfig: cfg,
+		Addr:              routes.{{.ServiceConstant}},
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		TLSConfig:         cfg,
 	}
 
 	reg := registry.New(filepath.Join("data", "registry.db"))
 	if err := reg.Load(); err != nil {
 		log.Fatal(err)
 	}
+	defer reg.Close()
 
 	repo := store.New(filepath.Join("data", "{{.ServiceName}}.db"))
 	if err := repo.Load(); err != nil {
 		log.Fatal(err)
 	}
+	defer repo.Close()
 
 	h := handler.NewHandler(repo, reg)
 	AddRoutes(h)

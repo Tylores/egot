@@ -159,6 +159,9 @@ func (s *Store) GetByOwner(ownerID string) []any {
 			results = append(results, val)
 		}
 	}
+	if err := rows.Err(); err != nil {
+		return nil
+	}
 	return results
 }
 
@@ -188,6 +191,9 @@ func (s *Store) Keys() []string {
 		if err := rows.Scan(&key); err == nil {
 			keys = append(keys, key)
 		}
+	}
+	if err := rows.Err(); err != nil {
+		return nil
 	}
 	return keys
 }

@@ -15,9 +15,28 @@ type Cache struct {
 	items map[string]Item
 }
 
+// New creates a new Cache with a background eviction routine running at the interval of the default TTL.
 func New(ttl time.Duration) *Cache {
-	return &Cache{
+	c := &Cache{
 		items: make(map[string]Item),
+	}
+	if ttl > 0 {
+		go c.startJanitor(ttl)
+	}
+	return c
+}
+
+func (c *Cache) startJanitor(interval time.Duration) {
+	ticker := time.NewTicker(interval)
+	for range ticker.C {
+		c.Lock()
+		now := time.Now().UnixNano()
+		for k, item := range c.items {
+			if item.Expiration > 0 && now > item.Expiration {
+				delete(c.items, k)
+			}
+		}
+		c.Unlock()
 	}
 }
 

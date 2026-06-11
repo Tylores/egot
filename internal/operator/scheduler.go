@@ -78,14 +78,18 @@ func (s *GreedyScheduler) scheduleHourly(gridReq GridServiceRequest) ([]Schedule
 	// slotPowerKW[i] tracks the net power committed for slot i (positive = injection).
 	slotPowerKW := make([]float64, numSlots)
 
+	// Copy the requests slice to avoid concurrent data races when sorting in-place.
+	requests := make([]*sep.FlowReservationRequest, len(s.Requests))
+	copy(requests, s.Requests)
+
 	// Sort requests by absolute power descending to maximise per-assignment impact.
-	sort.Slice(s.Requests, func(i, j int) bool {
+	sort.Slice(requests, func(i, j int) bool {
 		pi, pj := 0.0, 0.0
-		if s.Requests[i].PowerRequested != nil {
-			pi = math.Abs(float64(s.Requests[i].PowerRequested.Value))
+		if requests[i] != nil && requests[i].PowerRequested != nil {
+			pi = math.Abs(float64(requests[i].PowerRequested.Value))
 		}
-		if s.Requests[j].PowerRequested != nil {
-			pj = math.Abs(float64(s.Requests[j].PowerRequested.Value))
+		if requests[j] != nil && requests[j].PowerRequested != nil {
+			pj = math.Abs(float64(requests[j].PowerRequested.Value))
 		}
 		return pi > pj
 	})
@@ -93,7 +97,10 @@ func (s *GreedyScheduler) scheduleHourly(gridReq GridServiceRequest) ([]Schedule
 	var scheduled []ScheduledEvent
 	usedMRIDs := make(map[string]bool)
 
-	for _, derReq := range s.Requests {
+	for _, derReq := range requests {
+		if derReq == nil {
+			continue
+		}
 		if derReq.MRID == nil || derReq.MRID.HexBinary128 == nil {
 			continue
 		}
@@ -175,14 +182,18 @@ func (s *GreedyScheduler) ScheduleWithWindow(gridReq GridServiceRequest, window 
 		slotBalances[i] = gridReq.PowerKW
 	}
 
+	// Copy the requests slice to avoid concurrent data races when sorting in-place.
+	requests := make([]*sep.FlowReservationRequest, len(s.Requests))
+	copy(requests, s.Requests)
+
 	// Sort requests by absolute power (greedy)
-	sort.Slice(s.Requests, func(i, j int) bool {
+	sort.Slice(requests, func(i, j int) bool {
 		pi, pj := 0.0, 0.0
-		if s.Requests[i].PowerRequested != nil {
-			pi = math.Abs(float64(s.Requests[i].PowerRequested.Value))
+		if requests[i] != nil && requests[i].PowerRequested != nil {
+			pi = math.Abs(float64(requests[i].PowerRequested.Value))
 		}
-		if s.Requests[j].PowerRequested != nil {
-			pj = math.Abs(float64(s.Requests[j].PowerRequested.Value))
+		if requests[j] != nil && requests[j].PowerRequested != nil {
+			pj = math.Abs(float64(requests[j].PowerRequested.Value))
 		}
 		return pi > pj
 	})
@@ -190,7 +201,10 @@ func (s *GreedyScheduler) ScheduleWithWindow(gridReq GridServiceRequest, window 
 	var scheduled []ScheduledEvent
 	usedMRIDs := make(map[string]bool)
 
-	for _, derReq := range s.Requests {
+	for _, derReq := range requests {
+		if derReq == nil {
+			continue
+		}
 		if derReq.MRID == nil || derReq.MRID.HexBinary128 == nil {
 			continue
 		}
@@ -199,7 +213,7 @@ func (s *GreedyScheduler) ScheduleWithWindow(gridReq GridServiceRequest, window 
 			continue
 		}
 
-		if derReq.IntervalRequested == nil || derReq.IntervalRequested.Start == nil {
+		if derReq.IntervalRequested == nil || derReq.IntervalRequested.Start == nil || derReq.PowerRequested == nil {
 			continue
 		}
 		derStart := time.Unix(int64(*derReq.IntervalRequested.Start), 0)

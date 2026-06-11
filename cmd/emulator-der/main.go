@@ -156,34 +156,52 @@ func (e *Emulator) onboard() (string, error) {
 	// Step 1: Discovery (GET /dcap)
 	dcapURL := "https://" + e.cfg.Gateway + "/dcap"
 	log.Printf("[%s] [CSIP] Step 1: Discovery GET %s", e.cfg.Name, dcapURL)
-	resp, err := e.client.Get(dcapURL)
-	if err != nil {
-		return "", fmt.Errorf("discovery failed: %w", err)
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("discovery returned status %d", resp.StatusCode)
-	}
 	var dcap sep.DeviceCapability
-	if err := xml.NewDecoder(resp.Body).Decode(&dcap); err != nil {
-		return "", fmt.Errorf("failed to decode discovery response: %w", err)
+	err := func() error {
+		resp, err := e.client.Get(dcapURL)
+		if err != nil {
+			return fmt.Errorf("discovery failed: %w", err)
+		}
+		defer func() {
+			_, _ = io.Copy(io.Discard, resp.Body)
+			resp.Body.Close()
+		}()
+		if resp.StatusCode != http.StatusOK {
+			return fmt.Errorf("discovery returned status %d", resp.StatusCode)
+		}
+		if err := xml.NewDecoder(resp.Body).Decode(&dcap); err != nil {
+			return fmt.Errorf("failed to decode discovery response: %w", err)
+		}
+		return nil
+	}()
+	if err != nil {
+		return "", err
 	}
 	log.Printf("[%s] [CSIP] Discovery successful", e.cfg.Name)
 
 	// Step 2: Time Sync (GET /tm)
 	timeURL := "https://" + e.cfg.Gateway + "/tm"
 	log.Printf("[%s] [CSIP] Step 2: Time Sync GET %s", e.cfg.Name, timeURL)
-	resp, err = e.client.Get(timeURL)
-	if err != nil {
-		return "", fmt.Errorf("time sync failed: %w", err)
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("time sync returned status %d", resp.StatusCode)
-	}
 	var sTime sep.Time
-	if err := xml.NewDecoder(resp.Body).Decode(&sTime); err != nil {
-		return "", fmt.Errorf("failed to decode time response: %w", err)
+	err = func() error {
+		resp, err := e.client.Get(timeURL)
+		if err != nil {
+			return fmt.Errorf("time sync failed: %w", err)
+		}
+		defer func() {
+			_, _ = io.Copy(io.Discard, resp.Body)
+			resp.Body.Close()
+		}()
+		if resp.StatusCode != http.StatusOK {
+			return fmt.Errorf("time sync returned status %d", resp.StatusCode)
+		}
+		if err := xml.NewDecoder(resp.Body).Decode(&sTime); err != nil {
+			return fmt.Errorf("failed to decode time response: %w", err)
+		}
+		return nil
+	}()
+	if err != nil {
+		return "", err
 	}
 	if sTime.Quality != 7 {
 		return "", fmt.Errorf("time quality is not 7 (got %d)", sTime.Quality)
@@ -206,16 +224,26 @@ func (e *Emulator) onboard() (string, error) {
 
 	edevURL := "https://" + e.cfg.Gateway + "/edev"
 	log.Printf("[%s] [CSIP] Step 3: Device Registration POST %s", e.cfg.Name, edevURL)
-	resp, err = e.client.Post(edevURL, sep.ContentType, &buf)
+	var location string
+	err = func() error {
+		resp, err := e.client.Post(edevURL, sep.ContentType, &buf)
+		if err != nil {
+			return fmt.Errorf("registration POST failed: %w", err)
+		}
+		defer func() {
+			_, _ = io.Copy(io.Discard, resp.Body)
+			resp.Body.Close()
+		}()
+		if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
+			return fmt.Errorf("registration POST returned status %d", resp.StatusCode)
+		}
+		location = resp.Header.Get("Location")
+		return nil
+	}()
 	if err != nil {
-		return "", fmt.Errorf("registration POST failed: %w", err)
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("registration POST returned status %d", resp.StatusCode)
+		return "", err
 	}
 
-	location := resp.Header.Get("Location")
 	if location == "" {
 		location = "/edev/" + fmt.Sprintf("%d", e.sfdi)
 	}
@@ -224,17 +252,26 @@ func (e *Emulator) onboard() (string, error) {
 	// Step 4: PIN Verification (GET /edev/{id1}/rg)
 	pinURL := "https://" + e.cfg.Gateway + location + "/rg"
 	log.Printf("[%s] [CSIP] Step 4: PIN Verification GET %s", e.cfg.Name, pinURL)
-	resp, err = e.client.Get(pinURL)
-	if err != nil {
-		return "", fmt.Errorf("PIN verification GET failed: %w", err)
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("PIN verification GET returned status %d", resp.StatusCode)
-	}
 	var reg sep.Registration
-	if err := xml.NewDecoder(resp.Body).Decode(&reg); err != nil {
-		return "", fmt.Errorf("failed to decode registration response: %w", err)
+	err = func() error {
+		resp, err := e.client.Get(pinURL)
+		if err != nil {
+			return fmt.Errorf("PIN verification GET failed: %w", err)
+		}
+		defer func() {
+			_, _ = io.Copy(io.Discard, resp.Body)
+			resp.Body.Close()
+		}()
+		if resp.StatusCode != http.StatusOK {
+			return fmt.Errorf("PIN verification GET returned status %d", resp.StatusCode)
+		}
+		if err := xml.NewDecoder(resp.Body).Decode(&reg); err != nil {
+			return fmt.Errorf("failed to decode registration response: %w", err)
+		}
+		return nil
+	}()
+	if err != nil {
+		return "", err
 	}
 	if reg.PIN == nil {
 		return "", fmt.Errorf("registration response PIN is nil")
@@ -335,7 +372,10 @@ func (e *Emulator) registerMUP() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_, _ = io.Copy(io.Discard, resp.Body)
+		resp.Body.Close()
+	}()
 
 	if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
@@ -376,7 +416,10 @@ func (e *Emulator) pushTelemetry(mupPath string) {
 		log.Printf("Failed to push telemetry: %v", err)
 		return
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_, _ = io.Copy(io.Discard, resp.Body)
+		resp.Body.Close()
+	}()
 
 	if resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusOK {
 		log.Printf("Push telemetry failed with status: %d", resp.StatusCode)
@@ -397,7 +440,10 @@ func (e *Emulator) pollControls() {
 		log.Printf("Failed to poll controls: %v", err)
 		return
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_, _ = io.Copy(io.Discard, resp.Body)
+		resp.Body.Close()
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return
@@ -531,7 +577,10 @@ func (e *Emulator) postControlResponse(c *sep.DERControl, status uint8) error {
 	if err != nil {
 		return fmt.Errorf("HTTP POST failed: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_, _ = io.Copy(io.Discard, resp.Body)
+		resp.Body.Close()
+	}()
 
 	if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
@@ -571,7 +620,10 @@ func (e *Emulator) fetchCurve(href, curveName string) {
 		log.Printf("[%s] Failed to fetch %s curve: %v", e.cfg.Name, curveName, err)
 		return
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_, _ = io.Copy(io.Discard, resp.Body)
+		resp.Body.Close()
+	}()
 
 	if resp.StatusCode == http.StatusOK {
 		log.Printf("[%s] Successfully received and stored %s curve from %s", e.cfg.Name, curveName, href)

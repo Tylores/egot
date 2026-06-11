@@ -11,14 +11,37 @@ const (
 )
 
 func GetTime() TimeType {
-	return TimeType(time.Now().Second())
+	return TimeType(time.Now().Unix())
 }
 
 func ToSFDI(lfdi string) (SFDIType, error) {
 	if len(lfdi) < 9 {
 		return 0, fmt.Errorf("lfdi too short: %s", lfdi)
 	}
-	sfdi, err := strconv.ParseUint(lfdi[:9], 16, 64)
+	val, err := strconv.ParseUint(lfdi[:9], 16, 64)
+	if err != nil {
+		return 0, err
+	}
+
+	// Calculate Luhn mod 10 check digit on the decimal representation of the 36-bit prefix.
+	decStr := strconv.FormatUint(val, 10)
+	sum := 0
+	double := true
+	for i := len(decStr) - 1; i >= 0; i-- {
+		digit := int(decStr[i] - '0')
+		if double {
+			digit *= 2
+			if digit > 9 {
+				digit -= 9
+			}
+		}
+		sum += digit
+		double = !double
+	}
+	checkDigit := (10 - (sum % 10)) % 10
+
+	sfdiStr := fmt.Sprintf("%s%d", decStr, checkDigit)
+	sfdi, err := strconv.ParseUint(sfdiStr, 10, 64)
 	if err != nil {
 		return 0, err
 	}
@@ -117,7 +140,7 @@ func NewTime(resource *Resource) *Time {
 	if !t.IsDST() {
 		offset = 0
 		start, end = end, start
-		end.AddDate(1, 0, 0)
+		end = end.AddDate(1, 0, 0)
 	}
 
 	return &Time{
