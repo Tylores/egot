@@ -88,12 +88,12 @@ LOCATION_BLOCKS=""
 # Parse serviceMap entries (format: "/path": ServiceName,)
 while IFS= read -r line; do
     # Extract path and service name
-    PATH=$(echo "$line" | sed -n 's/.*"\(\/[^"]*\)": \([^,}]*\),.*/\1/p' | head -1)
+    ROUTE_PATH=$(echo "$line" | sed -n 's/.*"\(\/[^"]*\)": \([^,}]*\),.*/\1/p' | head -1)
     SERVICE=$(echo "$line" | sed -n 's/.*"\(\/[^"]*\)": \([^,}]*\),.*/\2/p' | head -1)
     
-    if [ -n "$PATH" ] && [ -n "$SERVICE" ]; then
+    if [ -n "$ROUTE_PATH" ] && [ -n "$SERVICE" ]; then
         # Convert path with {id} to nginx location pattern
-        NGINX_PATH=$(echo "$PATH" | sed 's/{id[0-9]*}/~/g')
+        NGINX_PATH=$(echo "$ROUTE_PATH" | sed 's/{id[0-9]*}/~/g')
         
         LOCATION_BLOCKS="${LOCATION_BLOCKS}        location ~ ^${NGINX_PATH}(/.*)?$ {
             proxy_pass https://${SERVICE,,}_backend;
@@ -101,6 +101,7 @@ while IFS= read -r line; do
             proxy_set_header X-Real-IP \$remote_addr;
             proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto \$scheme;
+            proxy_set_header X-SSL-Client-Cert \$ssl_client_escaped_cert;
             proxy_ssl_verify off;
         }
 

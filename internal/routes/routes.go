@@ -3,23 +3,28 @@ package routes
 import "fmt"
 
 const (
+	// API Gateway
+	Gateway = "localhost:8443"
+
 	// services (generated from scaffold)
-	BRS           = "egot.internal.com:8010"
-	Bill          = "egot.internal.com:8011"
-	DCAP          = "egot.internal.com:8012"
-	DERP          = "egot.internal.com:8013"
-	DR            = "egot.internal.com:8014"
-	EDevice       = "egot.internal.com:8015"
-	File          = "egot.internal.com:8016"
-	MUP           = "egot.internal.com:8017"
-	Messaging     = "egot.internal.com:8018"
-	Notify        = "egot.internal.com:8019"
-	PPY           = "egot.internal.com:8020"
-	SDevice       = "egot.internal.com:8021"
-	TariffProfile = "egot.internal.com:8022"
-	TimeOfUse     = "egot.internal.com:8023"
-	UPT           = "egot.internal.com:8024"
-	DER           = "egot.internal.com:8025"
+	BRS             = "localhost:8010"
+	Bill            = "localhost:8011"
+	DCAP            = "localhost:8012"
+	DR              = "localhost:8014"
+	EDevice         = "localhost:8015"
+	File            = "localhost:8016"
+	MUP             = "localhost:8017"
+	Messaging       = "localhost:8018"
+	Notify          = "localhost:8019"
+	PPY             = "localhost:8020"
+	SDevice         = "localhost:8021"
+	TariffProfile   = "localhost:8022"
+	TimeOfUse       = "localhost:8023"
+	UPT             = "localhost:8024"
+	DER             = "localhost:8026"
+	FlowReservation = "localhost:8027"
+	Operator        = "localhost:8028"
+	Rsps            = "localhost:8041"
 )
 
 // serviceMap maps each registered URL path template to the host:port of the
@@ -27,49 +32,37 @@ const (
 // consistent with Go's HTTP pattern syntax and the WADL samplePath attributes.
 // Use LinkFor to build a complete https URL from any registered path.
 var serviceMap = map[string]string{
+	// Root Discovery & Core
+	"/dcap": DCAP,
+	"/tm":   TimeOfUse,
+
 	// EDevice
-	"/edev":                                               EDevice,
-	"/edev/{id1}":                                         EDevice,
-	"/edev/{id1}/adev":                                    EDevice,
-	"/edev/{id1}/adev/{id2}":                              EDevice,
-	"/edev/{id1}/aggp":                                    EDevice,
-	"/edev/{id1}/cfg":                                     EDevice,
-	"/edev/{id1}/cfg/prcfg":                               EDevice,
-	"/edev/{id1}/cfg/prcfg/{id2}":                         EDevice,
-	"/edev/{id1}/der":                                     EDevice,
-	"/edev/{id1}/der/{id2}":                               EDevice,
-	"/edev/{id1}/der/{id2}/cdc":                           EDevice,
-	"/edev/{id1}/der/{id2}/cdp":                           EDevice,
-	"/edev/{id1}/der/{id2}/dera":                          EDevice,
-	"/edev/{id1}/der/{id2}/dercap":                        EDevice,
-	"/edev/{id1}/der/{id2}/dercom":                        EDevice,
-	"/edev/{id1}/der/{id2}/dercom/{id3}":                  EDevice,
-	"/edev/{id1}/der/{id2}/derg":                          EDevice,
-	"/edev/{id1}/der/{id2}/derp":                          EDevice,
-	"/edev/{id1}/der/{id2}/ders":                          EDevice,
-	"/edev/{id1}/der/{id2}/upt":                           EDevice,
-	"/edev/{id1}/di":                                      EDevice,
-	"/edev/{id1}/di/loc":                                  EDevice,
-	"/edev/{id1}/di/loc/{id2}":                            EDevice,
-	"/edev/{id1}/dstat":                                   EDevice,
-	"/edev/{id1}/frp":                                     EDevice,
-	"/edev/{id1}/frp/{id2}":                               EDevice,
-	"/edev/{id1}/frq":                                     EDevice,
-	"/edev/{id1}/frq/{id2}":                               EDevice,
-	"/edev/{id1}/fs":                                      EDevice,
-	"/edev/{id1}/fsa":                                     EDevice,
-	"/edev/{id1}/fsa/{id2}":                               EDevice,
-	"/edev/{id1}/lel":                                     EDevice,
-	"/edev/{id1}/lel/{id2}":                               EDevice,
-	"/edev/{id1}/lsl":                                     EDevice,
-	"/edev/{id1}/lsl/{id2}":                               EDevice,
-	"/edev/{id1}/ns":                                      EDevice,
-	"/edev/{id1}/ns/{id2}":                                EDevice,
-	"/edev/{id1}/ns/{id2}/addr":                           EDevice,
-	"/edev/{id1}/ns/{id2}/addr/{id3}":                     EDevice,
-	"/edev/{id1}/ns/{id2}/addr/{id3}/rpl":                 EDevice,
-	"/edev/{id1}/ns/{id2}/addr/{id3}/rpl/{id4}":           EDevice,
-	"/edev/{id1}/ns/{id2}/addr/{id3}/rpl/{id4}/srt":       EDevice,
+	"/edev":                                         EDevice,
+	"/edev/{id1}":                                   EDevice,
+	"/edev/{id1}/adev":                              EDevice,
+	"/edev/{id1}/adev/{id2}":                        EDevice,
+	"/edev/{id1}/aggp":                              EDevice,
+	"/edev/{id1}/cfg":                               EDevice,
+	"/edev/{id1}/cfg/prcfg":                         EDevice,
+	"/edev/{id1}/cfg/prcfg/{id2}":                   EDevice,
+	"/edev/{id1}/di":                                EDevice,
+	"/edev/{id1}/di/loc":                            EDevice,
+	"/edev/{id1}/di/loc/{id2}":                      EDevice,
+	"/edev/{id1}/dstat":                             EDevice,
+	"/edev/{id1}/fs":                                EDevice,
+	"/edev/{id1}/fsa":                               EDevice,
+	"/edev/{id1}/fsa/{id2}":                         EDevice,
+	"/edev/{id1}/lel":                               EDevice,
+	"/edev/{id1}/lel/{id2}":                         EDevice,
+	"/edev/{id1}/lsl":                               EDevice,
+	"/edev/{id1}/lsl/{id2}":                         EDevice,
+	"/edev/{id1}/ns":                                EDevice,
+	"/edev/{id1}/ns/{id2}":                          EDevice,
+	"/edev/{id1}/ns/{id2}/addr":                     EDevice,
+	"/edev/{id1}/ns/{id2}/addr/{id3}":               EDevice,
+	"/edev/{id1}/ns/{id2}/addr/{id3}/rpl":           EDevice,
+	"/edev/{id1}/ns/{id2}/addr/{id3}/rpl/{id4}":     EDevice,
+	"/edev/{id1}/ns/{id2}/addr/{id3}/rpl/{id4}/srt": EDevice,
 	"/edev/{id1}/ns/{id2}/addr/{id3}/rpl/{id4}/srt/{id5}": EDevice,
 	"/edev/{id1}/ns/{id2}/ll":                             EDevice,
 	"/edev/{id1}/ns/{id2}/ll/{id3}":                       EDevice,
@@ -81,6 +74,26 @@ var serviceMap = map[string]string{
 	"/edev/{id1}/rg":                                      EDevice,
 	"/edev/{id1}/sub":                                     EDevice,
 	"/edev/{id1}/sub/{id2}":                               EDevice,
+
+	// DER (Extracted from EDevice)
+	"/der":                    DER,
+	"/der/{id1}":              DER,
+	"/der/{id1}/cdc":          DER,
+	"/der/{id1}/cdp":          DER,
+	"/der/{id1}/dera":         DER,
+	"/der/{id1}/dercap":       DER,
+	"/der/{id1}/dercom":       DER,
+	"/der/{id1}/dercom/{id2}": DER,
+	"/der/{id1}/derg":         DER,
+	"/der/{id1}/derp":         DER,
+	"/der/{id1}/ders":         DER,
+	"/der/{id1}/upt":          DER,
+
+	// FlowReservation (Extracted from EDevice)
+	"/frq":       FlowReservation,
+	"/frq/{id1}": FlowReservation,
+	"/frp":       FlowReservation,
+	"/frp/{id1}": FlowReservation,
 
 	// BRS
 	"/brs":                BRS,
@@ -105,14 +118,14 @@ var serviceMap = map[string]string{
 	"/bill/{id1}/ss":                 Bill,
 
 	// DERP
-	"/derp":                  DERP,
-	"/derp/{id1}":            DERP,
-	"/derp/{id1}/actderc":    DERP,
-	"/derp/{id1}/dc":         DERP,
-	"/derp/{id1}/dc/{id2}":   DERP,
-	"/derp/{id1}/dderc":      DERP,
-	"/derp/{id1}/derc":       DERP,
-	"/derp/{id1}/derc/{id2}": DERP,
+	"/derp":                  DER,
+	"/derp/{id1}":            DER,
+	"/derp/{id1}/actderc":    DER,
+	"/derp/{id1}/dc":         DER,
+	"/derp/{id1}/dc/{id2}":   DER,
+	"/derp/{id1}/dderc":      DER,
+	"/derp/{id1}/derc":       DER,
+	"/derp/{id1}/derc/{id2}": DER,
 
 	// DR
 	"/dr":                 DR,
@@ -175,16 +188,16 @@ var serviceMap = map[string]string{
 	"/upt/{id1}/mr/{id2}/rs/{id3}/r":       UPT,
 	"/upt/{id1}/mr/{id2}/rs/{id3}/r/{id4}": UPT,
 	"/upt/{id1}/mr/{id2}/rt":               UPT,
+
+	// Rsps
+	"/rsps":                 Rsps,
+	"/rsps/{id1}":           Rsps,
+	"/rsps/{id1}/rsp":       Rsps,
+	"/rsps/{id1}/rsp/{id2}": Rsps,
+	"/operator":             Operator,
 }
 
 // LinkFor returns the full https URL template for a registered path.
-// It panics if path has no service mapping, making misconfigured links a
-// compile-time-detectable programmer error rather than a silent runtime bug.
-//
-// Example:
-//
-//	routes.LinkFor("/brs")              // "https://egot.internal.com:8010/brs"
-//	routes.LinkFor("/brs/{id1}/br")     // "https://egot.internal.com:8010/brs/{id1}/br"
 func LinkFor(path string) string {
 	host, ok := serviceMap[path]
 	if !ok {

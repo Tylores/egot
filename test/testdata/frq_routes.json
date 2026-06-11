@@ -1,0 +1,88 @@
+{
+  "service_name": "Flowreservation_extracted",
+  "wadl_file": "flowreservation_extracted.wadl",
+  "total_routes": 20,
+  "unique_paths": 4,
+  "routes": [
+    {
+      "Method": "DELETE",
+      "Path": "/frp"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/frp/{id1}"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/frq"
+    },
+    {
+      "Method": "DELETE",
+      "Path": "/frq/{id1}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/frp"
+    },
+    {
+      "Method": "GET",
+      "Path": "/frp/{id1}"
+    },
+    {
+      "Method": "GET",
+      "Path": "/frq"
+    },
+    {
+      "Method": "GET",
+      "Path": "/frq/{id1}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/frp"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/frp/{id1}"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/frq"
+    },
+    {
+      "Method": "HEAD",
+      "Path": "/frq/{id1}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/frp"
+    },
+    {
+      "Method": "POST",
+      "Path": "/frp/{id1}"
+    },
+    {
+      "Method": "POST",
+      "Path": "/frq"
+    },
+    {
+      "Method": "POST",
+      "Path": "/frq/{id1}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/frp"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/frp/{id1}"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/frq"
+    },
+    {
+      "Method": "PUT",
+      "Path": "/frq/{id1}"
+    }
+  ]
+}

@@ -2747,7 +2747,6 @@ type LocaleType = String32
 // Except for this special reserved identifier, each modification of an object (resource) representation SHALL have a different "version".
 type MRIDType struct {
 	*HexBinary128
-	XMLName xml.Name `xml:"mRIDType"`
 }
 
 // OneHourRangeType is A signed time offset, typically applied to a Time value, expressed in seconds, with range -3600 to 3600.

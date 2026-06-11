@@ -2,10 +2,10 @@
 # This template is processed by generate-nginx-config.sh to create the final nginx.conf
 # Variables: LISTEN_ADDR, PORT, SERVER_NAME, TLS_CERT, TLS_KEY, ACCESS_LOG, ERROR_LOG, UPSTREAM_BLOCKS
 
-user www-data www-data;
+# user www-data www-data;
 worker_processes auto;
 error_log {{ ERROR_LOG }} {{ ERROR_LOG_LEVEL }};
-pid /var/run/nginx.pid;
+pid ./logs/nginx.pid;
 
 events {
     worker_connections 1024;
@@ -38,6 +38,8 @@ http {
         # TLS configuration
         ssl_certificate {{ TLS_CERT }};
         ssl_certificate_key {{ TLS_KEY }};
+        ssl_client_certificate ./ssl/ca.crt;
+        ssl_verify_client on;
         ssl_protocols TLSv1.2 TLSv1.3;
         ssl_ciphers HIGH:!aNULL:!MD5;
 

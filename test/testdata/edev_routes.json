@@ -1,8 +1,8 @@
 {
   "service_name": "Edev",
   "wadl_file": "edev.wadl",
-  "total_routes": 265,
-  "unique_paths": 53,
+  "total_routes": 185,
+  "unique_paths": 37,
   "routes": [
     {
       "Method": "DELETE",
@@ -38,54 +38,6 @@
     },
     {
       "Method": "DELETE",
-      "Path": "/edev/{id1}/der"
-    },
-    {
-      "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}"
-    },
-    {
-      "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/cdc"
-    },
-    {
-      "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/cdp"
-    },
-    {
-      "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/dera"
-    },
-    {
-      "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/dercap"
-    },
-    {
-      "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/dercom"
-    },
-    {
-      "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/dercom/{id3}"
-    },
-    {
-      "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/derg"
-    },
-    {
-      "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/derp"
-    },
-    {
-      "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/ders"
-    },
-    {
-      "Method": "DELETE",
-      "Path": "/edev/{id1}/der/{id2}/upt"
-    },
-    {
-      "Method": "DELETE",
       "Path": "/edev/{id1}/di"
     },
     {
@@ -99,22 +51,6 @@
     {
       "Method": "DELETE",
       "Path": "/edev/{id1}/dstat"
-    },
-    {
-      "Method": "DELETE",
-      "Path": "/edev/{id1}/frp"
-    },
-    {
-      "Method": "DELETE",
-      "Path": "/edev/{id1}/frp/{id2}"
-    },
-    {
-      "Method": "DELETE",
-      "Path": "/edev/{id1}/frq"
-    },
-    {
-      "Method": "DELETE",
-      "Path": "/edev/{id1}/frq/{id2}"
     },
     {
       "Method": "DELETE",
@@ -250,54 +186,6 @@
     },
     {
       "Method": "GET",
-      "Path": "/edev/{id1}/der"
-    },
-    {
-      "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}"
-    },
-    {
-      "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/cdc"
-    },
-    {
-      "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/cdp"
-    },
-    {
-      "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/dera"
-    },
-    {
-      "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/dercap"
-    },
-    {
-      "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/dercom"
-    },
-    {
-      "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/dercom/{id3}"
-    },
-    {
-      "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/derg"
-    },
-    {
-      "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/derp"
-    },
-    {
-      "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/ders"
-    },
-    {
-      "Method": "GET",
-      "Path": "/edev/{id1}/der/{id2}/upt"
-    },
-    {
-      "Method": "GET",
       "Path": "/edev/{id1}/di"
     },
     {
@@ -311,22 +199,6 @@
     {
       "Method": "GET",
       "Path": "/edev/{id1}/dstat"
-    },
-    {
-      "Method": "GET",
-      "Path": "/edev/{id1}/frp"
-    },
-    {
-      "Method": "GET",
-      "Path": "/edev/{id1}/frp/{id2}"
-    },
-    {
-      "Method": "GET",
-      "Path": "/edev/{id1}/frq"
-    },
-    {
-      "Method": "GET",
-      "Path": "/edev/{id1}/frq/{id2}"
     },
     {
       "Method": "GET",
@@ -462,54 +334,6 @@
     },
     {
       "Method": "HEAD",
-      "Path": "/edev/{id1}/der"
-    },
-    {
-      "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}"
-    },
-    {
-      "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/cdc"
-    },
-    {
-      "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/cdp"
-    },
-    {
-      "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/dera"
-    },
-    {
-      "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/dercap"
-    },
-    {
-      "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/dercom"
-    },
-    {
-      "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/dercom/{id3}"
-    },
-    {
-      "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/derg"
-    },
-    {
-      "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/derp"
-    },
-    {
-      "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/ders"
-    },
-    {
-      "Method": "HEAD",
-      "Path": "/edev/{id1}/der/{id2}/upt"
-    },
-    {
-      "Method": "HEAD",
       "Path": "/edev/{id1}/di"
     },
     {
@@ -523,22 +347,6 @@
     {
       "Method": "HEAD",
       "Path": "/edev/{id1}/dstat"
-    },
-    {
-      "Method": "HEAD",
-      "Path": "/edev/{id1}/frp"
-    },
-    {
-      "Method": "HEAD",
-      "Path": "/edev/{id1}/frp/{id2}"
-    },
-    {
-      "Method": "HEAD",
-      "Path": "/edev/{id1}/frq"
-    },
-    {
-      "Method": "HEAD",
-      "Path": "/edev/{id1}/frq/{id2}"
     },
     {
       "Method": "HEAD",
@@ -674,54 +482,6 @@
     },
     {
       "Method": "POST",
-      "Path": "/edev/{id1}/der"
-    },
-    {
-      "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}"
-    },
-    {
-      "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/cdc"
-    },
-    {
-      "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/cdp"
-    },
-    {
-      "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/dera"
-    },
-    {
-      "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/dercap"
-    },
-    {
-      "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/dercom"
-    },
-    {
-      "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/dercom/{id3}"
-    },
-    {
-      "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/derg"
-    },
-    {
-      "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/derp"
-    },
-    {
-      "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/ders"
-    },
-    {
-      "Method": "POST",
-      "Path": "/edev/{id1}/der/{id2}/upt"
-    },
-    {
-      "Method": "POST",
       "Path": "/edev/{id1}/di"
     },
     {
@@ -735,22 +495,6 @@
     {
       "Method": "POST",
       "Path": "/edev/{id1}/dstat"
-    },
-    {
-      "Method": "POST",
-      "Path": "/edev/{id1}/frp"
-    },
-    {
-      "Method": "POST",
-      "Path": "/edev/{id1}/frp/{id2}"
-    },
-    {
-      "Method": "POST",
-      "Path": "/edev/{id1}/frq"
-    },
-    {
-      "Method": "POST",
-      "Path": "/edev/{id1}/frq/{id2}"
     },
     {
       "Method": "POST",
@@ -886,54 +630,6 @@
     },
     {
       "Method": "PUT",
-      "Path": "/edev/{id1}/der"
-    },
-    {
-      "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}"
-    },
-    {
-      "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/cdc"
-    },
-    {
-      "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/cdp"
-    },
-    {
-      "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/dera"
-    },
-    {
-      "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/dercap"
-    },
-    {
-      "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/dercom"
-    },
-    {
-      "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/dercom/{id3}"
-    },
-    {
-      "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/derg"
-    },
-    {
-      "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/derp"
-    },
-    {
-      "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/ders"
-    },
-    {
-      "Method": "PUT",
-      "Path": "/edev/{id1}/der/{id2}/upt"
-    },
-    {
-      "Method": "PUT",
       "Path": "/edev/{id1}/di"
     },
     {
@@ -947,22 +643,6 @@
     {
       "Method": "PUT",
       "Path": "/edev/{id1}/dstat"
-    },
-    {
-      "Method": "PUT",
-      "Path": "/edev/{id1}/frp"
-    },
-    {
-      "Method": "PUT",
-      "Path": "/edev/{id1}/frp/{id2}"
-    },
-    {
-      "Method": "PUT",
-      "Path": "/edev/{id1}/frq"
-    },
-    {
-      "Method": "PUT",
-      "Path": "/edev/{id1}/frq/{id2}"
     },
     {
       "Method": "PUT",

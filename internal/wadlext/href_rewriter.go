@@ -64,9 +64,9 @@ func (r *HrefRewriter) RewriteRepresentationElement(elementName string) string {
 // buildDefaultCrossServiceMap creates the default mapping of resource paths to services
 func buildDefaultCrossServiceMap() map[string]string {
 	return map[string]string{
-		// Core services
-		"/tm": "core",
-		"/rg": "core",
+		// Discovery & Core
+		"/dcap": "DCAP",
+		"/tm":   "TimeOfUse",
 
 		// Service mappings
 		"/bill":     "Bill",
@@ -81,7 +81,6 @@ func buildDefaultCrossServiceMap() map[string]string {
 		"/ppy":      "PPY",
 		"/sdev":     "SDevice",
 		"/tp":       "TariffProfile",
-		"/tou":      "TimeOfUse",
 		"/upt":      "UPT",
 		"/rsps":     "Rsps",
 		"/der":      "DER",
